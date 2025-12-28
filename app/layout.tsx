@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TextMorph - Text Converter",
+  title: "Title Case Converter Online",
   description: "Convert text between various cases (Title Case, camelCase, etc.)",
 };
 

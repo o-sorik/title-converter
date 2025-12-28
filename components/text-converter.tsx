@@ -25,9 +25,18 @@ const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
     { id: "inverse", label: "InVeRsE cAsE" },
 ]
 
-export function TextConverter() {
+interface TextConverterProps {
+    defaultMode?: ConversionType
+}
+
+export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
     const [input, setInput] = React.useState("")
-    const [activeType, setActiveType] = React.useState<ConversionType>("title")
+    const [activeType, setActiveType] = React.useState<ConversionType>(defaultMode)
+
+    // Update active type if defaultMode changes (e.g. navigation)
+    React.useEffect(() => {
+        setActiveType(defaultMode)
+    }, [defaultMode])
 
     // Derived state for output ensures it's always in sync
     const output = React.useMemo(() => {
@@ -64,7 +73,7 @@ export function TextConverter() {
             <Card className="border-0 shadow-2xl bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm ring-1 ring-zinc-200 dark:ring-zinc-800">
                 <CardHeader className="text-center pb-2">
                     <CardTitle className="text-4xl font-extrabold tracking-tight bg-gradient-to-br from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-500 bg-clip-text text-transparent pb-2">
-                        TextMorph
+                        Title Case Converter Online
                     </CardTitle>
                     <CardDescription className="text-lg">
                         Transform your text instantly with smart casing tools.
@@ -128,10 +137,11 @@ export function TextConverter() {
                         </div>
 
                         {/* Arrow Icon for Desktop */}
-                        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                        <div className="hidden md:flex flex-col items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 gap-1">
                             <div className="bg-background rounded-full p-2 border shadow-sm text-muted-foreground">
                                 <MoveRight className="h-6 w-6" />
                             </div>
+                            <span className="text-xs font-semibold text-muted-foreground bg-background/50 backdrop-blur-sm px-2 py-0.5 rounded-full">Convert</span>
                         </div>
 
                         {/* Output Area */}
