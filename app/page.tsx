@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/sonner"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zinc-50 to-white dark:from-zinc-950 dark:to-black">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-blue-50/30 to-purple-50/20 dark:from-zinc-950 dark:via-blue-950/20 dark:to-purple-950/10 gradient-animated">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center justify-between mx-auto px-4 max-w-5xl">
           <div className="flex items-center gap-2">
@@ -17,7 +17,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="container mx-auto py-10 px-4 min-h-[calc(100vh-3.5rem)] flex flex-col items-center">
+      <main className="container mx-auto py-10 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-3.5rem)] flex flex-col items-center">
         <div className="w-full max-w-5xl space-y-16">
           <TextConverter />
           <ContentSection />
