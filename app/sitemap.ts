@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { CONVERTER_SLUGS } from '@/lib/seo-config'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://titlecaseconverter.online' // Assuming this is the domain, or we can use localhost/placeholder
+    const baseUrl = 'https://titlecaseconverter.online'
 
     // Static pages
     const routes: MetadataRoute.Sitemap = [

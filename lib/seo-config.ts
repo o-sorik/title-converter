@@ -12,7 +12,45 @@ export interface SeoPageConfig {
         exampleInput: string;
         exampleOutput: string;
     };
+    faqs?: { question: string; answer: string }[];
 }
+
+export const HOME_PAGE_CONFIG: SeoPageConfig = {
+    slug: "",
+    mode: "title",
+    title: "Title Case Converter Online - Free Text Capitalization Tool",
+    description: "Convert text to Title Case instantly online. Automatically capitalizes major words and lowercases minor words following standard capitalization rules.",
+    h1: "Title Case Converter Online",
+    content: {
+        intro: "The Title Case Converter transforms your text into proper title capitalization. It automatically capitalizes major words (nouns, verbs, adjectives, adverbs) while keeping minor words (articles, prepositions, conjunctions) in lowercase. Perfect for headlines, blog post titles, book titles, and professional documents.",
+        features: [
+            "Capitalizes major words: nouns, pronouns, verbs, adjectives, adverbs.",
+            "Lowercases minor words: articles (a, an, the), conjunctions, short prepositions.",
+            "Always capitalizes the first and last word of the title.",
+            "Handles hyphenated compounds correctly.",
+        ],
+        exampleInput: "the quick brown fox jumps over the lazy dog",
+        exampleOutput: "The Quick Brown Fox Jumps over the Lazy Dog",
+    },
+    faqs: [
+        {
+            question: "What is title case?",
+            answer: "Title case is a capitalization style where major words are capitalized and minor words (like articles, prepositions, and conjunctions) are lowercased. It's commonly used for book titles, headlines, and article titles."
+        },
+        {
+            question: "Which words should be capitalized in title case?",
+            answer: "In title case, capitalize nouns, pronouns, verbs, adjectives, and adverbs. Lowercase articles (a, an, the), coordinating conjunctions (and, but, or), and short prepositions (in, on, at). Always capitalize the first and last word."
+        },
+        {
+            question: "Is 'the' capitalized in a title?",
+            answer: "The word 'the' is typically lowercased in title case unless it's the first or last word of the title. For example: 'The Catcher in the Rye' - the first 'The' is capitalized, but 'the' in the middle is lowercase."
+        },
+        {
+            question: "What's the difference between title case and sentence case?",
+            answer: "Title case capitalizes major words throughout the text, while sentence case only capitalizes the first word and proper nouns, similar to regular sentences. Use title case for titles and headlines, sentence case for subtitles and descriptions."
+        }
+    ],
+};
 
 export const SEO_CONFIG: Record<string, SeoPageConfig> = {
     "sentence-case-converter": {
@@ -173,3 +211,4 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
 };
 
 export const CONVERTER_SLUGS = Object.keys(SEO_CONFIG);
+
