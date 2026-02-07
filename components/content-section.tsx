@@ -9,7 +9,7 @@ export function ContentSection() {
                 </p>
                 <div className="grid gap-4 md:grid-cols-2 mt-6">
                     <div className="p-4 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
-                        <h3 className="font-semibold mb-2 text-green-600 dark:text-green-500">Correct Examples</h3>
+                        <h3 className="font-semibold mb-2 text-green-700 dark:text-green-400">Correct Examples</h3>
                         <ul className="list-disc list-inside space-y-1 text-sm">
                             <li>The Catcher in the Rye</li>
                             <li>A Tale of Two Cities</li>
@@ -17,7 +17,7 @@ export function ContentSection() {
                         </ul>
                     </div>
                     <div className="p-4 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
-                        <h3 className="font-semibold mb-2 text-red-600 dark:text-red-500">Incorrect Examples</h3>
+                        <h3 className="font-semibold mb-2 text-red-700 dark:text-red-400">Incorrect Examples</h3>
                         <ul className="list-disc list-inside space-y-1 text-sm">
                             <li>The catcher in the rye</li>
                             <li>A Tale Of Two Cities</li>
@@ -45,7 +45,7 @@ export function ContentSection() {
                     <div className="p-6 rounded-xl border bg-card text-card-foreground shadow-sm">
                         <h3 className="font-semibold text-lg mb-2">Paste Quickly</h3>
                         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                            Use the "Paste" button to instantly insert text from your clipboard into the converter.
+                            Use the &quot;Paste&quot; button to instantly insert text from your clipboard into the converter.
                         </p>
                     </div>
                     <div className="p-6 rounded-xl border bg-card text-card-foreground shadow-sm">
@@ -57,7 +57,7 @@ export function ContentSection() {
                     <div className="p-6 rounded-xl border bg-card text-card-foreground shadow-sm">
                         <h3 className="font-semibold text-lg mb-2">Keyboard Shortcuts</h3>
                         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                            Press <kbd className="px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 text-xs font-mono">Cmd/Ctrl + V</kbd> to paste and see instant results.
+                            Press <kbd className="px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 text-xs font-mono">Cmd/Ctrl + V</kbd> to paste and see instant results.
                         </p>
                     </div>
                 </div>

@@ -1,13 +1,13 @@
 "use client"
 
 import * as React from "react"
-import { Copy, RotateCcw, ClipboardPaste, ArrowRightLeft, MoveRight, Check, Info } from "lucide-react"
+import { Copy, RotateCcw, ClipboardPaste, MoveRight, Check, Info } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 import { convert, convertWithExplanations, type ConversionType, type WordExplanation } from "@/lib/converters"
@@ -128,7 +128,7 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
             setCopied(true)
             toast.success("Copied to clipboard")
             setTimeout(() => setCopied(false), 2000)
-        } catch (err) {
+        } catch {
             toast.error("Failed to copy")
         }
     }
@@ -138,7 +138,7 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
             const text = await navigator.clipboard.readText()
             setInput(text)
             toast.success("Pasted from clipboard")
-        } catch (err) {
+        } catch {
             toast.error("Failed to paste", { description: "Please allow clipboard access." })
         }
     }
@@ -185,7 +185,7 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                                             </TooltipTrigger>
                                             <TooltipContent>
                                                 Paste from Clipboard
-                                                <kbd className="ml-2 px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 text-xs font-mono">⌘V</kbd>
+                                                <kbd className="ml-2 px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 text-xs font-mono">⌘V</kbd>
                                             </TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
@@ -205,14 +205,14 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                             <div className="relative">
                                 <Textarea
                                     placeholder="Type or paste your text here..."
-                                    className="min-h-[300px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                                    className="min-h-[300px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-zinc-500 dark:placeholder:text-zinc-400"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     autoFocus
                                 />
                                 {!input && (
-                                    <div className="absolute bottom-4 left-6 text-xs text-muted-foreground/50 pointer-events-none animate-fadeIn">
-                                        Press <kbd className="px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 font-mono">⌘/Ctrl + V</kbd> to paste
+                                    <div className="absolute bottom-4 left-6 text-xs text-zinc-500 dark:text-zinc-400 pointer-events-none animate-fadeIn">
+                                        Press <kbd className="px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 font-mono">⌘/Ctrl + V</kbd> to paste
                                     </div>
                                 )}
                             </div>
@@ -253,7 +253,7 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                                         </TooltipTrigger>
                                         <TooltipContent>
                                             {copied ? "Copied!" : "Copy Result"}
-                                            {!copied && <kbd className="ml-2 px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-800 text-xs font-mono">⌘C</kbd>}
+                                            {!copied && <kbd className="ml-2 px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 text-xs font-mono">⌘C</kbd>}
                                         </TooltipContent>
                                     </Tooltip>
                                 </TooltipProvider>

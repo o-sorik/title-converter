@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation"
+import Link from "next/link"
 import { SEO_CONFIG, CONVERTER_SLUGS } from "@/lib/seo-config"
 import { TextConverter } from "@/components/text-converter"
 import { ContentSection } from "@/components/content-section"
@@ -87,9 +88,9 @@ export default async function ConverterPage({ params }: Props) {
             <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <div className="container flex h-14 items-center justify-between mx-auto px-4 max-w-5xl">
                     <div className="flex items-center gap-2">
-                        <a href="/" className="font-bold text-xl tracking-tighter hover:text-primary transition-colors">
+                        <Link href="/" className="font-bold text-xl tracking-tighter hover:text-primary transition-colors">
                             Title Case Converter Online
-                        </a>
+                        </Link>
                     </div>
                     <div className="flex items-center gap-2">
                         <ConverterNav />
@@ -120,7 +121,7 @@ export default async function ConverterPage({ params }: Props) {
 
                         <div className="grid md:grid-cols-2 gap-8 mb-12">
                             <div className="p-6 rounded-xl bg-zinc-50 dark:bg-zinc-900 border">
-                                <h3 className="text-lg font-semibold mb-4">Features</h3>
+                                <h2 className="text-lg font-semibold mb-4">Features</h2>
                                 <ul className="space-y-2">
                                     {config.content.features.map((feature, i) => (
                                         <li key={i} className="flex items-start gap-2">
@@ -131,7 +132,7 @@ export default async function ConverterPage({ params }: Props) {
                                 </ul>
                             </div>
                             <div className="p-6 rounded-xl bg-zinc-50 dark:bg-zinc-900 border">
-                                <h3 className="text-lg font-semibold mb-4">Example</h3>
+                                <h2 className="text-lg font-semibold mb-4">Example</h2>
                                 <div className="space-y-4">
                                     <div>
                                         <div className="text-xs font-mono text-muted-foreground mb-1 uppercase">Input</div>
