@@ -2,7 +2,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { SEO_CONFIG, CONVERTER_SLUGS } from "@/lib/seo-config"
 import { TextConverter } from "@/components/text-converter"
-import { ContentSection } from "@/components/content-section"
+import { ModeContentSection, getRelatedLinksForMode } from "@/components/mode-content-section"
 import { ModeToggle } from "@/components/mode-toggle"
 import { ConverterNav } from "@/components/converter-nav"
 import { Toaster } from "@/components/ui/sonner"
@@ -65,6 +65,7 @@ export default async function ConverterPage({ params }: Props) {
     }
 
     const pageUrl = `${siteUrl}/${slug}`
+    const relatedLinks = getRelatedLinksForMode(config.mode)
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-blue-50/30 to-purple-50/20 dark:from-zinc-950 dark:via-blue-950/20 dark:to-purple-950/10 gradient-animated">
@@ -147,23 +148,39 @@ export default async function ConverterPage({ params }: Props) {
                             </div>
                         </div>
 
-                        {/* FAQ Section */}
-                        {config.faqs && config.faqs.length > 0 && (
-                            <section className="mt-12">
-                                <h2 className="text-2xl font-bold tracking-tight mb-6">Frequently Asked Questions</h2>
-                                <div className="space-y-6">
-                                    {config.faqs.map((faq, i) => (
-                                        <div key={i} className="p-6 rounded-xl bg-zinc-50 dark:bg-zinc-900 border">
-                                            <h3 className="text-lg font-semibold mb-2">{faq.question}</h3>
-                                            <p className="text-muted-foreground">{faq.answer}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
                     </article>
 
-                    <ContentSection />
+                    <ModeContentSection config={config} showRelated={false} />
+
+                    {/* FAQ Section */}
+                    {config.faqs && config.faqs.length > 0 && (
+                        <section className="mt-16 w-full">
+                            <h2 className="text-2xl font-bold tracking-tight mb-6">Frequently Asked Questions</h2>
+                            <div className="space-y-6">
+                                {config.faqs.map((faq, i) => (
+                                    <div key={i} className="p-6 rounded-xl bg-zinc-50 dark:bg-zinc-900 border">
+                                        <h3 className="text-lg font-semibold mb-2">{faq.question}</h3>
+                                        <p className="text-muted-foreground">{faq.answer}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    <section className="mt-16 w-full">
+                        <h2 className="text-2xl font-bold tracking-tight mb-6">Related Converters</h2>
+                        <p className="text-zinc-600 dark:text-zinc-400">
+                            {relatedLinks.map((link, index) => (
+                                <span key={link.href}>
+                                    {index > 0 ? ", " : ""}
+                                    <Link href={link.href} className="underline underline-offset-4">
+                                        {link.label}
+                                    </Link>
+                                </span>
+                            ))}
+                            .
+                        </p>
+                    </section>
                 </div>
             </main>
 
@@ -178,4 +195,3 @@ export default async function ConverterPage({ params }: Props) {
         </div>
     )
 }
-

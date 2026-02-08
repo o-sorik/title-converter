@@ -109,6 +109,24 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
             exampleInput: "THIS IS an EXAMPLE. of SENTENCE CASE.",
             exampleOutput: "This is an example. Of sentence case.",
         },
+        faqs: [
+            {
+                question: "What does a sentence case converter do?",
+                answer: "It converts text so each sentence starts with a capital letter while the remaining words are lowercased, except where manual edits are needed."
+            },
+            {
+                question: "When should I use sentence case instead of title case?",
+                answer: "Use sentence case for body copy, UI text, and descriptions. Use title case mostly for headings and titles."
+            },
+            {
+                question: "Will sentence case fix random ALL CAPS text?",
+                answer: "Yes. It is useful for normalizing text that was typed in caps lock or pasted with inconsistent capitalization."
+            },
+            {
+                question: "Does sentence case preserve punctuation?",
+                answer: "Yes. The converter focuses on letter casing and keeps punctuation in place."
+            }
+        ],
     },
     "lower-case-converter": {
         slug: "lower-case-converter",
@@ -126,6 +144,24 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
             exampleInput: "Hello WORLD",
             exampleOutput: "hello world",
         },
+        faqs: [
+            {
+                question: "What is a lower case converter used for?",
+                answer: "It converts all letters to lowercase, which helps with text normalization, data cleanup, and case-insensitive matching."
+            },
+            {
+                question: "Does lower case conversion change numbers and symbols?",
+                answer: "No. Numbers and punctuation are preserved while alphabetic characters are converted to lowercase."
+            },
+            {
+                question: "Should I use lower case for SEO URLs?",
+                answer: "Yes, lowercase is generally preferred for consistent and clean URLs, often combined with hyphens."
+            },
+            {
+                question: "Can lower case conversion affect brand names?",
+                answer: "Yes. It may remove intentional brand casing, so review final text when proper nouns matter."
+            }
+        ],
     },
     "upper-case-converter": {
         slug: "upper-case-converter",
@@ -143,6 +179,24 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
             exampleInput: "Hello World",
             exampleOutput: "HELLO WORLD",
         },
+        faqs: [
+            {
+                question: "What is an upper case converter?",
+                answer: "It converts all letters in your text to uppercase, useful for short labels, emphasis, and warnings."
+            },
+            {
+                question: "When should I avoid using all caps?",
+                answer: "Avoid all caps for long paragraphs because it reduces readability and can feel visually aggressive."
+            },
+            {
+                question: "Does uppercase conversion keep punctuation?",
+                answer: "Yes. Symbols and punctuation remain unchanged while letters are capitalized."
+            },
+            {
+                question: "Can I use this for acronyms?",
+                answer: "Yes. Uppercase conversion is useful when formatting acronyms and short technical labels."
+            }
+        ],
     },
     "camel-case-converter": {
         slug: "camel-case-converter",
@@ -161,6 +215,24 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
             exampleInput: "User first name",
             exampleOutput: "userFirstName",
         },
+        faqs: [
+            {
+                question: "What is camelCase?",
+                answer: "camelCase is a naming convention where the first word is lowercase and each following word starts with an uppercase letter."
+            },
+            {
+                question: "Where is camelCase commonly used?",
+                answer: "It is common in JavaScript, TypeScript, and JSON keys for variables, properties, and function names."
+            },
+            {
+                question: "Does camel case remove spaces and punctuation?",
+                answer: "Yes. Spaces and separators are removed and words are merged into a single identifier."
+            },
+            {
+                question: "What is the difference between camelCase and PascalCase?",
+                answer: "camelCase starts with a lowercase letter, while PascalCase starts with an uppercase letter."
+            }
+        ],
     },
     "pascal-case-converter": {
         slug: "pascal-case-converter",
@@ -178,6 +250,24 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
             exampleInput: "api response data",
             exampleOutput: "ApiResponseData",
         },
+        faqs: [
+            {
+                question: "What is PascalCase used for?",
+                answer: "PascalCase is widely used for class names, component names, and type identifiers in many programming languages."
+            },
+            {
+                question: "Does PascalCase capitalize every word?",
+                answer: "Yes. Each word begins with an uppercase letter and separators are removed."
+            },
+            {
+                question: "Is PascalCase the same as UpperCamelCase?",
+                answer: "Yes. PascalCase and UpperCamelCase usually refer to the same naming style."
+            },
+            {
+                question: "Should file names also use PascalCase?",
+                answer: "That depends on your project conventions, but many teams align component files with PascalCase names."
+            }
+        ],
     },
     "snake-case-converter": {
         slug: "snake-case-converter",
@@ -195,6 +285,24 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
             exampleInput: "User ID Number",
             exampleOutput: "user_id_number",
         },
+        faqs: [
+            {
+                question: "What is snake_case?",
+                answer: "snake_case is a naming format where words are lowercase and separated by underscores."
+            },
+            {
+                question: "Where is snake_case commonly used?",
+                answer: "It is common in Python code, SQL schemas, and data engineering workflows."
+            },
+            {
+                question: "Does snake case keep numbers?",
+                answer: "Yes. Numeric characters are preserved while words are normalized and separated with underscores."
+            },
+            {
+                question: "Snake case vs kebab case: what is the difference?",
+                answer: "snake_case uses underscores, while kebab-case uses hyphens."
+            }
+        ],
     },
     "kebab-case-converter": {
         slug: "kebab-case-converter",
@@ -212,6 +320,24 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
             exampleInput: "Product Detail Page",
             exampleOutput: "product-detail-page",
         },
+        faqs: [
+            {
+                question: "What is kebab-case?",
+                answer: "kebab-case is a format where words are lowercase and separated by hyphens."
+            },
+            {
+                question: "Is kebab-case good for URLs?",
+                answer: "Yes. Hyphenated lowercase slugs are typically easier to read and widely used in SEO-friendly URLs."
+            },
+            {
+                question: "Can I use kebab-case for CSS classes?",
+                answer: "Yes. Many CSS naming patterns use kebab-case for consistency and readability."
+            },
+            {
+                question: "Will punctuation be removed in kebab conversion?",
+                answer: "Yes. Special characters are generally stripped while words are joined with hyphens."
+            }
+        ],
     },
     // Alias for slug generator
     "slug-generator": {
@@ -230,6 +356,24 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
             exampleInput: "What IS the Best Title?",
             exampleOutput: "what-is-the-best-title",
         },
+        faqs: [
+            {
+                question: "What is a URL slug generator?",
+                answer: "It converts text into a clean, URL-safe slug by lowercasing words, removing unsafe characters, and using hyphens."
+            },
+            {
+                question: "Why are hyphens preferred in slugs?",
+                answer: "Hyphens improve readability and are commonly used in search-friendly URL structures."
+            },
+            {
+                question: "Should slugs include stop words like 'the' and 'of'?",
+                answer: "They can, but many teams shorten slugs by removing unnecessary words while keeping meaning clear."
+            },
+            {
+                question: "Can I use generated slugs for blog posts and products?",
+                answer: "Yes. Slugs are useful for blog URLs, product pages, category pages, and docs."
+            }
+        ],
     },
     "alternating-case-converter": {
         slug: "alternating-case-converter",
@@ -247,6 +391,24 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
             exampleInput: "Don't mock me",
             exampleOutput: "dOn'T mOcK mE",
         },
+        faqs: [
+            {
+                question: "What is alternating case?",
+                answer: "Alternating case switches letter casing in sequence to create a playful or meme-like text style."
+            },
+            {
+                question: "When should I use alternating case?",
+                answer: "It works best for informal content like jokes, memes, and social media posts."
+            },
+            {
+                question: "Is alternating case good for professional writing?",
+                answer: "Usually no. It reduces readability and is not recommended for formal communication."
+            },
+            {
+                question: "Does alternating case preserve punctuation?",
+                answer: "Yes. Punctuation remains while letter casing alternates."
+            }
+        ],
     },
 };
 
