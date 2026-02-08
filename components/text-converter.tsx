@@ -20,7 +20,7 @@ const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
     { id: "camel", label: "camelCase" },
     { id: "pascal", label: "PascalCase" },
     { id: "snake", label: "snake_case" },
-    { id: "kebab", label: "kebab-case" },
+    { id: "kebab", label: "url-writing-case" },
     { id: "alternating", label: "aLtErNaTiNg" },
     { id: "inverse", label: "InVeRsE cAsE" },
 ]
