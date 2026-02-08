@@ -10,10 +10,19 @@ export type ConversionType =
     | "alternating"
     | "inverse";
 
-const MINOR_WORDS = new Set([
+export type TitleCaseStyle = "standard" | "ap" | "chicago" | "mla" | "apa";
+
+export interface ConvertOptions {
+    titleStyle?: TitleCaseStyle;
+}
+
+const ARTICLES = new Set([
     "a",
     "an",
     "the",
+]);
+
+const CONJUNCTIONS = new Set([
     "and",
     "but",
     "or",
@@ -22,26 +31,307 @@ const MINOR_WORDS = new Set([
     "yet",
     "so",
     "as",
+]);
+
+const PREPOSITIONS = new Set([
     "at",
+    "about",
+    "above",
+    "across",
+    "after",
+    "against",
+    "around",
+    "before",
+    "behind",
+    "below",
+    "beneath",
+    "beside",
+    "between",
     "by",
+    "during",
+    "except",
+    "for",
+    "from",
+    "inside",
     "in",
+    "near",
+    "off",
     "of",
     "on",
+    "out",
+    "outside",
+    "over",
+    "past",
+    "per",
+    "since",
+    "through",
+    "throughout",
+    "toward",
+    "towards",
     "to",
-    "from",
-    "with",
-    "into",
-    "onto",
+    "under",
+    "underneath",
+    "until",
+    "up",
     "upon",
     "via",
+    "with",
+    "within",
+    "without",
+    "into",
+    "onto",
+]);
+
+const PHRASAL_VERB_PAIRS = new Set([
+    "back up",
+    "break down",
+    "carry on",
+    "check in",
+    "check out",
+    "find out",
+    "log in",
+    "make up",
+    "pick up",
+    "set up",
+    "shut down",
+    "sign up",
+    "turn off",
+    "turn on",
+    "wake up",
+]);
+
+const ADVERBIAL_PARTICLES = new Set([
+    "up",
+    "down",
+    "in",
+    "out",
+    "off",
+    "on",
+    "over",
+    "through",
+    "around",
+    "away",
+    "back",
+    "along",
+]);
+
+const COMMON_BASE_VERBS = new Set([
+    "add",
+    "back",
+    "break",
+    "bring",
+    "call",
+    "carry",
+    "check",
+    "clean",
+    "close",
+    "come",
+    "cut",
+    "fill",
+    "find",
+    "get",
+    "go",
+    "hand",
+    "head",
+    "join",
+    "keep",
+    "let",
+    "log",
+    "look",
+    "make",
+    "move",
+    "open",
+    "pick",
+    "point",
+    "put",
+    "run",
+    "set",
+    "shut",
+    "sign",
+    "sort",
+    "start",
+    "step",
+    "take",
+    "think",
+    "turn",
+    "walk",
+    "wake",
+    "work",
+    "write",
+    "zoom",
+]);
+
+const KNOWN_ACRONYMS = new Set([
+    "API",
+    "CSS",
+    "GPU",
+    "HTML",
+    "HTTP",
+    "HTTPS",
+    "ID",
+    "JSON",
+    "JS",
+    "PDF",
+    "SEO",
+    "SQL",
+    "UI",
+    "URL",
+    "UX",
 ]);
 
 function capitalize(word: string): string {
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
-export function convert(text: string, type: ConversionType): string {
+function getTitleCaseDecision(word: string, style: TitleCaseStyle): { convertToLower: boolean; reason: string } {
+    if (ARTICLES.has(word)) return { convertToLower: true, reason: "Article" };
+    if (CONJUNCTIONS.has(word)) {
+        if (style === "apa" && word.length >= 4) {
+            return { convertToLower: false, reason: "APA style: conjunction with 4+ letters" };
+        }
+        return { convertToLower: true, reason: "Coordinating conjunction" };
+    }
+
+    if (PREPOSITIONS.has(word)) {
+        if (style === "ap" && word.length >= 5) {
+            return { convertToLower: false, reason: "AP style: preposition with 5+ letters" };
+        }
+        if (style === "apa" && word.length >= 4) {
+            return { convertToLower: false, reason: "APA style: preposition with 4+ letters" };
+        }
+        return { convertToLower: true, reason: "Preposition" };
+    }
+
+    return { convertToLower: false, reason: "Major word" };
+}
+
+interface WordToken {
+    word: string;
+    start: number;
+    end: number;
+}
+
+interface TitleWordTransform {
+    word: string;
+    converted: string;
+    reason: string;
+    type: "capitalized" | "lowercased" | "unchanged";
+    start: number;
+    end: number;
+}
+
+function tokenizeWords(text: string): WordToken[] {
+    return Array.from(text.matchAll(/\b[\w']+\b/g)).map((match) => ({
+        word: match[0],
+        start: match.index ?? 0,
+        end: (match.index ?? 0) + match[0].length,
+    }));
+}
+
+function isLikelyAcronym(word: string): boolean {
+    if (KNOWN_ACRONYMS.has(word)) return true;
+    return /[0-9]/.test(word) && /^[A-Z0-9]{2,}$/.test(word);
+}
+
+function hasCustomCasing(word: string): boolean {
+    return /[a-z]/.test(word) && /[A-Z]/.test(word) && word !== word.toLowerCase() && word !== word.toUpperCase();
+}
+
+function looksVerbLike(word: string): boolean {
+    const lower = word.toLowerCase();
+    return COMMON_BASE_VERBS.has(lower) || lower.endsWith("ed") || lower.endsWith("ing");
+}
+
+function buildTitleTransforms(text: string, style: TitleCaseStyle): TitleWordTransform[] {
+    const tokens = tokenizeWords(text);
+    if (!tokens.length) return [];
+
+    const lowerWords = tokens.map((t) => t.word.toLowerCase());
+
+    return tokens.map((token, i) => {
+        const lower = lowerWords[i];
+        const isFirst = i === 0;
+        const isLast = i === tokens.length - 1;
+        const prevToken = i > 0 ? tokens[i - 1] : null;
+        const nextToken = i < tokens.length - 1 ? tokens[i + 1] : null;
+
+        const betweenPrevAndCurrent = prevToken ? text.slice(prevToken.end, token.start) : "";
+        const betweenCurrentAndNext = nextToken ? text.slice(token.end, nextToken.start) : "";
+        const followsColon = /:/.test(betweenPrevAndCurrent);
+        const isHyphenLeft = betweenPrevAndCurrent === "-";
+        const isHyphenRight = betweenCurrentAndNext === "-";
+        const inHyphenCompound = isHyphenLeft || isHyphenRight;
+        const isHyphenCompoundStart = isHyphenRight && !isHyphenLeft;
+
+        if (isLikelyAcronym(token.word)) {
+            return { word: token.word, converted: token.word, reason: "Likely acronym", type: "unchanged", start: token.start, end: token.end };
+        }
+
+        if (hasCustomCasing(token.word)) {
+            return { word: token.word, converted: token.word, reason: "Custom/proper noun casing preserved", type: "unchanged", start: token.start, end: token.end };
+        }
+
+        if (isFirst) {
+            return { word: token.word, converted: capitalize(lower), reason: "First word is always capitalized", type: "capitalized", start: token.start, end: token.end };
+        }
+
+        if (isLast) {
+            return { word: token.word, converted: capitalize(lower), reason: "Last word is always capitalized", type: "capitalized", start: token.start, end: token.end };
+        }
+
+        if (followsColon) {
+            return { word: token.word, converted: capitalize(lower), reason: "First word after colon is capitalized", type: "capitalized", start: token.start, end: token.end };
+        }
+
+        if (lower === "to" && nextToken) {
+            return { word: token.word, converted: "to", reason: "Infinitive marker stays lowercase", type: "lowercased", start: token.start, end: token.end };
+        }
+
+        if (!inHyphenCompound && prevToken && ADVERBIAL_PARTICLES.has(lower) && looksVerbLike(prevToken.word)) {
+            return { word: token.word, converted: capitalize(lower), reason: "Adverbial particle after verb", type: "capitalized", start: token.start, end: token.end };
+        }
+
+        if (prevToken && PHRASAL_VERB_PAIRS.has(`${lowerWords[i - 1]} ${lower}`)) {
+            return { word: token.word, converted: capitalize(lower), reason: "Phrasal verb particle", type: "capitalized", start: token.start, end: token.end };
+        }
+
+        if (inHyphenCompound) {
+            if (isHyphenCompoundStart) {
+                return { word: token.word, converted: capitalize(lower), reason: "First element in hyphenated compound", type: "capitalized", start: token.start, end: token.end };
+            }
+
+            const decision = getTitleCaseDecision(lower, style);
+            if (decision.convertToLower) {
+                return { word: token.word, converted: lower, reason: `${decision.reason} in hyphenated compound`, type: "lowercased", start: token.start, end: token.end };
+            }
+            return { word: token.word, converted: capitalize(lower), reason: "Hyphenated compound part", type: "capitalized", start: token.start, end: token.end };
+        }
+
+        const decision = getTitleCaseDecision(lower, style);
+        if (decision.convertToLower) {
+            return { word: token.word, converted: lower, reason: `${decision.reason} (${style.toUpperCase()} style)`, type: "lowercased", start: token.start, end: token.end };
+        }
+
+        return { word: token.word, converted: capitalize(lower), reason: `${decision.reason} (${style.toUpperCase()} style)`, type: "capitalized", start: token.start, end: token.end };
+    });
+}
+
+function convertTitleCase(text: string, style: TitleCaseStyle): string {
+    const transforms = buildTitleTransforms(text, style);
+    let result = text;
+    let offset = 0;
+
+    for (const transform of transforms) {
+        result = result.slice(0, transform.start + offset) + transform.converted + result.slice(transform.end + offset);
+        offset += transform.converted.length - transform.word.length;
+    }
+
+    return result;
+}
+
+export function convert(text: string, type: ConversionType, options: ConvertOptions = {}): string {
     if (!text) return "";
+    const titleStyle = options.titleStyle ?? "standard";
 
     switch (type) {
         case "upper": return text.toUpperCase();
@@ -50,14 +340,7 @@ export function convert(text: string, type: ConversionType): string {
             // Upper first letter of sentences.
             return text.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, c => c.toUpperCase());
         case "title":
-            return text.replace(/\b\w[\w']*\b/g, (match, offset, fullText) => {
-                const lower = match.toLowerCase();
-                if (offset === 0 || offset + match.length === fullText.length) {
-                    return capitalize(lower);
-                }
-                if (MINOR_WORDS.has(lower)) return lower;
-                return capitalize(lower);
-            });
+            return convertTitleCase(text, titleStyle);
         case "camel":
             return (text.match(/[a-zA-Z0-9]+/g) || [])
                 .map((w, i) => i === 0 ? w.toLowerCase() : capitalize(w))
@@ -95,71 +378,37 @@ export interface ConversionResult {
 }
 
 // Convert with explanations - provides detailed reasons for each word transformation
-export function convertWithExplanations(text: string, type: ConversionType): ConversionResult {
+export function convertWithExplanations(text: string, type: ConversionType, options: ConvertOptions = {}): ConversionResult {
     if (!text) return { output: "", explanations: [] };
 
     const explanations: WordExplanation[] = [];
     let output = "";
+    const titleStyle = options.titleStyle ?? "standard";
 
     switch (type) {
         case "title":
             // Title case with explanations
-            const words = text.match(/\b[\w']+\b/g) || [];
-            const wordPositions: { word: string; start: number; end: number }[] = [];
+            const transforms = buildTitleTransforms(text, titleStyle);
+            let transformedText = text;
+            let transformOffset = 0;
 
-            let searchStart = 0;
-            for (const word of words) {
-                const idx = text.indexOf(word, searchStart);
-                wordPositions.push({ word, start: idx, end: idx + word.length });
-                searchStart = idx + word.length;
-            }
-
-            let result = text;
-            let offset = 0;
-
-            for (let i = 0; i < wordPositions.length; i++) {
-                const { word, start, end } = wordPositions[i];
-                const lower = word.toLowerCase();
-                const isFirst = i === 0;
-                const isLast = i === wordPositions.length - 1;
-
-                let converted: string;
-                let reason: string;
-                let explanationType: "capitalized" | "lowercased" | "unchanged";
-
-                if (isFirst) {
-                    converted = capitalize(lower);
-                    reason = "First word is always capitalized";
-                    explanationType = "capitalized";
-                } else if (isLast) {
-                    converted = capitalize(lower);
-                    reason = "Last word is always capitalized";
-                    explanationType = "capitalized";
-                } else if (MINOR_WORDS.has(lower)) {
-                    converted = lower;
-                    reason = `Minor word (${getMinorWordType(lower)})`;
-                    explanationType = "lowercased";
-                } else {
-                    converted = capitalize(lower);
-                    reason = "Major word (capitalized)";
-                    explanationType = "capitalized";
-                }
-
-                // Only add explanation if something changed
-                if (word !== converted) {
+            for (const transform of transforms) {
+                if (transform.word !== transform.converted) {
                     explanations.push({
-                        word,
-                        converted,
-                        reason,
-                        type: explanationType
+                        word: transform.word,
+                        converted: transform.converted,
+                        reason: transform.reason,
+                        type: transform.type,
                     });
                 }
 
-                // Apply the transformation
-                result = result.slice(0, start + offset) + converted + result.slice(end + offset);
-                offset += converted.length - word.length;
+                transformedText =
+                    transformedText.slice(0, transform.start + transformOffset) +
+                    transform.converted +
+                    transformedText.slice(transform.end + transformOffset);
+                transformOffset += transform.converted.length - transform.word.length;
             }
-            output = result;
+            output = transformedText;
             break;
 
         case "sentence":
@@ -205,22 +454,9 @@ export function convertWithExplanations(text: string, type: ConversionType): Con
 
         default:
             // For other types, just convert without detailed explanations
-            output = convert(text, type);
+            output = convert(text, type, options);
             break;
     }
 
     return { output, explanations };
 }
-
-// Helper to get the type of minor word (for detailed explanations)
-function getMinorWordType(word: string): string {
-    const articles = ["a", "an", "the"];
-    const conjunctions = ["and", "but", "or", "nor", "for", "yet", "so", "as"];
-    const prepositions = ["at", "by", "in", "of", "on", "to", "from", "with", "into", "onto", "upon", "via"];
-
-    if (articles.includes(word)) return "article";
-    if (conjunctions.includes(word)) return "conjunction";
-    if (prepositions.includes(word)) return "preposition";
-    return "minor word";
-}
-

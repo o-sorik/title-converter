@@ -67,6 +67,20 @@ export default function Home() {
             <p className="lead text-lg text-muted-foreground mb-8">
               {config.content.intro}
             </p>
+            <nav aria-label="On this page" className="mb-8 p-4 rounded-xl border bg-zinc-50 dark:bg-zinc-900">
+              <p className="text-sm font-medium text-foreground mb-2">On this page:</p>
+              <div className="flex flex-wrap gap-x-2 gap-y-1 text-sm">
+                <a href="#what-is-title-case" className="text-primary hover:underline underline-offset-4">What Is Title Case?</a>
+                <span className="text-muted-foreground">•</span>
+                <a href="#which-title-case-style" className="text-primary hover:underline underline-offset-4">Title Capitalization Styles</a>
+                <span className="text-muted-foreground">•</span>
+                <a href="#common-title-case-mistakes" className="text-primary hover:underline underline-offset-4">Common Mistakes</a>
+                <span className="text-muted-foreground">•</span>
+                <a href="#title-case-cheat-sheet" className="text-primary hover:underline underline-offset-4">Rules Cheat Sheet</a>
+                <span className="text-muted-foreground">•</span>
+                <a href="#faq" className="text-primary hover:underline underline-offset-4">FAQ</a>
+              </div>
+            </nav>
 
             <div className="grid md:grid-cols-2 gap-8 mb-12">
               <div className="p-6 rounded-xl bg-zinc-50 dark:bg-zinc-900 border">
@@ -99,7 +113,7 @@ export default function Home() {
             {/* FAQ Section */}
             {config.faqs && config.faqs.length > 0 && (
               <section className="mt-12">
-                <h2 className="text-2xl font-bold tracking-tight mb-6">Frequently Asked Questions</h2>
+                <h2 id="faq" className="scroll-mt-20 text-2xl font-bold tracking-tight mb-6">Frequently Asked Questions</h2>
                 <div className="space-y-6">
                   {config.faqs.map((faq, i) => (
                     <div key={i} className="p-6 rounded-xl bg-zinc-50 dark:bg-zinc-900 border">

@@ -6,7 +6,7 @@ export function ContentSection() {
     return (
         <section className="mt-16 space-y-12 max-w-4xl mx-auto px-4 text-zinc-800 dark:text-zinc-200">
             <div className="space-y-4">
-                <h2 className="text-3xl font-bold tracking-tight">What Is Title Case?</h2>
+                <h2 id="what-is-title-case" className="scroll-mt-20 text-3xl font-bold tracking-tight">What Is Title Case?</h2>
                 <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
                     Title case is a capitalization style where major words are capitalized and most minor words stay lowercase.
                     It is commonly used for blog titles, article headlines, video titles, and book names.
@@ -32,7 +32,7 @@ export function ContentSection() {
             </div>
 
             <div className="space-y-4">
-                <h2 className="text-3xl font-bold tracking-tight">Which Title Case Style Should You Use?</h2>
+                <h2 id="which-title-case-style" className="scroll-mt-20 text-3xl font-bold tracking-tight">Which Title Case Style Should You Use?</h2>
                 <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
                     Most teams follow one style guide consistently. The right choice depends on your publication type and editorial standards.
                 </p>
@@ -74,7 +74,7 @@ export function ContentSection() {
             </div>
 
             <div className="space-y-4">
-                <h2 className="text-3xl font-bold tracking-tight">Common Title Case Mistakes (With Fixes)</h2>
+                <h2 id="common-title-case-mistakes" className="scroll-mt-20 text-3xl font-bold tracking-tight">Common Title Case Mistakes (With Fixes)</h2>
                 <div className="grid gap-4">
                     <div className="p-4 rounded-lg border bg-card text-sm"><strong>Wrong:</strong> A Guide To Better Writing | <strong>Correct:</strong> A Guide to Better Writing | <strong>Why:</strong> Short prepositions are usually lowercase.</div>
                     <div className="p-4 rounded-lg border bg-card text-sm"><strong>Wrong:</strong> How to Build a brand Voice | <strong>Correct:</strong> How to Build a Brand Voice | <strong>Why:</strong> Nouns are major words.</div>
@@ -98,7 +98,7 @@ export function ContentSection() {
             </div>
 
             <div className="space-y-4">
-                <h2 className="text-3xl font-bold tracking-tight">Title Case Rules Cheat Sheet</h2>
+                <h2 id="title-case-cheat-sheet" className="scroll-mt-20 text-3xl font-bold tracking-tight">Title Case Rules Cheat Sheet</h2>
                 <ol className="space-y-3 list-decimal list-inside text-zinc-700 dark:text-zinc-300">
                     <li>Capitalize the first and last word. Example: &quot;In the End&quot;.</li>
                     <li>Capitalize nouns, pronouns, verbs, adjectives, and adverbs. Example: &quot;How Smart Teams Work&quot;.</li>

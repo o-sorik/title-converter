@@ -7,10 +7,11 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
-import { convert, convertWithExplanations, type ConversionType, type WordExplanation } from "@/lib/converters"
+import { convert, convertWithExplanations, type ConversionType, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
 
 const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
     { id: "title", label: "Title Case" },
@@ -27,6 +28,21 @@ const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
 
 // Modes that support explanations
 const EXPLANATION_MODES: ConversionType[] = ["title", "sentence"]
+const TITLE_STYLES: { id: TitleCaseStyle; label: string; hint: string }[] = [
+    { id: "standard", label: "Standard", hint: "Balanced default title casing" },
+    { id: "ap", label: "AP", hint: "AP-like: capitalize prepositions with 5+ letters" },
+    { id: "chicago", label: "Chicago", hint: "Classic editorial style defaults" },
+    { id: "mla", label: "MLA", hint: "Common humanities title style" },
+    { id: "apa", label: "APA", hint: "Academic-friendly title style" },
+]
+
+const STYLE_RULE_SUMMARY: Record<TitleCaseStyle, string> = {
+    standard: "Lowercases most prepositions and conjunctions; capitalizes major words plus first/last positions.",
+    ap: "Capitalizes prepositions with 5+ letters, lowercases shorter ones in the middle of titles.",
+    chicago: "Lowercases prepositions and conjunctions in most middle positions; strong positional rules.",
+    mla: "Similar to Chicago for core capitalization; emphasizes consistent headline style usage.",
+    apa: "Capitalizes prepositions and conjunctions with 4+ letters; lowercases shorter ones in the middle.",
+}
 
 interface TextConverterProps {
     defaultMode?: ConversionType
@@ -59,7 +75,15 @@ function TextStats({ text }: { text: string }) {
 }
 
 // Explanations Component
-function ExplanationsPanel({ explanations }: { explanations: WordExplanation[] }) {
+function ExplanationsPanel({
+    explanations,
+    activeType,
+    titleStyle,
+}: {
+    explanations: WordExplanation[]
+    activeType: ConversionType
+    titleStyle: TitleCaseStyle
+}) {
     if (!explanations.length) return null
 
     return (
@@ -68,6 +92,12 @@ function ExplanationsPanel({ explanations }: { explanations: WordExplanation[] }
                 <Info className="h-4 w-4 text-blue-500" />
                 Why was it capitalized this way?
             </h4>
+            {activeType === "title" && (
+                <p className="text-xs text-muted-foreground mb-3">
+                    <span className="font-medium text-foreground">{TITLE_STYLES.find((s) => s.id === titleStyle)?.label} style:</span>{" "}
+                    {STYLE_RULE_SUMMARY[titleStyle]}
+                </p>
+            )}
             <div className="space-y-2 max-h-48 overflow-y-auto">
                 {explanations.slice(0, 15).map((exp, i) => (
                     <div key={i} className="flex items-center gap-3 text-sm">
@@ -96,6 +126,7 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
     const [copied, setCopied] = React.useState(false)
     const [outputKey, setOutputKey] = React.useState(0)
     const [showExplanations, setShowExplanations] = React.useState(false)
+    const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>("standard")
 
     // Update active type if defaultMode changes (e.g. navigation)
     React.useEffect(() => {
@@ -104,14 +135,18 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
 
     // Check if current mode supports explanations
     const supportsExplanations = EXPLANATION_MODES.includes(activeType)
+    const conversionOptions = React.useMemo(
+        () => activeType === "title" ? { titleStyle } : {},
+        [activeType, titleStyle]
+    )
 
     // Derived state for output and explanations
     const { output, explanations } = React.useMemo(() => {
         if (showExplanations && supportsExplanations) {
-            return convertWithExplanations(input, activeType)
+            return convertWithExplanations(input, activeType, conversionOptions)
         }
-        return { output: convert(input, activeType), explanations: [] }
-    }, [input, activeType, showExplanations, supportsExplanations])
+        return { output: convert(input, activeType, conversionOptions), explanations: [] }
+    }, [input, activeType, showExplanations, supportsExplanations, conversionOptions])
 
     // Trigger animation when output changes
     React.useEffect(() => {
@@ -269,6 +304,32 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                         </div>
                     </div>
 
+                    {activeType === "title" && (
+                        <div className="space-y-3 pt-1">
+                            <p className="text-sm font-medium text-muted-foreground text-left">Title Style</p>
+                            <Tabs
+                                value={titleStyle}
+                                onValueChange={(value) => setTitleStyle(value as TitleCaseStyle)}
+                                className="w-fit"
+                            >
+                                <TabsList className="w-fit h-auto flex-wrap justify-start gap-1 p-1 bg-zinc-100 dark:bg-zinc-900">
+                                    {TITLE_STYLES.map((style) => (
+                                        <TabsTrigger
+                                            key={style.id}
+                                            value={style.id}
+                                            className="h-8 px-3 flex-none"
+                                        >
+                                            {style.label}
+                                        </TabsTrigger>
+                                    ))}
+                                </TabsList>
+                            </Tabs>
+                            <p className="text-xs text-muted-foreground text-left">
+                                {TITLE_STYLES.find((style) => style.id === titleStyle)?.hint}
+                            </p>
+                        </div>
+                    )}
+
                     {/* Show Explanations Toggle */}
                     {supportsExplanations && (
                         <div className="flex justify-center pt-4">
@@ -295,7 +356,7 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
 
                     {/* Explanations Panel */}
                     {showExplanations && explanations.length > 0 && (
-                        <ExplanationsPanel explanations={explanations} />
+                        <ExplanationsPanel explanations={explanations} activeType={activeType} titleStyle={titleStyle} />
                     )}
                 </CardContent>
             </Card>
