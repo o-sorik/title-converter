@@ -22,12 +22,12 @@ export const HOME_PAGE_CONFIG: SeoPageConfig = {
     description: "Convert text to Title Case instantly online. Automatically capitalizes major words and lowercases minor words following standard capitalization rules.",
     h1: "Title Case Converter Online",
     content: {
-        intro: "The Title Case Converter transforms your text into proper title capitalization. It automatically capitalizes major words (nouns, verbs, adjectives, adverbs) while keeping minor words (articles, prepositions, conjunctions) in lowercase. Perfect for headlines, blog post titles, book titles, and professional documents.",
+        intro: "Use this free title capitalization tool to convert headlines and titles in seconds. It applies standard title case rules used across AP, APA, MLA, and Chicago style workflows, with practical handling for small words, punctuation, and common edge cases.",
         features: [
-            "Capitalizes major words: nouns, pronouns, verbs, adjectives, adverbs.",
-            "Lowercases minor words: articles (a, an, the), conjunctions, short prepositions.",
-            "Always capitalizes the first and last word of the title.",
-            "Handles hyphenated compounds correctly.",
+            "Converts text instantly with no signup required.",
+            "Capitalizes major words and keeps minor words lowercase where appropriate.",
+            "Always capitalizes the first and last word of a title.",
+            "Supports practical edge cases like hyphenated words and subtitle punctuation.",
         ],
         exampleInput: "the quick brown fox jumps over the lazy dog",
         exampleOutput: "The Quick Brown Fox Jumps over the Lazy Dog",
@@ -48,6 +48,46 @@ export const HOME_PAGE_CONFIG: SeoPageConfig = {
         {
             question: "What's the difference between title case and sentence case?",
             answer: "Title case capitalizes major words throughout the text, while sentence case only capitalizes the first word and proper nouns, similar to regular sentences. Use title case for titles and headlines, sentence case for subtitles and descriptions."
+        },
+        {
+            question: "Is title case the same in AP, APA, MLA, and Chicago?",
+            answer: "Not exactly. The core logic is similar, but style guides differ on specific edge cases, especially prepositions, conjunction length rules, and subtitle treatment. Use your required style guide when writing for publication."
+        },
+        {
+            question: "Do you capitalize short verbs like 'is' or 'be' in title case?",
+            answer: "Yes. Verbs are major words, so they are capitalized even when short. Example: 'Why This Is Important' and 'How to Be More Productive.'"
+        },
+        {
+            question: "Should words after a colon be capitalized?",
+            answer: "In many editorial styles, the first word after a colon in a title is capitalized, especially when a subtitle begins. Example: 'Title Case Rules: A Practical Guide.'"
+        },
+        {
+            question: "How should hyphenated words be capitalized?",
+            answer: "Hyphenated compounds are often capitalized based on each part's role. In many cases both parts are capitalized for title case. Example: 'State-of-the-Art Methods' may vary by guide, so check your target style."
+        },
+        {
+            question: "Is 'to' capitalized in infinitives like 'How to Write'?",
+            answer: "Usually 'to' remains lowercase in title case when used as an infinitive marker. Example: 'How to Write Better Headlines.'"
+        },
+        {
+            question: "Should prepositions always stay lowercase?",
+            answer: "Not always. Most short prepositions are lowercased in the middle of a title, but they are capitalized when they are the first or last word."
+        },
+        {
+            question: "When should I use title case vs sentence case?",
+            answer: "Use title case for headlines, article titles, book titles, and many marketing headings. Use sentence case for body copy, UI labels, and contexts where a more conversational tone is preferred."
+        },
+        {
+            question: "Can I trust automatic title capitalization for brand names?",
+            answer: "Automatic conversion is a fast baseline, but brand and product names may have custom capitalization. Always do a final manual check for proper nouns and trademarks."
+        },
+        {
+            question: "Does this converter work for blog titles and YouTube titles?",
+            answer: "Yes. It is useful for blogs, newsletters, ad headlines, and video titles when you need consistent capitalization quickly."
+        },
+        {
+            question: "Is this title case converter free to use?",
+            answer: "Yes. The converter is free, instant, and does not require account signup for basic use."
         }
     ],
 };
@@ -211,4 +251,3 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
 };
 
 export const CONVERTER_SLUGS = Object.keys(SEO_CONFIG);
-

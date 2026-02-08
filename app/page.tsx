@@ -51,8 +51,13 @@ export default function Home() {
               {config.h1}
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Transform your text instantly with smart capitalization rules.
+              Capitalize titles with practical AP, APA, MLA, and Chicago-friendly rules in one click.
             </p>
+            <div className="flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground">
+              <span className="rounded-full border px-3 py-1">Free</span>
+              <span className="rounded-full border px-3 py-1">Instant</span>
+              <span className="rounded-full border px-3 py-1">No Signup</span>
+            </div>
           </div>
 
           <TextConverter defaultMode={config.mode} />

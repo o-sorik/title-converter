@@ -12,6 +12,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'monthly',
             priority: 1,
         },
+        {
+            url: `${baseUrl}/capitalization-rules-guide`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.7,
+        },
     ]
 
     // Dynamic pages from SEO config
