@@ -10,6 +10,8 @@ import { WebApplicationJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/j
 import type { Metadata } from "next"
 
 const siteUrl = "https://titlecaseconverter.online"
+export const revalidate = 604800
+export const dynamicParams = false
 
 // 1. Generate Static Params for all known slugs
 export function generateStaticParams() {

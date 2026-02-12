@@ -7,6 +7,8 @@ import { ConverterNav } from "@/components/converter-nav"
 import { Toaster } from "@/components/ui/sonner"
 import { WebApplicationJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/json-ld"
 
+export const revalidate = 86400
+
 export default function Home() {
   const config = HOME_PAGE_CONFIG;
   const siteUrl = "https://titlecaseconverter.online";

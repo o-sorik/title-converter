@@ -1,9 +1,15 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 
+export const revalidate = 604800
+
 export const metadata: Metadata = {
     title: "Capitalization Rules Guide (Coming Soon)",
     description: "Coming soon: a comprehensive capitalization rules guide covering AP, APA, MLA, Chicago, examples, edge cases, and practical publishing workflows.",
+    robots: {
+        index: false,
+        follow: true,
+    },
     alternates: {
         canonical: "https://titlecaseconverter.online/capitalization-rules-guide",
     },

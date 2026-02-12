@@ -1,6 +1,8 @@
 import { MetadataRoute } from 'next'
 import { CONVERTER_SLUGS } from '@/lib/seo-config'
 
+export const revalidate = 86400
+
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = 'https://titlecaseconverter.online'
 
@@ -11,12 +13,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: new Date(),
             changeFrequency: 'monthly',
             priority: 1,
-        },
-        {
-            url: `${baseUrl}/capitalization-rules-guide`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.7,
         },
     ]
 
