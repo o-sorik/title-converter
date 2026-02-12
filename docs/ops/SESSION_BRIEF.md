@@ -6,13 +6,13 @@
 
 ## Where We Are
 - Current phase/epic: Roadmap setup complete; pre-launch prep before Epic 0 data collection.
-- What is already done: roadmap v2 finalized, ops docs structure created, strategic constraints aligned.
-- What is in progress: deployment plan, analytics setup plan, backlog decomposition.
+- What is already done: roadmap v2 finalized, ops docs structure created, strategic constraints aligned, rendering strategy aligned in code, content template v1 + taxonomy rules documented.
+- What is in progress: deployment plan, analytics setup plan, first 20 URL prioritization.
 
 ## Top 3 Next Actions
 - [ ] Define and execute production deploy path for `titlecaseconverter.online`.
 - [ ] Connect GSC + GA4 + Bing immediately after launch and capture week-0 baseline.
-- [ ] Finalize content templates + taxonomy rules, then ship first `20` pages in 14 days.
+- [ ] Build prioritized MVP list of first `20` URLs with one primary intent per URL.
 
 ## Active Blockers
 - Blocker: Project is not live yet, so SEO metrics cannot be collected.

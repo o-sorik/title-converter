@@ -56,9 +56,27 @@ export default function Home() {
               Capitalize titles with practical AP, APA, MLA, and Chicago-friendly rules in one click.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground">
-              <span className="rounded-full border px-3 py-1">Free</span>
-              <span className="rounded-full border px-3 py-1">Instant</span>
-              <span className="rounded-full border px-3 py-1">No Signup</span>
+              <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
+                <span className="relative inline-flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
+                </span>
+                Free
+              </span>
+              <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
+                <span className="relative inline-flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
+                </span>
+                Instant
+              </span>
+              <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
+                <span className="relative inline-flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
+                </span>
+                No Signup
+              </span>
             </div>
           </div>
 

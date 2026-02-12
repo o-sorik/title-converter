@@ -174,3 +174,16 @@ Use one entry per decision.
 - Revisit trigger: After first two-week velocity experiment.
 - Owner: Founder
 - Status: active
+
+### D-0013
+- Date: 2026-02-12
+- Decision ID: D-0013
+- Area: Content / SEO
+- Decision: Build a dedicated MVP `Rules Hub` at `/rules` with mandatory official citations and reusable internal-link role for future articles.
+- Context: Need a high-trust reference page comparable to competitor rules hubs, without expanding scope beyond MVP.
+- Options considered: (1) keep `/capitalization-rules-guide` placeholder, (2) launch dedicated `/rules` MVP page now.
+- Why this option: Stronger UX and SEO utility for internal references (`according to /rules`) and authority signaling.
+- Risks: Citation quality and editorial maintenance overhead.
+- Revisit trigger: After first month of impressions/clicks for `/rules`.
+- Owner: Founder
+- Status: active

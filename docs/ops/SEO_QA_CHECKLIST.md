@@ -58,6 +58,14 @@ Use this before every production release.
 - [ ] Confirm new URLs appear in sitemap and are discoverable.
 - [ ] Log release notes and anomalies in `docs/ops/SESSION_BRIEF.md`.
 
+## 10) Blog and Article Template QA
+- [ ] Blog homepage has crawlable HTML links to article URLs.
+- [ ] Article template includes semantic heading structure (`H1` -> `H2/H3`).
+- [ ] Article page shows author + publish/update dates.
+- [ ] Article page has related links block (min `3` internal links out).
+- [ ] `BlogPosting` and `BreadcrumbList` JSON-LD are valid when used.
+- [ ] Requirements match `docs/ops/BLOG_SEO_DESIGN_REQUIREMENTS.md`.
+
 ## Release Decision
 - [ ] PASS
 - [ ] HOLD (list blockers below)

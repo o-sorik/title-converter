@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Copy, RotateCcw, ClipboardPaste, MoveRight, Check, Info } from "lucide-react"
+import { Copy, RotateCcw, ClipboardPaste, MoveRight, Check, Info, Bug } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -127,6 +127,7 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
     const [outputKey, setOutputKey] = React.useState(0)
     const [showExplanations, setShowExplanations] = React.useState(false)
     const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>("standard")
+    const feedbackEmail = process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ?? "support@titlecaseconverter.online"
 
     // Update active type if defaultMode changes (e.g. navigation)
     React.useEffect(() => {
@@ -181,6 +182,27 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
     const handleClear = () => {
         setInput("")
         toast.message("Cleared text")
+    }
+
+    const handleReportTitleStyleError = () => {
+        const snippetLimit = 280
+        const inputSnippet = input.trim().slice(0, snippetLimit) || "(empty)"
+        const outputSnippet = output.trim().slice(0, snippetLimit) || "(empty)"
+        const subject = `[Title Style Feedback] ${titleStyle.toUpperCase()}`
+        const body = [
+            "Hi, I found a possible capitalization issue.",
+            "",
+            `Selected style: ${titleStyle}`,
+            `Input: ${inputSnippet}`,
+            `Output: ${outputSnippet}`,
+            `Page: ${typeof window !== "undefined" ? window.location.href : "/"}`,
+            "",
+            "Expected result:",
+            "Why this looks incorrect:",
+        ].join("\n")
+
+        const mailtoUrl = `mailto:${feedbackEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+        window.location.href = mailtoUrl
     }
 
     return (
@@ -305,25 +327,40 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                     </div>
 
                     {activeType === "title" && (
-                        <div className="space-y-3 pt-1">
-                            <p className="text-sm font-medium text-muted-foreground text-left">Title Style</p>
-                            <Tabs
-                                value={titleStyle}
-                                onValueChange={(value) => setTitleStyle(value as TitleCaseStyle)}
-                                className="w-fit"
-                            >
-                                <TabsList className="w-fit h-auto flex-wrap justify-start gap-1 p-1 bg-zinc-100 dark:bg-zinc-900">
-                                    {TITLE_STYLES.map((style) => (
-                                        <TabsTrigger
-                                            key={style.id}
-                                            value={style.id}
-                                            className="h-8 px-3 flex-none"
-                                        >
-                                            {style.label}
-                                        </TabsTrigger>
-                                    ))}
-                                </TabsList>
-                            </Tabs>
+                        <div className="space-y-2 pt-1">
+                            <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-x-4 gap-y-2 items-end">
+                                <p className="text-sm font-medium text-muted-foreground text-left">Title Style</p>
+                                <p className="text-sm font-medium text-muted-foreground text-left sm:text-right">
+                                    Found an issue?
+                                </p>
+                                <Tabs
+                                    value={titleStyle}
+                                    onValueChange={(value) => setTitleStyle(value as TitleCaseStyle)}
+                                    className="w-fit"
+                                >
+                                    <TabsList className="w-fit h-auto flex-wrap justify-start gap-1 p-1 bg-zinc-100 dark:bg-zinc-900">
+                                        {TITLE_STYLES.map((style) => (
+                                            <TabsTrigger
+                                                key={style.id}
+                                                value={style.id}
+                                                className="h-8 px-3 flex-none"
+                                            >
+                                                {style.label}
+                                            </TabsTrigger>
+                                        ))}
+                                    </TabsList>
+                                </Tabs>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 gap-2 w-fit sm:justify-self-end"
+                                    onClick={handleReportTitleStyleError}
+                                >
+                                    <Bug className="h-3.5 w-3.5" />
+                                    Report error
+                                </Button>
+                            </div>
                             <p className="text-xs text-muted-foreground text-left">
                                 {TITLE_STYLES.find((style) => style.id === titleStyle)?.hint}
                             </p>
