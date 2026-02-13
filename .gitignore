@@ -23,6 +23,11 @@
 # misc
 .DS_Store
 *.pem
+*.key
+*.crt
+*.p12
+*.pfx
+.envrc
 
 # debug
 npm-debug.log*
@@ -35,6 +40,16 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# internal docs
+/docs/
+
+# local AI / IDE state
+/.claude/
+/.codex/
+/.cursor/
+/.vscode/
+/.idea/
 
 # typescript
 *.tsbuildinfo
