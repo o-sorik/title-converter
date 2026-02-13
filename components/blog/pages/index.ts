@@ -1,0 +1,5 @@
+export { BlogIndexHero } from "@/components/blog/pages/blog-index-hero"
+export { BlogWritingTipsPanel } from "@/components/blog/pages/blog-writing-tips-panel"
+export { CategoriesHero } from "@/components/blog/pages/categories-hero"
+export { CategoriesGrid } from "@/components/blog/pages/categories-grid"
+export { PopularGuidesStrip } from "@/components/blog/pages/popular-guides-strip"

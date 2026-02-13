@@ -20,6 +20,34 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Environment Variables
+
+1. Copy `.env.example` to `.env.local`.
+2. Set real values in `.env.local` (for example `OPENAI_API_KEY`).
+3. Keep secrets out of git. This repo already ignores `.env*`.
+
+```bash
+cp .env.example .env.local
+```
+
+For production, add secrets in Vercel Project Settings -> Environment Variables.
+
+If a key is ever exposed (commit, logs, screenshots, chat), rotate/revoke it immediately and issue a new one.
+
+### Pre-commit secret guard
+
+Enable local git hooks once per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+Manual scan before commit:
+
+```bash
+npm run secrets:scan
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

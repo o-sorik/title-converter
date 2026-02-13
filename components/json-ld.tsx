@@ -15,6 +15,16 @@ interface FAQPageProps {
     faqs: FAQItem[]
 }
 
+interface BlogPostingProps {
+    headline: string
+    description: string
+    url: string
+    image: string
+    author: string
+    dateModified: string
+    section?: string
+}
+
 // WebApplication schema for tool pages
 export function WebApplicationJsonLd({ name, description, url }: WebApplicationProps) {
     const jsonLd = {
@@ -113,6 +123,48 @@ export function HomePageJsonLd() {
             "target": "https://titlecaseconverter.online/?q={search_term_string}",
             "query-input": "required name=search_term_string"
         }
+    }
+
+    return (
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+    )
+}
+
+// BlogPosting schema for article pages
+export function BlogPostingJsonLd({
+    headline,
+    description,
+    url,
+    image,
+    author,
+    dateModified,
+    section,
+}: BlogPostingProps) {
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": headline,
+        "description": description,
+        "url": url,
+        "image": [image],
+        "author": {
+            "@type": "Person",
+            "name": author,
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "TitleCase",
+        },
+        "dateModified": dateModified,
+        "datePublished": dateModified,
+        "articleSection": section ?? "Writing Guides",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": url,
+        },
     }
 
     return (

@@ -40,6 +40,9 @@ export default function Home() {
             </Link>
           </div>
           <div className="flex items-center gap-2">
+            <Link href="/blog" className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-primary sm:inline-flex">
+              Guides
+            </Link>
             <ConverterNav />
             <ModeToggle />
           </div>
