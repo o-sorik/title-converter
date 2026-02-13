@@ -16,42 +16,42 @@ export function ArticleSidebar({ related, tocItems }: { related: Article[]; tocI
           <div className="my-3 h-px bg-white/20" />
           <p className="text-sm font-bold text-white">The Definitive Guide to APA 7th Edition Title Case</p>
         </div>
-        <Button asChild className="mt-5 w-full bg-white text-blue-800 hover:bg-blue-50">
+        <Button asChild className="mt-5 w-full bg-white text-blue-800 hover:bg-blue-50 dark:border dark:border-white/35 dark:bg-white/10 dark:text-white dark:backdrop-blur dark:hover:bg-white/20">
           <Link href="/">Start Converting</Link>
         </Button>
       </section>
       <details className="rounded-2xl border border-slate-200 bg-white p-4 md:hidden">
-        <summary className="cursor-pointer text-base font-bold text-slate-950">On this page</summary>
-        <ul className="mt-3 space-y-2 text-sm text-slate-600">
+        <summary className="cursor-pointer text-base font-bold text-slate-950 dark:text-zinc-100">On this page</summary>
+        <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-zinc-300">
           {tocItems.map((item) => (
             <li key={`mobile-${item.id}`}>
-              <Link href={`#${item.id}`} className="hover:text-blue-700">
+              <Link href={`#${item.id}`} className="hover:text-blue-700 dark:hover:text-blue-300">
                 {item.label}
               </Link>
             </li>
           ))}
         </ul>
       </details>
-      <section className="hidden rounded-2xl border border-slate-200 bg-white p-5 md:block">
-        <h2 className="text-base font-bold text-slate-950">On this page</h2>
-        <ul className="mt-3 space-y-2 text-sm text-slate-600">
+      <section className="hidden rounded-2xl border border-slate-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900/80 md:block">
+        <h2 className="text-base font-bold text-slate-950 dark:text-zinc-100">On this page</h2>
+        <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-zinc-300">
           {tocItems.map((item) => (
             <li key={`desktop-${item.id}`}>
-              <Link href={`#${item.id}`} className="hover:text-blue-700">
+              <Link href={`#${item.id}`} className="hover:text-blue-700 dark:hover:text-blue-300">
                 {item.label}
               </Link>
             </li>
           ))}
         </ul>
       </section>
-      <section className="rounded-2xl border border-slate-200 bg-white p-5">
-        <h2 className="text-base font-bold text-slate-950">Related guides</h2>
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900/80">
+        <h2 className="text-base font-bold text-slate-950 dark:text-zinc-100">Related guides</h2>
         <div className="mt-3 space-y-3">
           {related.map((relatedArticle) => (
             <Link
               key={relatedArticle.slug}
               href={`/blog/${relatedArticle.slug}`}
-              className="block text-sm font-medium text-slate-700 transition-colors hover:text-blue-700"
+              className="block text-sm font-medium text-slate-700 transition-colors hover:text-blue-700 dark:text-zinc-300 dark:hover:text-blue-300"
             >
               {relatedArticle.title}
             </Link>

@@ -207,3 +207,32 @@
     animation: gradientShift 24s ease infinite;
   }
 }
+
+/* Blog dark-theme contrast normalization */
+.dark .blog-theme :where(.bg-white):not([class*="dark:bg-"]) {
+  background-color: oklch(0.24 0.01 260);
+}
+
+.dark .blog-theme :where(.bg-\[\#eef4fb\]):not([class*="dark:bg-"]) {
+  background-color: oklch(0.28 0.01 260);
+}
+
+.dark .blog-theme :where(.border-slate-200, .border-slate-100):not([class*="dark:border-"]) {
+  border-color: oklch(0.36 0.01 260);
+}
+
+.dark .blog-theme :where(.text-slate-950, .text-slate-900, .text-slate-800):not([class*="dark:text-"]) {
+  color: oklch(0.96 0.01 260);
+}
+
+.dark .blog-theme :where(.text-slate-700, .text-slate-600):not([class*="dark:text-"]) {
+  color: oklch(0.86 0.01 260);
+}
+
+.dark .blog-theme :where(.text-slate-500, .text-slate-400):not([class*="dark:text-"]) {
+  color: oklch(0.76 0.01 260);
+}
+
+.dark .blog-theme :where(.hover\:bg-slate-50:hover) {
+  background-color: oklch(0.3 0.01 260);
+}

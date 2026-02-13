@@ -48,6 +48,8 @@ yarn-error.log*
 # local AI / IDE state
 /.claude/
 /.codex/
+/.agent/
+/_bmad/
 /.cursor/
 /.vscode/
 /.idea/

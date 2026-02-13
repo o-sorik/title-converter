@@ -25,6 +25,15 @@ interface BlogPostingProps {
     section?: string
 }
 
+interface BreadcrumbItem {
+    name: string
+    item: string
+}
+
+interface BreadcrumbListProps {
+    items: BreadcrumbItem[]
+}
+
 // WebApplication schema for tool pages
 export function WebApplicationJsonLd({ name, description, url }: WebApplicationProps) {
     const jsonLd = {
@@ -165,6 +174,27 @@ export function BlogPostingJsonLd({
             "@type": "WebPage",
             "@id": url,
         },
+    }
+
+    return (
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+    )
+}
+
+// BreadcrumbList schema for blog and category pages
+export function BreadcrumbListJsonLd({ items }: BreadcrumbListProps) {
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": items.map((crumb, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "name": crumb.name,
+            "item": crumb.item,
+        })),
     }
 
     return (

@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { BlogPostingJsonLd } from "@/components/json-ld"
+import { BlogPostingJsonLd, BreadcrumbListJsonLd } from "@/components/json-ld"
 import { ReadingProgressBar } from "@/components/blog/reading-progress"
 import { BottomCta, ComparisonCards, FaqBlock } from "@/components/blog/sections"
 import { ArticleCardsGrid } from "@/components/blog/article/article-cards-grid"
@@ -36,6 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ArticlePage({ params }: Props) {
+  const siteUrl = "https://titlecaseconverter.online"
   const { slug } = await params
   const viewModel = getArticlePageViewModel(slug)
   if (!viewModel) {
@@ -59,6 +60,14 @@ export default async function ArticlePage({ params }: Props) {
   return (
     <>
       <ReadingProgressBar targetId="article-content" />
+      <BreadcrumbListJsonLd
+        items={[
+          { name: "Home", item: siteUrl },
+          { name: "Blog", item: `${siteUrl}/blog` },
+          ...(category ? [{ name: category.name, item: `${siteUrl}/blog/categories/${category.id}` }] : []),
+          { name: article.title, item: articleUrl },
+        ]}
+      />
       <BlogPostingJsonLd
         headline={article.title}
         description={article.excerpt}

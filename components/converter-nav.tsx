@@ -83,7 +83,8 @@ export function ConverterNav() {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="gap-1">
-                    All Converters
+                    <span className="hidden sm:inline">All Converters</span>
+                    <span className="sm:hidden">Converters</span>
                     <ChevronDown className="h-4 w-4" />
                 </Button>
             </DropdownMenuTrigger>

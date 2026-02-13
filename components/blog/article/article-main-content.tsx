@@ -6,13 +6,13 @@ import type { Article } from "@/components/blog/data"
 
 export function ArticleMainContent({ article }: { article: Article }) {
   return (
-    <article id="article-content" className="space-y-8 rounded-3xl border border-slate-200 bg-white p-4 sm:p-5 md:space-y-10 md:p-8">
-      <Image src={article.image} alt={article.title} width={1120} height={640} className="rounded-xl border border-slate-200 md:rounded-2xl" />
+    <article id="article-content" className="space-y-8 rounded-3xl border border-slate-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900/80 sm:p-5 md:space-y-10 md:p-8">
+      <Image src={article.image} alt={article.title} width={1120} height={640} className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
 
       <section id="key-takeaway" className="scroll-mt-24 space-y-4">
-        <div className="rounded-xl border-l-4 border-blue-700 bg-blue-50 p-4 md:p-5">
-          <h2 className="text-xl font-black text-slate-950 md:text-2xl">Key Takeaway</h2>
-          <p className="mt-2 text-sm text-slate-700">
+        <div className="rounded-xl border-l-4 border-blue-700 bg-blue-50 p-4 dark:bg-blue-500/10 md:p-5">
+          <h2 className="text-xl font-black text-slate-950 dark:text-zinc-100 md:text-2xl">Key Takeaway</h2>
+          <p className="mt-2 text-sm text-slate-700 dark:text-zinc-300">
             APA 7 title case emphasizes major words, including many terms with four letters or more. Minor words can remain lowercase unless they open or close the title.
           </p>
         </div>
@@ -47,7 +47,7 @@ export function ArticleMainContent({ article }: { article: Article }) {
         <p className="mt-2 text-sm text-blue-100">
           Use TitleCase to draft faster, then apply your final style-specific review with confidence.
         </p>
-        <Button asChild className="mt-4 bg-white text-blue-800 hover:bg-blue-50">
+        <Button asChild className="mt-4 bg-white text-blue-800 hover:bg-blue-50 dark:border dark:border-white/35 dark:bg-white/10 dark:text-white dark:backdrop-blur dark:hover:bg-white/20">
           <Link href="/">Start Converting</Link>
         </Button>
       </section>
@@ -56,19 +56,19 @@ export function ArticleMainContent({ article }: { article: Article }) {
         <Separator className="mb-8" />
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-slate-500">Tags:</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400">Tags:</span>
             {["APA 7", "Capitalization", "Academic Writing"].map((tag) => (
-              <span key={tag} className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-700">
+              <span key={tag} className="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-700 dark:bg-zinc-800 dark:text-zinc-200">
                 {tag}
               </span>
             ))}
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-slate-500">Helpful?</span>
-            <button type="button" className="rounded-lg border border-slate-200 px-2 py-1 text-xs hover:bg-emerald-50">
+            <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400">Helpful?</span>
+            <button type="button" className="rounded-lg border border-slate-200 px-2 py-1 text-xs hover:bg-emerald-50 dark:border-zinc-700 dark:hover:bg-emerald-500/15">
               👍
             </button>
-            <button type="button" className="rounded-lg border border-slate-200 px-2 py-1 text-xs hover:bg-rose-50">
+            <button type="button" className="rounded-lg border border-slate-200 px-2 py-1 text-xs hover:bg-rose-50 dark:border-zinc-700 dark:hover:bg-rose-500/15">
               👎
             </button>
           </div>
@@ -77,8 +77,8 @@ export function ArticleMainContent({ article }: { article: Article }) {
 
       <section>
         <Separator className="mb-8" />
-        <h3 className="text-lg font-bold text-slate-900">About {article.author}</h3>
-        <p className="mt-2 text-sm text-slate-600">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-zinc-100">About {article.author}</h3>
+        <p className="mt-2 text-sm text-slate-600 dark:text-zinc-300">
           {article.author} is part of the TitleCase editorial team, focused on practical style-guide implementation for academic and professional writing.
         </p>
       </section>

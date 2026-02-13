@@ -3,9 +3,8 @@ import Link from "next/link"
 import { SEO_CONFIG, CONVERTER_SLUGS } from "@/lib/seo-config"
 import { TextConverter } from "@/components/text-converter"
 import { ModeContentSection, getRelatedLinksForMode } from "@/components/mode-content-section"
-import { ModeToggle } from "@/components/mode-toggle"
-import { ConverterNav } from "@/components/converter-nav"
 import { Toaster } from "@/components/ui/sonner"
+import { SiteFooter, SiteHeader } from "@/components/site-shell"
 import { WebApplicationJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/json-ld"
 import type { Metadata } from "next"
 
@@ -88,22 +87,7 @@ export default async function ConverterPage({ params }: Props) {
             />
             {config.faqs && <FAQPageJsonLd faqs={config.faqs} />}
 
-            <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="container flex h-14 items-center justify-between mx-auto px-4 max-w-5xl">
-                    <div className="flex items-center gap-2">
-                        <Link href="/" className="font-bold text-xl tracking-tighter hover:text-primary transition-colors">
-                            Title Case Converter Online
-                        </Link>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Link href="/blog" className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-primary sm:inline-flex">
-                            Guides
-                        </Link>
-                        <ConverterNav />
-                        <ModeToggle />
-                    </div>
-                </div>
-            </header>
+            <SiteHeader containerClassName="max-w-5xl" />
 
             <main className="container mx-auto py-10 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-3.5rem)] flex flex-col items-center">
                 <div className="w-full max-w-5xl space-y-16">
@@ -189,13 +173,7 @@ export default async function ConverterPage({ params }: Props) {
                 </div>
             </main>
 
-            <footer className="border-t py-6 md:py-0">
-                <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row mx-auto px-4 max-w-5xl">
-                    <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-                        Built by Antigravity. Source available on GitHub.
-                    </p>
-                </div>
-            </footer>
+            <SiteFooter containerClassName="max-w-5xl" />
             <Toaster />
         </div>
     )

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { BreadcrumbListJsonLd } from "@/components/json-ld"
 import { BottomCta, CategoryChips, ComparisonCards, FaqBlock, FeaturedArticle, ArticleCard } from "@/components/blog/sections"
 import { BlogIndexHero, BlogWritingTipsPanel } from "@/components/blog/pages"
 import { getBlogIndexPageViewModel } from "@/lib/blog-view-model"
@@ -12,11 +13,18 @@ export const metadata: Metadata = {
 }
 
 export default function BlogIndexPage() {
+  const siteUrl = "https://titlecaseconverter.online"
   const viewModel = getBlogIndexPageViewModel()
   const { featured, latest, categories, comparisons, faqs } = viewModel
 
   return (
     <>
+      <BreadcrumbListJsonLd
+        items={[
+          { name: "Home", item: siteUrl },
+          { name: "Blog", item: `${siteUrl}/blog` },
+        ]}
+      />
       <BlogIndexHero />
 
       <FeaturedArticle article={featured} />
@@ -27,8 +35,8 @@ export default function BlogIndexPage() {
 
       <section className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-black text-slate-950">Latest Guides</h2>
-          <Link href="/blog/categories" className="text-sm font-semibold text-blue-700">
+          <h2 className="text-2xl font-black text-slate-950 dark:text-zinc-100">Latest Guides</h2>
+          <Link href="/blog/categories" className="text-sm font-semibold text-blue-700 dark:text-blue-300">
             View all
           </Link>
         </div>

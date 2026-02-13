@@ -84,6 +84,50 @@ const checks = [
       return !!content && content.includes("export const revalidate = 86400");
     },
   },
+  {
+    id: "breadcrumb-schema-component",
+    description: "BreadcrumbList JSON-LD component is defined",
+    run: () => {
+      const content = read("components/json-ld.tsx");
+      return (
+        !!content &&
+        content.includes("export function BreadcrumbListJsonLd") &&
+        content.includes('"@type": "BreadcrumbList"')
+      );
+    },
+  },
+  {
+    id: "blog-index-breadcrumb-jsonld",
+    description: "Blog index includes BreadcrumbList JSON-LD",
+    run: () => {
+      const content = read("app/blog/page.tsx");
+      return !!content && content.includes("BreadcrumbListJsonLd");
+    },
+  },
+  {
+    id: "blog-categories-breadcrumb-jsonld",
+    description: "Blog categories index includes BreadcrumbList JSON-LD",
+    run: () => {
+      const content = read("app/blog/categories/page.tsx");
+      return !!content && content.includes("BreadcrumbListJsonLd");
+    },
+  },
+  {
+    id: "blog-category-breadcrumb-jsonld",
+    description: "Blog category detail includes BreadcrumbList JSON-LD",
+    run: () => {
+      const content = read("app/blog/categories/[category]/page.tsx");
+      return !!content && content.includes("BreadcrumbListJsonLd");
+    },
+  },
+  {
+    id: "blog-article-breadcrumb-jsonld",
+    description: "Blog article page includes BreadcrumbList JSON-LD",
+    run: () => {
+      const content = read("app/blog/[slug]/page.tsx");
+      return !!content && content.includes("BreadcrumbListJsonLd");
+    },
+  },
 ];
 
 let failures = 0;

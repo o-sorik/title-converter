@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { BreadcrumbListJsonLd } from "@/components/json-ld"
 import { BottomCta, CategorySearchBar, ComparisonCards, FaqBlock } from "@/components/blog/sections"
 import { CategoriesGrid, CategoriesHero, PopularGuidesStrip } from "@/components/blog/pages"
 import { getBlogCategoriesPageViewModel } from "@/lib/blog-view-model"
@@ -11,11 +12,19 @@ export const metadata: Metadata = {
 }
 
 export default function BlogCategoriesPage() {
+  const siteUrl = "https://titlecaseconverter.online"
   const viewModel = getBlogCategoriesPageViewModel()
   const { categories, popular, comparisons, faqs } = viewModel
 
   return (
     <>
+      <BreadcrumbListJsonLd
+        items={[
+          { name: "Home", item: siteUrl },
+          { name: "Blog", item: `${siteUrl}/blog` },
+          { name: "Categories", item: `${siteUrl}/blog/categories` },
+        ]}
+      />
       <CategoriesHero />
 
       <CategorySearchBar />
