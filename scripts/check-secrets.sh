@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Scan only staged additions for common API key leaks.
-DIFF_CONTENT="$(git diff --cached --no-color -U0 -- . ':(exclude).env.local' ':(exclude).env.*' || true)"
+DIFF_CONTENT="$(git diff --cached --no-color -U0 -- . || true)"
 
 if [[ -z "${DIFF_CONTENT}" ]]; then
   exit 0

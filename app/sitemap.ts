@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { CONVERTER_SLUGS } from '@/lib/seo-config'
+import { blogArticles, blogCategories } from '@/components/blog/data'
 
 export const revalidate = 86400
 
@@ -26,18 +27,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'weekly',
             priority: 0.8,
         },
-        {
-            url: `${baseUrl}/blog/categories/apa-style`,
-            lastModified: new Date(),
-            changeFrequency: 'weekly',
-            priority: 0.7,
-        },
-        {
-            url: `${baseUrl}/blog/apa-7-title-case-guide`,
-            lastModified: new Date(),
-            changeFrequency: 'weekly',
-            priority: 0.7,
-        },
     ]
 
     // Dynamic pages from SEO config
@@ -48,5 +37,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.8,
     }))
 
-    return [...routes, ...converterRoutes]
+    const blogCategoryRoutes: MetadataRoute.Sitemap = blogCategories.map((category) => ({
+        url: `${baseUrl}/blog/categories/${category.id}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.7,
+    }))
+
+    const blogArticleRoutes: MetadataRoute.Sitemap = blogArticles.map((article) => ({
+        url: `${baseUrl}/blog/${article.slug}`,
+        lastModified: new Date(article.updatedAt),
+        changeFrequency: 'weekly',
+        priority: 0.7,
+    }))
+
+    return [...routes, ...converterRoutes, ...blogCategoryRoutes, ...blogArticleRoutes]
 }

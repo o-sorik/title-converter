@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type { Article } from "@/components/blog/data"
+import { formatBlogDate } from "@/lib/blog-date"
 
 export function FeaturedArticle({ article }: { article: Article }) {
   return (
@@ -18,7 +19,7 @@ export function FeaturedArticle({ article }: { article: Article }) {
         <h2 className="text-3xl font-black leading-tight text-slate-950">{article.title}</h2>
         <p className="text-sm text-slate-600">{article.excerpt}</p>
         <p className="text-xs text-slate-500">
-          {article.author} • Last updated {article.updatedAt}
+          {article.author} • Last updated {formatBlogDate(article.updatedAt)}
         </p>
         <Button asChild className="w-fit bg-blue-700 text-white hover:bg-blue-800">
           <Link href={`/blog/${article.slug}`}>Read the full guide</Link>

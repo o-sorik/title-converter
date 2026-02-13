@@ -9,6 +9,7 @@ import {
   getCategoryById,
   styleComparisons,
 } from "@/components/blog/data"
+import { toIsoDateTime } from "@/lib/blog-date"
 
 export type TocItem = {
   id: string
@@ -45,7 +46,7 @@ export function getArticlePageViewModel(slug: string) {
 
   const articleUrl = `https://titlecaseconverter.online/blog/${article.slug}`
   const articleImage = `https://titlecaseconverter.online${article.image}`
-  const updatedIso = new Date(article.updatedAt).toISOString()
+  const updatedIso = toIsoDateTime(article.updatedAt)
 
   return {
     article,

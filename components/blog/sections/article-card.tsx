@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import type { Article } from "@/components/blog/data"
+import { formatBlogDate } from "@/lib/blog-date"
 
 export function ArticleCard({ article }: { article: Article }) {
   return (
@@ -11,7 +12,7 @@ export function ArticleCard({ article }: { article: Article }) {
       </Link>
       <div className="flex grow flex-col space-y-3 p-4">
         <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-          Last updated {article.updatedAt} • {article.readTime} • {article.author}
+          Last updated {formatBlogDate(article.updatedAt)} • {article.readTime} • {article.author}
         </p>
         <Link href={`/blog/${article.slug}`} className="block">
           <h3 className="text-lg font-bold leading-tight text-slate-950 transition-colors hover:text-blue-700">{article.title}</h3>

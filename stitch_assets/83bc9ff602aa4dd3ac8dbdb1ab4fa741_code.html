@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TitleCase Categories - Style Guides &amp; Writing Tips</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1f49b6", // Royal Blue
+                        "background-light": "#eaf1f8", // Mist Blue Gray
+                        "background-dark": "#0d1b3d", // Deep Navy
+                        "sky-blue": "#2f9df5",
+                        "muted-slate": "#475569",
+                        "navy-heading": "#0f172a",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "12px",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --royal-blue: #1f49b6;
+            --mist-blue: #eaf1f8;
+            --dark-navy: #0d1b3d;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .category-card {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(31, 73, 182, 0.12);
+        }
+        .faq-accordion[open] .faq-icon {
+            transform: rotate(180deg);
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-[#eaf1f8] text-navy-heading font-display">
+<nav class="sticky top-0 z-50 w-full border-b border-primary/10 bg-white/95 backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-16">
+<div class="flex items-center gap-2">
+<div class="bg-primary p-1.5 rounded-lg">
+<span class="material-icons text-white text-lg">format_size</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-primary">TitleCase</span>
+</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Tool</a>
+<a class="text-sm font-semibold text-primary" href="#">Guides</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Pricing</a>
+<button class="bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-[#163a91] transition-all shadow-md">
+                        Start Converting
+                    </button>
+</div>
+</div>
+</div>
+</nav>
+<main>
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+<h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-navy-heading mb-6 leading-tight tracking-tight">
+                Explore Writing Style <span class="text-primary">Categories</span>
+</h1>
+<p class="text-lg text-muted-slate leading-relaxed max-w-2xl mx-auto mb-8">
+                Master capitalization rules across every major style guide with our expert-curated lessons and technical documentation.
+            </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<button class="bg-primary text-white px-8 py-4 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg flex items-center gap-2">
+                    Open Converter <span class="material-icons text-sm">bolt</span>
+</button>
+<a class="text-primary font-bold hover:underline py-4 px-6 flex items-center gap-2" href="#latest">
+                    View Latest Guides <span class="material-icons text-sm">arrow_downward</span>
+</a>
+</div>
+</section>
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+<div class="flex flex-col md:flex-row items-center justify-between gap-6 bg-white p-4 rounded-2xl shadow-sm border border-blue-100/50">
+<div class="flex flex-wrap items-center gap-2">
+<button class="px-5 py-2 rounded-full text-sm font-bold bg-primary text-white transition-all shadow-sm">All</button>
+<button class="px-5 py-2 rounded-full text-sm font-bold text-muted-slate hover:bg-primary/5 transition-all">APA Style</button>
+<button class="px-5 py-2 rounded-full text-sm font-bold text-muted-slate hover:bg-primary/5 transition-all">MLA Style</button>
+<button class="px-5 py-2 rounded-full text-sm font-bold text-muted-slate hover:bg-primary/5 transition-all">Chicago</button>
+<button class="px-5 py-2 rounded-full text-sm font-bold text-muted-slate hover:bg-primary/5 transition-all">Journalism</button>
+<button class="px-5 py-2 rounded-full text-sm font-bold text-muted-slate hover:bg-primary/5 transition-all">Grammar 101</button>
+<button class="px-5 py-2 rounded-full text-sm font-bold text-muted-slate hover:bg-primary/5 transition-all">Writing Tips</button>
+</div>
+<div class="relative w-full md:w-64">
+<span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-[#f8fafc] border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="Search categories..." type="text"/>
+</div>
+</div>
+</section>
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<a class="category-card bg-white p-8 rounded-2xl border border-blue-100/50 flex flex-col group" href="#">
+<div class="w-12 h-12 bg-sky-blue/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-sky-blue/20 transition-colors">
+<span class="material-symbols-outlined text-sky-blue font-bold">school</span>
+</div>
+<h3 class="text-xl font-extrabold text-[#0d1b3d] mb-3 group-hover:text-primary transition-colors">APA Style Guide</h3>
+<p class="text-muted-slate text-sm leading-relaxed mb-6 line-clamp-2">The complete 7th edition rules for academic headers and title case formatting.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">12+ Articles</span>
+<div class="flex items-center text-primary text-sm font-bold">
+                            View Category <span class="material-icons text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</div>
+</a>
+<a class="category-card bg-white p-8 rounded-2xl border border-blue-100/50 flex flex-col group" href="#">
+<div class="w-12 h-12 bg-sky-blue/10 rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-sky-blue font-bold">history_edu</span>
+</div>
+<h3 class="text-xl font-extrabold text-[#0d1b3d] mb-3 group-hover:text-primary transition-colors">MLA Standards</h3>
+<p class="text-muted-slate text-sm leading-relaxed mb-6 line-clamp-2">Modern Language Association guidelines for humanities and literature formatting.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">8+ Articles</span>
+<div class="flex items-center text-primary text-sm font-bold">
+                            View Category <span class="material-icons text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</div>
+</a>
+<a class="category-card bg-white p-8 rounded-2xl border border-blue-100/50 flex flex-col group" href="#">
+<div class="w-12 h-12 bg-sky-blue/10 rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-sky-blue font-bold">menu_book</span>
+</div>
+<h3 class="text-xl font-extrabold text-[#0d1b3d] mb-3 group-hover:text-primary transition-colors">Chicago Style</h3>
+<p class="text-muted-slate text-sm leading-relaxed mb-6 line-clamp-2">In-depth look at the Chicago Manual of Style's 'down' style and header rules.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">15+ Articles</span>
+<div class="flex items-center text-primary text-sm font-bold">
+                            View Category <span class="material-icons text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</div>
+</a>
+<a class="category-card bg-white p-8 rounded-2xl border border-blue-100/50 flex flex-col group" href="#">
+<div class="w-12 h-12 bg-sky-blue/10 rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-sky-blue font-bold">newspaper</span>
+</div>
+<h3 class="text-xl font-extrabold text-[#0d1b3d] mb-3 group-hover:text-primary transition-colors">Journalism &amp; AP</h3>
+<p class="text-muted-slate text-sm leading-relaxed mb-6 line-clamp-2">Writing for the newsroom: AP style rules for titles, jobs, and digital headlines.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">10+ Articles</span>
+<div class="flex items-center text-primary text-sm font-bold">
+                            View Category <span class="material-icons text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</div>
+</a>
+<a class="category-card bg-white p-8 rounded-2xl border border-blue-100/50 flex flex-col group" href="#">
+<div class="w-12 h-12 bg-sky-blue/10 rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-sky-blue font-bold">stylus</span>
+</div>
+<h3 class="text-xl font-extrabold text-[#0d1b3d] mb-3 group-hover:text-primary transition-colors">Grammar 101</h3>
+<p class="text-muted-slate text-sm leading-relaxed mb-6 line-clamp-2">Fundamental building blocks for professional writing and sentence construction.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">24+ Articles</span>
+<div class="flex items-center text-primary text-sm font-bold">
+                            View Category <span class="material-icons text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</div>
+</a>
+<a class="category-card bg-white p-8 rounded-2xl border border-blue-100/50 flex flex-col group" href="#">
+<div class="w-12 h-12 bg-sky-blue/10 rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-sky-blue font-bold">lightbulb</span>
+</div>
+<h3 class="text-xl font-extrabold text-[#0d1b3d] mb-3 group-hover:text-primary transition-colors">Writing Tips</h3>
+<p class="text-muted-slate text-sm leading-relaxed mb-6 line-clamp-2">Actionable insights to improve readability and flow in your professional work.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-xs font-bold text-slate-400 uppercase tracking-widest">18+ Articles</span>
+<div class="flex items-center text-primary text-sm font-bold">
+                            View Category <span class="material-icons text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</div>
+</a>
+</div>
+</section>
+<section class="border-y border-blue-100/50 bg-white/50 mb-16">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xs font-black uppercase tracking-widest text-slate-400">Popular Guides</h3>
+<div class="h-[1px] flex-grow mx-6 bg-blue-100/50"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<a class="flex items-center gap-4 group" href="#">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Guide thumbnail" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEc3Qbwb1p3RRGBsK_yKrs64hQi03cWXi2COJ2hb1H8mWWU8GS8vIOquvrAAWoXvVtiW-wdQnCUU9Ff1wzRBHEZnu1b74B_imGnMxgoDyxFJxcL3njH9Kn2Tc7X7wV3kYbBUhAZ1rjhoyEDiCyNBBERoxFmxGaqY9Pxnn31L5c5Yxexa55XW2hxm8iE-pnkksxbmuyFB42BG3C4YQsSQElEFF4JRFkAYv1Jv4V283UsNqYZRhSPVn20dLnfQ5mHFG_CIKa6fHNHlU"/>
+</div>
+<div>
+<h4 class="text-sm font-bold text-navy-heading group-hover:text-primary transition-colors mb-1 line-clamp-1">Capitalizing Hyphenated Words</h4>
+<span class="text-[10px] font-bold text-slate-400 uppercase">4 min read</span>
+</div>
+</a>
+<a class="flex items-center gap-4 group" href="#">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Guide thumbnail" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-k0y1aZCwIRDL-cBG3zQ-CvnSDz9dngIGzoQPsyt-s90UXDO4K2r5bprKvck4MWM_-pRX--2Ev3Xjm0sInG5py8JPttLEZpfFM7zV4KssTduyOvAE3R6x3VLMdwrSJXZr8ncWtC7hq7CVEG5YwNA8e-iaXyQIsMd5mE0X4Cti5C-bd59G0Dywvb55lc0J_nsyrVgaAEi8dA7AiouZ2uEVlPy2U-fysK-IU1I_SetJ00udb3tR5p5rNRKg4JyDJuABeJRkUpbDy9A"/>
+</div>
+<div>
+<h4 class="text-sm font-bold text-navy-heading group-hover:text-primary transition-colors mb-1 line-clamp-1">Sentence Case vs Title Case</h4>
+<span class="text-[10px] font-bold text-slate-400 uppercase">6 min read</span>
+</div>
+</a>
+<a class="flex items-center gap-4 group" href="#">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Guide thumbnail" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp-ih7XBMDQWdDIr4Hz_CdhzF5n8_QNctqKj63yBJQ6ykUs-WJRUfABCis7mNOHzAMgGctqQiKss_PVrDS_MfIFsPQfgcjh6hL35zsgcUNPyBB0Blm7qLjNQ75c2rC26iNnh8pmRhv8CtJVxUoNh6JepbxVzXSVRE835PrWr5Mu57XkzkFblFNyeGY5LfmMqwKCT3TARsjMQAp8nhHZQux5j8kvBfvDaAtQpvwj_rUjRkDymz6iWzq2u3nnLkRLxrmjPDRmwTT-GM"/>
+</div>
+<div>
+<h4 class="text-sm font-bold text-navy-heading group-hover:text-primary transition-colors mb-1 line-clamp-1">Professional Job Titles</h4>
+<span class="text-[10px] font-bold text-slate-400 uppercase">5 min read</span>
+</div>
+</a>
+</div>
+</div>
+</section>
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+<div class="bg-primary/5 rounded-3xl p-8 lg:p-12 border border-primary/10">
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+<div class="lg:col-span-1">
+<h2 class="text-2xl font-black text-navy-heading mb-4">Style Comparison</h2>
+<p class="text-sm text-muted-slate leading-relaxed">Quickly understand the nuances between major publication standards.</p>
+</div>
+<div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
+<a class="bg-white p-6 rounded-2xl border border-blue-100 shadow-sm hover:border-primary transition-colors flex flex-col group" href="#">
+<h4 class="font-bold text-navy-heading mb-2">MLA vs APA</h4>
+<p class="text-xs text-muted-slate mb-4 line-clamp-2">Academic heading requirements compared side-by-side.</p>
+<span class="mt-auto text-[10px] font-bold text-primary uppercase tracking-widest flex items-center group-hover:gap-2 transition-all">Read Comparison <span class="material-icons text-xs ml-1">chevron_right</span></span>
+</a>
+<a class="bg-white p-6 rounded-2xl border border-blue-100 shadow-sm hover:border-primary transition-colors flex flex-col group" href="#">
+<h4 class="font-bold text-navy-heading mb-2">NY Times vs AP</h4>
+<p class="text-xs text-muted-slate mb-4 line-clamp-2">Newsroom standards for modern digital media.</p>
+<span class="mt-auto text-[10px] font-bold text-primary uppercase tracking-widest flex items-center group-hover:gap-2 transition-all">Read Comparison <span class="material-icons text-xs ml-1">chevron_right</span></span>
+</a>
+<a class="bg-white p-6 rounded-2xl border border-blue-100 shadow-sm hover:border-primary transition-colors flex flex-col group" href="#">
+<h4 class="font-bold text-navy-heading mb-2">Chicago vs APA</h4>
+<p class="text-xs text-muted-slate mb-4 line-clamp-2">Deep dive into formal capitalization hierarchies.</p>
+<span class="mt-auto text-[10px] font-bold text-primary uppercase tracking-widest flex items-center group-hover:gap-2 transition-all">Read Comparison <span class="material-icons text-xs ml-1">chevron_right</span></span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+<h2 class="text-2xl font-black text-navy-heading mb-8 text-center">Frequently Asked Questions</h2>
+<div class="space-y-4">
+<details class="faq-accordion group bg-white rounded-xl border border-blue-100 overflow-hidden">
+<summary class="flex justify-between items-center p-5 cursor-pointer list-none font-bold text-navy-heading hover:text-primary transition-colors">
+                        What is APA Title Case?
+                        <span class="material-icons faq-icon text-primary transition-transform">expand_more</span>
+</summary>
+<div class="p-5 pt-0 text-muted-slate text-sm leading-relaxed border-t border-slate-50">
+                        APA Title Case is a capitalization style where major words are capitalized. In the 7th edition, you capitalize words of four letters or more, plus all verbs, nouns, pronouns, adjectives, and adverbs.
+                    </div>
+</details>
+<details class="faq-accordion group bg-white rounded-xl border border-blue-100 overflow-hidden">
+<summary class="flex justify-between items-center p-5 cursor-pointer list-none font-bold text-navy-heading hover:text-primary transition-colors">
+                        How do I choose the right style guide?
+                        <span class="material-icons faq-icon text-primary transition-transform">expand_more</span>
+</summary>
+<div class="p-5 pt-0 text-muted-slate text-sm leading-relaxed border-t border-slate-50">
+                        Choosing a style guide depends on your industry. Academic papers typically use APA or MLA. Journalism and marketing often favor AP style. Books and formal publications frequently use Chicago.
+                    </div>
+</details>
+<details class="faq-accordion group bg-white rounded-xl border border-blue-100 overflow-hidden">
+<summary class="flex justify-between items-center p-5 cursor-pointer list-none font-bold text-navy-heading hover:text-primary transition-colors">
+                        Is Title Case better than Sentence Case?
+                        <span class="material-icons faq-icon text-primary transition-transform">expand_more</span>
+</summary>
+<div class="p-5 pt-0 text-muted-slate text-sm leading-relaxed border-t border-slate-50">
+                        Title case is traditionally seen as more formal and authoritative, while sentence case is becoming popular in modern web interfaces for its readability and casual feel.
+                    </div>
+</details>
+<details class="faq-accordion group bg-white rounded-xl border border-blue-100 overflow-hidden">
+<summary class="flex justify-between items-center p-5 cursor-pointer list-none font-bold text-navy-heading hover:text-primary transition-colors">
+                        Does your tool support automated formatting?
+                        <span class="material-icons faq-icon text-primary transition-transform">expand_more</span>
+</summary>
+<div class="p-5 pt-0 text-muted-slate text-sm leading-relaxed border-t border-slate-50">
+                        Yes! Our main tool allows you to paste your headline and select any major style guide to automatically format your text according to the latest standards.
+                    </div>
+</details>
+</div>
+</section>
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+<div class="bg-[#0d1b3d] rounded-[2rem] p-12 text-center text-white relative overflow-hidden shadow-2xl">
+<div class="absolute -top-24 -left-24 w-64 h-64 bg-primary/20 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-24 -right-24 w-64 h-64 bg-sky-blue/20 rounded-full blur-3xl"></div>
+<div class="relative z-10">
+<h2 class="text-3xl md:text-4xl font-black mb-6">Ready to format your headlines?</h2>
+<p class="text-slate-300 text-lg mb-10 max-w-xl mx-auto">Join thousands of editors who use TitleCase every day for precision and consistency.</p>
+<button class="bg-white text-primary px-10 py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-sky-blue hover:text-white transition-all shadow-xl">
+                        Start Converting Now
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-white border-t border-blue-100 py-20 text-slate-600">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+<div class="col-span-1">
+<div class="flex items-center gap-2 mb-6">
+<div class="bg-primary p-1.5 rounded-lg">
+<span class="material-icons text-white text-lg">format_size</span>
+</div>
+<span class="text-2xl font-black tracking-tight text-primary">TitleCase</span>
+</div>
+<p class="text-sm text-slate-400 leading-relaxed mb-6">
+                        The ultimate resource for writers, editors, and publishers seeking capitalization accuracy.
+                    </p>
+<div class="flex gap-4">
+<a class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all" href="#"><span class="material-icons text-sm">alternate_email</span></a>
+<a class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all" href="#"><span class="material-icons text-sm">share</span></a>
+</div>
+</div>
+<div>
+<h5 class="font-bold text-navy-heading mb-6 text-xs uppercase tracking-widest">Resources</h5>
+<ul class="space-y-4 text-sm font-medium">
+<li><a class="hover:text-primary transition-colors" href="#">APA 7th Edition</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">MLA Guidebook</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Chicago Manual</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">AP Stylebook</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold text-navy-heading mb-6 text-xs uppercase tracking-widest">Company</h5>
+<ul class="space-y-4 text-sm font-medium">
+<li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Writing Team</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold text-navy-heading mb-6 text-xs uppercase tracking-widest">Legal</h5>
+<ul class="space-y-4 text-sm font-medium">
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Use</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Cookie Policy</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-10 border-t border-blue-100 flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-xs text-slate-400">© 2024 TitleCase. All rights reserved.</p>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Crafted for Clarity</span>
+</div>
+</div>
+</div>
+</footer>
+
+</body></html>
