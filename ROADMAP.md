@@ -153,6 +153,22 @@ Build a scalable SEO content system around `titlecaseconverter.online` to grow n
 ### KPI / Exit Criteria
 - `[ ]` At least `8` completed experiments per 6 weeks with clear keep/kill decisions.
 
+## Epic 16: Post-Launch Content IA and UX Consolidation (Weeks 1-4 after production launch)
+### Scope
+- `[ ]` Define blog content model v1: `articleType` (guide/comparison/rule/faq/update), hierarchy, `primaryIntent`, and canonical source fields.
+- `[ ]` Formalize internal linking system by article type: minimum `3 in / 3 out`, required hub links (`/rules`, category hubs), and no orphan pages.
+- `[ ]` Replace placeholder-heavy blog content with production-ready drafts according to the new type system and hierarchy rules.
+- `[ ]` Unify global navigation shell (`header/nav/footer`) across converter, blog, and core pages for seamless transitions.
+- `[ ]` Refresh homepage visual language to align with newer blog UI patterns and component quality.
+- `[ ]` Run post-launch canonical remediation for blog templates on production domain (including alternates consistency checks).
+- `[ ]` Prepare and integrate brand assets pack (favicon variants + primary logo + header/footer lockups).
+- `[ ]` Launch author system: `/authors` and `/authors/[slug]` with bio, authored articles, and valid `Person` schema.
+### KPI / Exit Criteria
+- `[ ]` Zero unresolved IA/linking ambiguities in editorial docs.
+- `[ ]` Consistent header/footer/navigation UX across key routes (`/`, `/blog`, `/blog/[slug]`, `/rules`, converter pages).
+- `[ ]` Canonical policy is clean on production blog templates with no critical mismatches.
+- `[ ]` Author pages are indexable, internally linked, and validated with structured data tests.
+
 ## Global Guardrails (Mandatory)
 - `[ ]` Do not publish massive page volumes at once.
 - `[ ]` Every batch must pass quality QA before release.
@@ -176,6 +192,14 @@ Build a scalable SEO content system around `titlecaseconverter.online` to grow n
 - `[ ]` First `15` MVP pages + internal links.
 ### Days 11-14
 - `[ ]` Next `15-20` pages + QA + initial performance review.
+
+## Immediate Next Queue (After Production Launch)
+1. `[ ]` Production deploy + domain cutover (`P0-01`), then run technical SEO QA on live host (`P0-04`).
+2. `[ ]` Start Epic 16 by locking content model and link policy before scaling blog volume.
+3. `[ ]` Implement unified site shell and homepage visual alignment.
+4. `[ ]` Fix canonical issues found in production verification.
+5. `[ ]` Ship brand assets and author pages with schema.
+6. `[ ]` After deploy, run Lighthouse on production (`mobile` + `desktop`) and compare metrics against local baseline; log deltas and follow-up fixes.
 
 ## 90-Day Go/No-Go Scoreboard
 ### Day 45 Checkpoint

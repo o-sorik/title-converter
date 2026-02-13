@@ -1,13 +1,23 @@
 import { HOME_PAGE_CONFIG } from "@/lib/seo-config"
 import Link from "next/link"
+import dynamic from "next/dynamic"
 import { TextConverter } from "@/components/text-converter"
 import { ContentSection } from "@/components/content-section"
-import { ModeToggle } from "@/components/mode-toggle"
-import { ConverterNav } from "@/components/converter-nav"
-import { Toaster } from "@/components/ui/sonner"
 import { WebApplicationJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/json-ld"
 
 export const revalidate = 86400
+
+const ConverterNav = dynamic(
+  () => import("@/components/converter-nav").then((module) => module.ConverterNav)
+)
+
+const ModeToggle = dynamic(
+  () => import("@/components/mode-toggle").then((module) => module.ModeToggle)
+)
+
+const Toaster = dynamic(
+  () => import("@/components/ui/sonner").then((module) => module.Toaster)
+)
 
 export default function Home() {
   const config = HOME_PAGE_CONFIG;
@@ -60,24 +70,15 @@ export default function Home() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground">
               <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
-                <span className="relative inline-flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
-                </span>
+                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                 Free
               </span>
               <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
-                <span className="relative inline-flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
-                </span>
+                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                 Instant
               </span>
               <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
-                <span className="relative inline-flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
-                </span>
+                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                 No Signup
               </span>
             </div>

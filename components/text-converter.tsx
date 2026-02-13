@@ -9,8 +9,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-
 import { convert, convertWithExplanations, type ConversionType, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
 
 const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
@@ -232,31 +230,26 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                                     Input Text
                                 </label>
                                 <div className="flex gap-1">
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handlePaste}>
-                                                    <ClipboardPaste className="h-4 w-4" />
-                                                    <span className="sr-only">Paste</span>
-                                                </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                Paste from Clipboard
-                                                <kbd className="ml-2 px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 text-xs font-mono">⌘V</kbd>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-500" onClick={handleClear}>
-                                                    <RotateCcw className="h-4 w-4" />
-                                                    <span className="sr-only">Clear</span>
-                                                </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent>Clear Input</TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8"
+                                        onClick={handlePaste}
+                                        title="Paste from Clipboard"
+                                    >
+                                        <ClipboardPaste className="h-4 w-4" />
+                                        <span className="sr-only">Paste</span>
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 hover:text-red-500"
+                                        onClick={handleClear}
+                                        title="Clear Input"
+                                    >
+                                        <RotateCcw className="h-4 w-4" />
+                                        <span className="sr-only">Clear</span>
+                                    </Button>
                                 </div>
                             </div>
                             <div className="relative">
@@ -265,7 +258,6 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                                     className="min-h-[300px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-zinc-500 dark:placeholder:text-zinc-400"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
-                                    autoFocus
                                 />
                                 {!input && (
                                     <div className="absolute bottom-4 left-6 text-xs text-zinc-500 dark:text-zinc-400 pointer-events-none animate-fadeIn">
@@ -290,30 +282,21 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                                 <label className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
                                     {CONVERSION_TYPES.find(t => t.id === activeType)?.label} output
                                 </label>
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="h-8 w-8 relative"
-                                                onClick={handleCopy}
-                                                disabled={!output}
-                                            >
-                                                {copied ? (
-                                                    <Check className="h-4 w-4 text-green-500 animate-checkmark" />
-                                                ) : (
-                                                    <Copy className="h-4 w-4" />
-                                                )}
-                                                <span className="sr-only">Copy</span>
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            {copied ? "Copied!" : "Copy Result"}
-                                            {!copied && <kbd className="ml-2 px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 text-xs font-mono">⌘C</kbd>}
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 relative"
+                                    onClick={handleCopy}
+                                    disabled={!output}
+                                    title={copied ? "Copied!" : "Copy Result"}
+                                >
+                                    {copied ? (
+                                        <Check className="h-4 w-4 text-green-500 animate-checkmark" />
+                                    ) : (
+                                        <Copy className="h-4 w-4" />
+                                    )}
+                                    <span className="sr-only">Copy</span>
+                                </Button>
                             </div>
                             <Textarea
                                 key={outputKey}
@@ -370,24 +353,16 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                     {/* Show Explanations Toggle */}
                     {supportsExplanations && (
                         <div className="flex justify-center pt-4">
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button
-                                            variant={showExplanations ? "default" : "outline"}
-                                            size="sm"
-                                            onClick={() => setShowExplanations(!showExplanations)}
-                                            className={`rounded-full gap-2 transition-all ${showExplanations ? 'bg-blue-500 hover:bg-blue-600 text-white' : ''}`}
-                                        >
-                                            <Info className="h-4 w-4" />
-                                            {showExplanations ? "Hide Explanations" : "Show Explanations"}
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        See why each word was capitalized
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
+                            <Button
+                                variant={showExplanations ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => setShowExplanations(!showExplanations)}
+                                className={`rounded-full gap-2 transition-all ${showExplanations ? 'bg-blue-500 hover:bg-blue-600 text-white' : ''}`}
+                                title="See why each word was capitalized"
+                            >
+                                <Info className="h-4 w-4" />
+                                {showExplanations ? "Hide Explanations" : "Show Explanations"}
+                            </Button>
                         </div>
                     )}
 

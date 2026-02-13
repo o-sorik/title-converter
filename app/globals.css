@@ -200,5 +200,10 @@
 
 .gradient-animated {
   background-size: 200% 200%;
-  animation: gradientShift 15s ease infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .gradient-animated {
+    animation: gradientShift 24s ease infinite;
+  }
 }
