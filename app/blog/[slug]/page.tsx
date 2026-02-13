@@ -18,6 +18,9 @@ type Props = {
   params: Promise<{ slug: string }>
 }
 
+export const revalidate = 604800
+export const dynamicParams = false
+
 export function generateStaticParams() {
   return getBlogArticleSlugs().map((slug) => ({ slug }))
 }

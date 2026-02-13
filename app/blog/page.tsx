@@ -4,6 +4,8 @@ import { BottomCta, CategoryChips, ComparisonCards, FaqBlock, FeaturedArticle, A
 import { BlogIndexHero, BlogWritingTipsPanel } from "@/components/blog/pages"
 import { getBlogIndexPageViewModel } from "@/lib/blog-view-model"
 
+export const revalidate = 86400
+
 export const metadata: Metadata = {
   title: "Blog",
   description: "Capitalization guides, comparisons, and practical writing tips.",

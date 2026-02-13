@@ -3,6 +3,8 @@ import { BottomCta, CategorySearchBar, ComparisonCards, FaqBlock } from "@/compo
 import { CategoriesGrid, CategoriesHero, PopularGuidesStrip } from "@/components/blog/pages"
 import { getBlogCategoriesPageViewModel } from "@/lib/blog-view-model"
 
+export const revalidate = 86400
+
 export const metadata: Metadata = {
   title: "Categories",
   description: "Explore writing and capitalization categories.",

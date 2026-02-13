@@ -25,6 +25,9 @@ type Props = {
   params: Promise<{ category: string }>
 }
 
+export const revalidate = 86400
+export const dynamicParams = false
+
 export function generateStaticParams() {
   return blogCategories.map((category) => ({ category: category.id }))
 }
