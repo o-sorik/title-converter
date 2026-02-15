@@ -180,7 +180,14 @@ const KNOWN_ACRONYMS = new Set([
 ]);
 
 function capitalize(word: string): string {
-    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    return word
+        .split(/(['’])/)
+        .map((segment) => {
+            if (segment === "'" || segment === "’") return segment;
+            if (!segment) return segment;
+            return segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase();
+        })
+        .join("");
 }
 
 function getTitleCaseDecision(word: string, style: TitleCaseStyle): { convertToLower: boolean; reason: string } {
@@ -221,7 +228,7 @@ interface TitleWordTransform {
 }
 
 function tokenizeWords(text: string): WordToken[] {
-    return Array.from(text.matchAll(/\b[\w']+\b/g)).map((match) => ({
+    return Array.from(text.matchAll(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu)).map((match) => ({
         word: match[0],
         start: match.index ?? 0,
         end: (match.index ?? 0) + match[0].length,
@@ -233,6 +240,11 @@ function isLikelyAcronym(word: string): boolean {
     return /[0-9]/.test(word) && /^[A-Z0-9]{2,}$/.test(word);
 }
 
+function shouldPreserveUpperToken(word: string, inputHasLowercase: boolean): boolean {
+    if (!inputHasLowercase) return false;
+    return /^[\p{Lu}\p{N}]{2,}$/u.test(word);
+}
+
 function hasCustomCasing(word: string): boolean {
     return /[a-z]/.test(word) && /[A-Z]/.test(word) && word !== word.toLowerCase() && word !== word.toUpperCase();
 }
@@ -240,6 +252,14 @@ function hasCustomCasing(word: string): boolean {
 function looksVerbLike(word: string): boolean {
     const lower = word.toLowerCase();
     return COMMON_BASE_VERBS.has(lower) || lower.endsWith("ed") || lower.endsWith("ing");
+}
+
+function tokenizeIdentifierWords(text: string): string[] {
+    const normalized = text
+        .replace(/([\p{Ll}\p{N}])([\p{Lu}])/gu, "$1 $2")
+        .replace(/([\p{Lu}]+)([\p{Lu}][\p{Ll}])/gu, "$1 $2");
+
+    return normalized.match(/[\p{L}\p{N}]+/gu) ?? [];
 }
 
 function buildTitleTransforms(text: string, style: TitleCaseStyle): TitleWordTransform[] {
@@ -329,6 +349,56 @@ function convertTitleCase(text: string, style: TitleCaseStyle): string {
     return result;
 }
 
+function buildSentenceTransforms(text: string): TitleWordTransform[] {
+    const tokens = tokenizeWords(text);
+    if (!tokens.length) return [];
+
+    const inputHasLowercase = /[\p{Ll}]/u.test(text);
+
+    return tokens.map((token, i) => {
+        const prevToken = i > 0 ? tokens[i - 1] : null;
+        const betweenPrevAndCurrent = prevToken ? text.slice(prevToken.end, token.start) : "";
+        const sentenceStart = i === 0 || /[.!?]/.test(betweenPrevAndCurrent);
+
+        if (
+            hasCustomCasing(token.word) ||
+            isLikelyAcronym(token.word) ||
+            shouldPreserveUpperToken(token.word, inputHasLowercase)
+        ) {
+            return {
+                word: token.word,
+                converted: token.word,
+                reason: "Custom casing or acronym preserved",
+                type: "unchanged",
+                start: token.start,
+                end: token.end,
+            };
+        }
+
+        if (sentenceStart) {
+            const converted = capitalize(token.word.toLowerCase());
+            return {
+                word: token.word,
+                converted,
+                reason: "First word of sentence",
+                type: converted === token.word ? "unchanged" : "capitalized",
+                start: token.start,
+                end: token.end,
+            };
+        }
+
+        const converted = token.word.toLowerCase();
+        return {
+            word: token.word,
+            converted,
+            reason: "Sentence case lowercases non-initial words",
+            type: converted === token.word ? "unchanged" : "lowercased",
+            start: token.start,
+            end: token.end,
+        };
+    });
+}
+
 export function convert(text: string, type: ConversionType, options: ConvertOptions = {}): string {
     if (!text) return "";
     const titleStyle = options.titleStyle ?? "standard";
@@ -337,24 +407,33 @@ export function convert(text: string, type: ConversionType, options: ConvertOpti
         case "upper": return text.toUpperCase();
         case "lower": return text.toLowerCase();
         case "sentence":
-            // Upper first letter of sentences.
-            return text.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, c => c.toUpperCase());
+            const sentenceTransforms = buildSentenceTransforms(text);
+            let sentenceResult = text;
+            let sentenceOffset = 0;
+            for (const transform of sentenceTransforms) {
+                sentenceResult =
+                    sentenceResult.slice(0, transform.start + sentenceOffset) +
+                    transform.converted +
+                    sentenceResult.slice(transform.end + sentenceOffset);
+                sentenceOffset += transform.converted.length - transform.word.length;
+            }
+            return sentenceResult;
         case "title":
             return convertTitleCase(text, titleStyle);
         case "camel":
-            return (text.match(/[a-zA-Z0-9]+/g) || [])
+            return tokenizeIdentifierWords(text)
                 .map((w, i) => i === 0 ? w.toLowerCase() : capitalize(w))
                 .join("");
         case "pascal":
-            return (text.match(/[a-zA-Z0-9]+/g) || [])
+            return tokenizeIdentifierWords(text)
                 .map((w) => capitalize(w))
                 .join("");
         case "snake":
-            return (text.match(/[a-zA-Z0-9]+/g) || [])
+            return tokenizeIdentifierWords(text)
                 .map((w) => w.toLowerCase())
                 .join("_");
         case "kebab":
-            return (text.match(/[a-zA-Z0-9]+/g) || [])
+            return tokenizeIdentifierWords(text)
                 .map((w) => w.toLowerCase())
                 .join("-");
         case "alternating":
@@ -413,19 +492,26 @@ export function convertWithExplanations(text: string, type: ConversionType, opti
 
         case "sentence":
             // Sentence case with explanations
-            const lowerText = text.toLowerCase();
-            output = lowerText.replace(/(^\s*\w|[\.!?]\s*\w)/g, (match, idx) => {
-                const upper = match.toUpperCase();
-                if (idx === 0 || /[.!?]/.test(text[idx - 1] || "")) {
+            const sentenceTransforms = buildSentenceTransforms(text);
+            output = text;
+            let sentenceOffset = 0;
+
+            for (const transform of sentenceTransforms) {
+                if (transform.word !== transform.converted) {
                     explanations.push({
-                        word: match.trim(),
-                        converted: upper.trim(),
-                        reason: idx === 0 ? "First letter of text" : "First letter after sentence end",
-                        type: "capitalized"
+                        word: transform.word,
+                        converted: transform.converted,
+                        reason: transform.reason,
+                        type: transform.type,
                     });
                 }
-                return upper;
-            });
+
+                output =
+                    output.slice(0, transform.start + sentenceOffset) +
+                    transform.converted +
+                    output.slice(transform.end + sentenceOffset);
+                sentenceOffset += transform.converted.length - transform.word.length;
+            }
             break;
 
         case "upper":

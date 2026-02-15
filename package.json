@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "vitest run",
     "lint": "eslint",
     "seo:qa": "node scripts/seo-qa.mjs",
     "secrets:scan": "scripts/check-secrets.sh"

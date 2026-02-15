@@ -72,3 +72,22 @@ test('converts to pascal case', () => {
 test('converts to snake case', () => {
     expect(convert('hello world', 'snake')).toBe('hello_world')
 })
+
+test('supports unicode in title case', () => {
+    expect(convert('привіт світ', 'title')).toBe('Привіт Світ')
+    expect(convert('working with café data', 'title')).toBe('Working with Café Data')
+})
+
+test('capitalizes apostrophe names correctly in title case', () => {
+    expect(convert("o'neill and d'artagnan", 'title')).toBe("O'Neill and D'Artagnan")
+})
+
+test('handles mixedCase input for identifier formats', () => {
+    expect(convert('helloWorld testCase', 'snake')).toBe('hello_world_test_case')
+    expect(convert('helloWorld testCase', 'kebab')).toBe('hello-world-test-case')
+    expect(convert('hello_world test-case', 'camel')).toBe('helloWorldTestCase')
+})
+
+test('preserves acronym-like tokens in sentence mode when context is mixed', () => {
+    expect(convert('NASA and USA mission. API works.', 'sentence')).toBe('NASA and USA mission. API works.')
+})
