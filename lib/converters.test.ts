@@ -91,3 +91,13 @@ test('handles mixedCase input for identifier formats', () => {
 test('preserves acronym-like tokens in sentence mode when context is mixed', () => {
     expect(convert('NASA and USA mission. API works.', 'sentence')).toBe('NASA and USA mission. API works.')
 })
+
+test('preserves dotted acronyms', () => {
+    expect(convert('learning from the U.S.A. style guide', 'title')).toBe('Learning from the U.S.A. Style Guide')
+    expect(convert('we follow U.S.A. standards. api stays stable.', 'sentence')).toBe('We follow U.S.A. standards. API stays stable.')
+})
+
+test('handles sentence boundaries with quotes and parentheses', () => {
+    expect(convert('he said "HELLO." then LEFT.', 'sentence')).toBe('He said "hello." Then left.')
+    expect(convert('(what IS this?) YES it is.', 'sentence')).toBe('(What is this?) Yes it is.')
+})

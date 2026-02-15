@@ -162,8 +162,12 @@ const COMMON_BASE_VERBS = new Set([
 ]);
 
 const KNOWN_ACRONYMS = new Set([
+    "AI",
     "API",
+    "CPU",
     "CSS",
+    "EU",
+    "GDP",
     "GPU",
     "HTML",
     "HTTP",
@@ -171,11 +175,16 @@ const KNOWN_ACRONYMS = new Set([
     "ID",
     "JSON",
     "JS",
+    "ML",
+    "NASA",
     "PDF",
     "SEO",
     "SQL",
     "UI",
+    "UK",
+    "UN",
     "URL",
+    "USA",
     "UX",
 ]);
 
@@ -227,22 +236,22 @@ interface TitleWordTransform {
     end: number;
 }
 
+const WORD_TOKEN_PATTERN = /(?:[\p{Lu}](?:\.[\p{Lu}])+\.?)|(?:[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*)/gu;
+
 function tokenizeWords(text: string): WordToken[] {
-    return Array.from(text.matchAll(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu)).map((match) => ({
+    return Array.from(text.matchAll(WORD_TOKEN_PATTERN)).map((match) => ({
         word: match[0],
         start: match.index ?? 0,
         end: (match.index ?? 0) + match[0].length,
     }));
 }
 
-function isLikelyAcronym(word: string): boolean {
-    if (KNOWN_ACRONYMS.has(word)) return true;
-    return /[0-9]/.test(word) && /^[A-Z0-9]{2,}$/.test(word);
-}
-
-function shouldPreserveUpperToken(word: string, inputHasLowercase: boolean): boolean {
-    if (!inputHasLowercase) return false;
-    return /^[\p{Lu}\p{N}]{2,}$/u.test(word);
+function getCanonicalAcronym(word: string): string | null {
+    const upper = word.toUpperCase();
+    if (KNOWN_ACRONYMS.has(upper)) return upper;
+    if (/^[A-Za-z](?:\.[A-Za-z])+\.?$/.test(word)) return upper;
+    if (/[0-9]/.test(word) && /^[A-Za-z0-9]{2,}$/.test(word)) return upper;
+    return null;
 }
 
 function hasCustomCasing(word: string): boolean {
@@ -283,8 +292,16 @@ function buildTitleTransforms(text: string, style: TitleCaseStyle): TitleWordTra
         const inHyphenCompound = isHyphenLeft || isHyphenRight;
         const isHyphenCompoundStart = isHyphenRight && !isHyphenLeft;
 
-        if (isLikelyAcronym(token.word)) {
-            return { word: token.word, converted: token.word, reason: "Likely acronym", type: "unchanged", start: token.start, end: token.end };
+        const canonicalAcronym = getCanonicalAcronym(token.word);
+        if (canonicalAcronym) {
+            return {
+                word: token.word,
+                converted: canonicalAcronym,
+                reason: "Likely acronym",
+                type: canonicalAcronym === token.word ? "unchanged" : "capitalized",
+                start: token.start,
+                end: token.end,
+            };
         }
 
         if (hasCustomCasing(token.word)) {
@@ -353,23 +370,18 @@ function buildSentenceTransforms(text: string): TitleWordTransform[] {
     const tokens = tokenizeWords(text);
     if (!tokens.length) return [];
 
-    const inputHasLowercase = /[\p{Ll}]/u.test(text);
-
     return tokens.map((token, i) => {
         const prevToken = i > 0 ? tokens[i - 1] : null;
         const betweenPrevAndCurrent = prevToken ? text.slice(prevToken.end, token.start) : "";
         const sentenceStart = i === 0 || /[.!?]/.test(betweenPrevAndCurrent);
+        const canonicalAcronym = getCanonicalAcronym(token.word);
 
-        if (
-            hasCustomCasing(token.word) ||
-            isLikelyAcronym(token.word) ||
-            shouldPreserveUpperToken(token.word, inputHasLowercase)
-        ) {
+        if (hasCustomCasing(token.word) || canonicalAcronym) {
             return {
                 word: token.word,
-                converted: token.word,
+                converted: canonicalAcronym ?? token.word,
                 reason: "Custom casing or acronym preserved",
-                type: "unchanged",
+                type: !canonicalAcronym || canonicalAcronym === token.word ? "unchanged" : "capitalized",
                 start: token.start,
                 end: token.end,
             };
