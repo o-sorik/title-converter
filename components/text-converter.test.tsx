@@ -60,6 +60,8 @@ test("mode controls expose keyboard-friendly toggle semantics", () => {
 
   expect(html).toContain('aria-label="Mode Controls"')
   expect((modeControls.match(/aria-pressed="/g) ?? []).length).toBe(10)
+  expect(html).toContain('data-testid="convert-action"')
+  expect(html).toContain(">Convert<")
 })
 
 test("style controls expose active style state and show expected options in title mode", () => {

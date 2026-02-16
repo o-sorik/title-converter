@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Copy, RotateCcw, ClipboardPaste, MoveRight, Check, Info, Bug } from "lucide-react"
+import { Copy, RotateCcw, ClipboardPaste, Check, Info, Bug } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { convert, convertWithExplanations, type ConversionType, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
+import { createConversionSnapshot, hasPendingConversionChanges, syncSnapshotMode, type ConversionSnapshot } from "@/lib/conversion-session"
 
 const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
     { id: "title", label: "Title Case" },
@@ -127,39 +128,56 @@ export function TextConverter({
 }: TextConverterProps) {
     const [input, setInput] = React.useState(initialInput)
     const [activeType, setActiveType] = React.useState<ConversionType>(defaultMode)
+    const [conversionSnapshot, setConversionSnapshot] = React.useState<ConversionSnapshot | null>(
+        createConversionSnapshot(initialInput, defaultMode, initialTitleStyle)
+    )
     const [copied, setCopied] = React.useState(false)
-    const [outputKey, setOutputKey] = React.useState(0)
+    const [outputKey, setOutputKey] = React.useState(initialInput ? 1 : 0)
     const [showExplanations, setShowExplanations] = React.useState(false)
     const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>(initialTitleStyle)
     const feedbackEmail = process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ?? "support@titlecaseconverter.online"
+    const outputTitleStyle = conversionSnapshot?.titleStyle ?? titleStyle
 
     // Update active type if defaultMode changes (e.g. navigation)
     React.useEffect(() => {
         setActiveType(defaultMode)
+        setConversionSnapshot((prev) => syncSnapshotMode(prev, defaultMode))
     }, [defaultMode])
 
-    // Check if current mode supports explanations
-    const supportsExplanations = EXPLANATION_MODES.includes(activeType)
+    const outputType = conversionSnapshot?.type ?? activeType
+    const hasPendingChanges = hasPendingConversionChanges(conversionSnapshot, input, activeType, titleStyle)
+    const outputSupportsExplanations = conversionSnapshot
+        ? EXPLANATION_MODES.includes(conversionSnapshot.type)
+        : false
     const conversionOptions = React.useMemo(
-        () => activeType === "title" ? { titleStyle } : {},
-        [activeType, titleStyle]
+        () => outputType === "title" ? { titleStyle: outputTitleStyle } : {},
+        [outputType, outputTitleStyle]
     )
 
     // Derived state for output and explanations
     const { output, explanations } = React.useMemo(() => {
-        if (showExplanations && supportsExplanations) {
-            return convertWithExplanations(input, activeType, conversionOptions)
+        if (!conversionSnapshot) {
+            return { output: "", explanations: [] }
         }
-        return { output: convert(input, activeType, conversionOptions), explanations: [] }
-    }, [input, activeType, showExplanations, supportsExplanations, conversionOptions])
+        if (showExplanations && outputSupportsExplanations) {
+            return convertWithExplanations(conversionSnapshot.input, outputType, conversionOptions)
+        }
+        return { output: convert(conversionSnapshot.input, outputType, conversionOptions), explanations: [] }
+    }, [conversionSnapshot, outputType, showExplanations, outputSupportsExplanations, conversionOptions])
 
-    // Trigger animation when output changes
     React.useEffect(() => {
-        if (output) {
-            setOutputKey(prev => prev + 1)
+        if (!outputSupportsExplanations && showExplanations) {
+            setShowExplanations(false)
         }
-    }, [output])
+    }, [outputSupportsExplanations, showExplanations])
 
+    const handleConvert = () => {
+        const nextSnapshot = createConversionSnapshot(input, activeType, titleStyle)
+        if (!nextSnapshot) return
+        setConversionSnapshot(nextSnapshot)
+        setCopied(false)
+        setOutputKey((prev) => prev + 1)
+    }
 
     const handleCopy = async () => {
         if (!output) return
@@ -185,6 +203,9 @@ export function TextConverter({
 
     const handleClear = () => {
         setInput("")
+        setConversionSnapshot(null)
+        setCopied(false)
+        setOutputKey((prev) => prev + 1)
         toast.message("Cleared text")
     }
 
@@ -237,6 +258,22 @@ export function TextConverter({
                             </Button>
                         ))}
                     </div>
+                    <div className="flex items-center justify-center gap-3">
+                        <Button
+                            type="button"
+                            onClick={handleConvert}
+                            disabled={!input.trim()}
+                            data-testid="convert-action"
+                            className="min-w-32"
+                        >
+                            Convert
+                        </Button>
+                        {hasPendingChanges && output && (
+                            <p className="text-xs text-muted-foreground">
+                                Settings changed. Run convert to refresh output.
+                            </p>
+                        )}
+                    </div>
 
                     <div className="grid md:grid-cols-2 gap-6 relative">
                         {/* Input Area */}
@@ -275,6 +312,12 @@ export function TextConverter({
                                     className="min-h-[300px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-zinc-500 dark:placeholder:text-zinc-400"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                                            e.preventDefault()
+                                            handleConvert()
+                                        }
+                                    }}
                                 />
                                 {!input && (
                                     <div className="absolute bottom-4 left-6 text-xs text-zinc-500 dark:text-zinc-400 pointer-events-none animate-fadeIn">
@@ -285,19 +328,11 @@ export function TextConverter({
                             {input && <TextStats text={input} />}
                         </div>
 
-                        {/* Arrow Icon for Desktop */}
-                        <div className="hidden md:flex flex-col items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 gap-1">
-                            <div className="bg-background rounded-full p-2 border shadow-sm text-muted-foreground">
-                                <MoveRight className="h-6 w-6" />
-                            </div>
-                            <span className="text-xs font-semibold text-muted-foreground bg-background/50 backdrop-blur-sm px-2 py-0.5 rounded-full">Convert</span>
-                        </div>
-
                         {/* Output Area */}
                         <div className="space-y-2 group" data-testid="output-zone">
                             <div className="flex items-center justify-between px-1">
                                 <label htmlFor="converter-output" className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
-                                    {CONVERSION_TYPES.find(t => t.id === activeType)?.label} output
+                                    {CONVERSION_TYPES.find(t => t.id === outputType)?.label} output
                                 </label>
                                 <Button
                                     variant="ghost"
@@ -327,7 +362,7 @@ export function TextConverter({
                         </div>
                     </div>
 
-                    {activeType === "title" && (
+                    {outputType === "title" && (
                         <div className="space-y-2 pt-1" data-testid="style-controls">
                             <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-x-4 gap-y-2 items-end">
                                 <p className="text-sm font-medium text-muted-foreground text-left">Title Style</p>
@@ -370,7 +405,7 @@ export function TextConverter({
                     )}
 
                     {/* Show Explanations Toggle */}
-                    {supportsExplanations && (
+                    {outputSupportsExplanations && output.length > 0 && (
                         <div className="flex justify-center pt-4">
                             <Button
                                 variant={showExplanations ? "default" : "outline"}
@@ -387,7 +422,7 @@ export function TextConverter({
 
                     {/* Explanations Panel */}
                     {showExplanations && explanations.length > 0 && (
-                        <ExplanationsPanel explanations={explanations} activeType={activeType} titleStyle={titleStyle} />
+                        <ExplanationsPanel explanations={explanations} activeType={outputType} titleStyle={outputTitleStyle} />
                     )}
                 </CardContent>
             </Card>

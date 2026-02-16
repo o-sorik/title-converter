@@ -89,6 +89,18 @@ test('produces expected deterministic outputs for baseline mode conversions', ()
     expect(convert(input, 'lower')).toBe('hello world')
 })
 
+test('is deterministic across repeated conversion calls with identical input and settings', () => {
+    const input = 'repeatable headline for qa'
+
+    const firstRun = convert(input, 'title', { titleStyle: 'apa' })
+    const secondRun = convert(input, 'title', { titleStyle: 'apa' })
+    const thirdRun = convert(input, 'title', { titleStyle: 'apa' })
+
+    expect(firstRun).toBe('Repeatable Headline for Qa')
+    expect(secondRun).toBe(firstRun)
+    expect(thirdRun).toBe(firstRun)
+})
+
 test('converts to camel case', () => {
     expect(convert('hello world', 'camel')).toBe('helloWorld')
     expect(convert('Hello World', 'camel')).toBe('helloWorld')
