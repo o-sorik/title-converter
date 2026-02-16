@@ -204,12 +204,20 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
     }
 
     return (
-        <div className="w-full max-w-5xl mx-auto p-4 space-y-8">
+        <section
+            className="w-full max-w-5xl mx-auto p-4 space-y-8"
+            aria-label="Converter Workspace"
+            data-testid="converter-workspace"
+        >
             <Card className="border-0 shadow-2xl bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm ring-1 ring-zinc-200 dark:ring-zinc-800">
                 <CardContent className="space-y-6 pt-6">
 
                     {/* Controls - Top for ez access */}
-                    <div className="flex flex-wrap items-center justify-center gap-2 pb-4">
+                    <div
+                        className="flex flex-wrap items-center justify-center gap-2 pb-4"
+                        aria-label="Mode Controls"
+                        data-testid="mode-controls"
+                    >
                         {CONVERSION_TYPES.map((type) => (
                             <Button
                                 key={type.id}
@@ -224,9 +232,9 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
 
                     <div className="grid md:grid-cols-2 gap-6 relative">
                         {/* Input Area */}
-                        <div className="space-y-2 group">
+                        <div className="space-y-2 group" data-testid="input-zone">
                             <div className="flex items-center justify-between px-1">
-                                <label className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
+                                <label htmlFor="converter-input" className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
                                     Input Text
                                 </label>
                                 <div className="flex gap-1">
@@ -254,6 +262,7 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                             </div>
                             <div className="relative">
                                 <Textarea
+                                    id="converter-input"
                                     placeholder="Type or paste your text here..."
                                     className="min-h-[300px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-zinc-500 dark:placeholder:text-zinc-400"
                                     value={input}
@@ -277,9 +286,9 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                         </div>
 
                         {/* Output Area */}
-                        <div className="space-y-2 group">
+                        <div className="space-y-2 group" data-testid="output-zone">
                             <div className="flex items-center justify-between px-1">
-                                <label className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
+                                <label htmlFor="converter-output" className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
                                     {CONVERSION_TYPES.find(t => t.id === activeType)?.label} output
                                 </label>
                                 <Button
@@ -299,6 +308,7 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                                 </Button>
                             </div>
                             <Textarea
+                                id="converter-output"
                                 key={outputKey}
                                 readOnly
                                 placeholder="Result will appear here..."
@@ -310,7 +320,7 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                     </div>
 
                     {activeType === "title" && (
-                        <div className="space-y-2 pt-1">
+                        <div className="space-y-2 pt-1" data-testid="style-controls">
                             <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-x-4 gap-y-2 items-end">
                                 <p className="text-sm font-medium text-muted-foreground text-left">Title Style</p>
                                 <p className="text-sm font-medium text-muted-foreground text-left sm:text-right">
@@ -372,6 +382,6 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                     )}
                 </CardContent>
             </Card>
-        </div>
+        </section>
     )
 }
