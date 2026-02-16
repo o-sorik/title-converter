@@ -17,6 +17,16 @@ function extractCopyActionMarkup(html: string): string {
   return match?.[0] ?? ""
 }
 
+function extractStyleRulesEntryMarkup(html: string): string {
+  const match = html.match(/data-testid="style-rules-entry"[\s\S]*?<\/div>/)
+  return match?.[0] ?? ""
+}
+
+function extractOutputRulesEntryMarkup(html: string): string {
+  const match = html.match(/data-testid="output-rules-entry"[\s\S]*?<\/div>/)
+  return match?.[0] ?? ""
+}
+
 test("renders converter workspace shell with required zones", () => {
   const html = renderToStaticMarkup(<TextConverter defaultMode="title" />)
 
@@ -95,6 +105,35 @@ test("style selection updates title output for the same input", () => {
 
   expect(standardHtml).toContain("Walking during the Light")
   expect(apHtml).toContain("Walking During the Light")
+})
+
+test("shows style-contextual guidance entry points in title mode", () => {
+  const html = renderToStaticMarkup(
+    <TextConverter defaultMode="title" initialInput="walking during the light" initialTitleStyle="ap" />
+  )
+  const styleRulesEntry = extractStyleRulesEntryMarkup(html)
+  const outputRulesEntry = extractOutputRulesEntryMarkup(html)
+
+  expect(html).toContain('data-testid="style-rules-entry"')
+  expect(html).toContain('data-testid="output-rules-entry"')
+  expect(styleRulesEntry).toContain("AP rules")
+  expect(outputRulesEntry).toContain("AP rules")
+  expect(styleRulesEntry).toContain('href="/capitalization-rules-guide?mode=title&amp;style=ap"')
+  expect(outputRulesEntry).toContain('href="/capitalization-rules-guide?mode=title&amp;style=ap"')
+})
+
+test("keeps non-title guidance visible without style-specific claims", () => {
+  const html = renderToStaticMarkup(<TextConverter defaultMode="sentence" initialInput="hello world" />)
+  const outputRulesEntry = extractOutputRulesEntryMarkup(html)
+
+  expect(html).not.toContain('data-testid="style-rules-entry"')
+  expect(html).toContain('data-testid="output-rules-entry"')
+  expect(outputRulesEntry).toContain("Rules guide")
+  expect(outputRulesEntry).toContain('href="/capitalization-rules-guide?mode=sentence"')
+  expect(outputRulesEntry).not.toContain("AP rules")
+  expect(outputRulesEntry).not.toContain("APA rules")
+  expect(outputRulesEntry).not.toContain("MLA rules")
+  expect(outputRulesEntry).not.toContain("Chicago rules")
 })
 
 test("shows explicit accessible copy feedback text when output is unavailable", () => {

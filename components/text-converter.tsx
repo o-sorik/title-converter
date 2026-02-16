@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { Copy, RotateCcw, ClipboardPaste, Check, Info, Bug } from "lucide-react"
+import Link from "next/link"
+import { Copy, RotateCcw, ClipboardPaste, Check, Info, Bug, ExternalLink } from "lucide-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -12,6 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { convert, convertWithExplanations, type ConversionType, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
 import { createConversionSnapshot, hasPendingConversionChanges, syncSnapshotMode, type ConversionSnapshot } from "@/lib/conversion-session"
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
+import { getContextualRuleGuidance } from "@/lib/rule-guidance"
 
 const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
     { id: "title", label: "Title Case" },
@@ -148,6 +150,14 @@ export function TextConverter({
     }, [defaultMode])
 
     const outputType = conversionSnapshot?.type ?? activeType
+    const outputGuidance = React.useMemo(
+        () => getContextualRuleGuidance(activeType, titleStyle),
+        [activeType, titleStyle]
+    )
+    const styleGuidance = React.useMemo(
+        () => getContextualRuleGuidance(activeType, titleStyle),
+        [activeType, titleStyle]
+    )
     const hasPendingChanges = hasPendingConversionChanges(conversionSnapshot, input, activeType, titleStyle)
     const outputSupportsExplanations = conversionSnapshot
         ? EXPLANATION_MODES.includes(conversionSnapshot.type)
@@ -395,6 +405,21 @@ export function TextConverter({
                                 aria-describedby="copy-feedback"
                                 aria-label="Converted output"
                             />
+                            <div
+                                className="flex justify-end"
+                                data-testid="output-rules-entry"
+                            >
+                                <Link
+                                    href={outputGuidance.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                                    aria-label={outputGuidance.description}
+                                >
+                                    <span>{outputGuidance.shortLabel}</span>
+                                    <ExternalLink className="h-3 w-3" />
+                                </Link>
+                            </div>
                             {output && <TextStats text={output} />}
                         </div>
                     </div>
@@ -417,7 +442,7 @@ export function TextConverter({
                         )}
                     </div>
 
-                    {outputType === "title" && (
+                    {activeType === "title" && (
                         <div className="space-y-2 pt-1" data-testid="style-controls">
                             <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-x-4 gap-y-2 items-end">
                                 <p className="text-sm font-medium text-muted-foreground text-left">Title Style</p>
@@ -457,6 +482,18 @@ export function TextConverter({
                             <p className="text-xs text-muted-foreground text-left">
                                 {TITLE_STYLES.find((style) => style.id === titleStyle)?.hint}
                             </p>
+                            <div className="flex justify-start" data-testid="style-rules-entry">
+                                <Link
+                                    href={styleGuidance.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                                    aria-label={styleGuidance.description}
+                                >
+                                    <span>{styleGuidance.shortLabel}</span>
+                                    <ExternalLink className="h-3 w-3" />
+                                </Link>
+                            </div>
                         </div>
                     )}
 
