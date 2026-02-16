@@ -59,6 +59,20 @@ test('converts to sentence case', () => {
     expect(convert('HELLO WORLD', 'sentence')).toBe('Hello world')
 })
 
+test('converts to upper and lower case for baseline mode set', () => {
+    expect(convert('Hello World', 'upper')).toBe('HELLO WORLD')
+    expect(convert('Hello World', 'lower')).toBe('hello world')
+})
+
+test('produces expected deterministic outputs for baseline mode conversions', () => {
+    const input = 'Hello WORLD'
+
+    expect(convert(input, 'title')).toBe('Hello World')
+    expect(convert(input, 'sentence')).toBe('Hello world')
+    expect(convert(input, 'upper')).toBe('HELLO WORLD')
+    expect(convert(input, 'lower')).toBe('hello world')
+})
+
 test('converts to camel case', () => {
     expect(convert('hello world', 'camel')).toBe('helloWorld')
     expect(convert('Hello World', 'camel')).toBe('helloWorld')

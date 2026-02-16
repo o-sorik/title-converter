@@ -44,6 +44,7 @@ const STYLE_RULE_SUMMARY: Record<TitleCaseStyle, string> = {
 
 interface TextConverterProps {
     defaultMode?: ConversionType
+    initialInput?: string
 }
 
 // Text Statistics Component
@@ -118,8 +119,8 @@ function ExplanationsPanel({
     )
 }
 
-export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
-    const [input, setInput] = React.useState("")
+export function TextConverter({ defaultMode = "title", initialInput = "" }: TextConverterProps) {
+    const [input, setInput] = React.useState(initialInput)
     const [activeType, setActiveType] = React.useState<ConversionType>(defaultMode)
     const [copied, setCopied] = React.useState(false)
     const [outputKey, setOutputKey] = React.useState(0)
@@ -223,6 +224,8 @@ export function TextConverter({ defaultMode = "title" }: TextConverterProps) {
                                 key={type.id}
                                 variant={activeType === type.id ? "default" : "outline"}
                                 onClick={() => setActiveType(type.id)}
+                                aria-pressed={activeType === type.id}
+                                data-active={activeType === type.id ? "true" : "false"}
                                 className="rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-md"
                             >
                                 {type.label}
