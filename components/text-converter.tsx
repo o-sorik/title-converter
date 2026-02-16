@@ -11,6 +11,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { convert, convertWithExplanations, type ConversionType, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
 import { createConversionSnapshot, hasPendingConversionChanges, syncSnapshotMode, type ConversionSnapshot } from "@/lib/conversion-session"
+import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
 
 const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
     { id: "title", label: "Title Case" },
@@ -132,6 +133,8 @@ export function TextConverter({
         createConversionSnapshot(initialInput, defaultMode, initialTitleStyle)
     )
     const [copied, setCopied] = React.useState(false)
+    const [copyFeedbackState, setCopyFeedbackState] = React.useState<CopyFeedbackState>("idle")
+    const [copyFeedbackTick, setCopyFeedbackTick] = React.useState(0)
     const [outputKey, setOutputKey] = React.useState(initialInput ? 1 : 0)
     const [showExplanations, setShowExplanations] = React.useState(false)
     const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>(initialTitleStyle)
@@ -164,6 +167,11 @@ export function TextConverter({
         }
         return { output: convert(conversionSnapshot.input, outputType, conversionOptions), explanations: [] }
     }, [conversionSnapshot, outputType, showExplanations, outputSupportsExplanations, conversionOptions])
+    const canCopy = Boolean(output)
+    const copyFeedbackMessage = getCopyFeedbackMessage(copyFeedbackState, canCopy)
+    const showVisibleCopyFeedback = copyFeedbackState === "success" || copyFeedbackState === "error"
+    const copyFeedbackBadgeText =
+        copyFeedbackState === "success" ? "Copied" : copyFeedbackState === "error" ? "Copy failed" : ""
 
     React.useEffect(() => {
         if (!outputSupportsExplanations && showExplanations) {
@@ -171,11 +179,21 @@ export function TextConverter({
         }
     }, [outputSupportsExplanations, showExplanations])
 
+    React.useEffect(() => {
+        if (copyFeedbackState === "idle") return
+        const timeoutId = window.setTimeout(() => {
+            setCopied(false)
+            setCopyFeedbackState("idle")
+        }, 2500)
+        return () => window.clearTimeout(timeoutId)
+    }, [copyFeedbackState, copyFeedbackTick])
+
     const handleConvert = () => {
         const nextSnapshot = createConversionSnapshot(input, activeType, titleStyle)
         if (!nextSnapshot) return
         setConversionSnapshot(nextSnapshot)
         setCopied(false)
+        setCopyFeedbackState("idle")
         setOutputKey((prev) => prev + 1)
     }
 
@@ -184,9 +202,13 @@ export function TextConverter({
         try {
             await navigator.clipboard.writeText(output)
             setCopied(true)
+            setCopyFeedbackState("success")
+            setCopyFeedbackTick((prev) => nextCopyFeedbackTick(prev))
             toast.success("Copied to clipboard")
-            setTimeout(() => setCopied(false), 2000)
         } catch {
+            setCopied(false)
+            setCopyFeedbackState("error")
+            setCopyFeedbackTick((prev) => nextCopyFeedbackTick(prev))
             toast.error("Failed to copy")
         }
     }
@@ -205,6 +227,7 @@ export function TextConverter({
         setInput("")
         setConversionSnapshot(null)
         setCopied(false)
+        setCopyFeedbackState("idle")
         setOutputKey((prev) => prev + 1)
         toast.message("Cleared text")
     }
@@ -334,22 +357,45 @@ export function TextConverter({
                                 <label htmlFor="converter-output" className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
                                     {CONVERSION_TYPES.find(t => t.id === outputType)?.label} output
                                 </label>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 relative"
-                                    onClick={handleCopy}
-                                    disabled={!output}
-                                    title={copied ? "Copied!" : "Copy Result"}
-                                >
-                                    {copied ? (
-                                        <Check className="h-4 w-4 text-green-500 animate-checkmark" />
-                                    ) : (
-                                        <Copy className="h-4 w-4" />
-                                    )}
-                                    <span className="sr-only">Copy</span>
-                                </Button>
+                                <div className="flex items-center gap-2">
+                                    <span
+                                        data-testid="copy-feedback-visible"
+                                        aria-hidden="true"
+                                        className={`rounded-full px-2 py-0.5 text-xs transition-all duration-500 ease-in-out motion-reduce:transition-none ${copyFeedbackState === "success"
+                                            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
+                                            : copyFeedbackState === "error"
+                                                ? "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400"
+                                                : "bg-transparent text-transparent"
+                                            } ${showVisibleCopyFeedback ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+                                    >
+                                        {copyFeedbackBadgeText}
+                                    </span>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 relative"
+                                        onClick={handleCopy}
+                                        disabled={!canCopy}
+                                        title={copied ? "Copied!" : "Copy Result"}
+                                        data-testid="copy-action"
+                                    >
+                                        {copied ? (
+                                            <Check className="h-4 w-4 text-green-500 animate-checkmark" />
+                                        ) : (
+                                            <Copy className="h-4 w-4" />
+                                        )}
+                                        <span className="sr-only">Copy</span>
+                                    </Button>
+                                </div>
                             </div>
+                            <p
+                                data-testid="copy-feedback"
+                                role="status"
+                                aria-live="polite"
+                                className="sr-only"
+                            >
+                                {copyFeedbackMessage}
+                            </p>
                             <Textarea
                                 id="converter-output"
                                 key={outputKey}

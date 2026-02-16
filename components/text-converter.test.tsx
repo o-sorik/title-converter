@@ -12,6 +12,11 @@ function extractStyleControlsMarkup(html: string): string {
   return match?.[0] ?? ""
 }
 
+function extractCopyActionMarkup(html: string): string {
+  const match = html.match(/<button[^>]*data-testid="copy-action"[^>]*>/)
+  return match?.[0] ?? ""
+}
+
 test("renders converter workspace shell with required zones", () => {
   const html = renderToStaticMarkup(<TextConverter defaultMode="title" />)
 
@@ -89,4 +94,24 @@ test("style selection updates title output for the same input", () => {
 
   expect(standardHtml).toContain("Walking during the Light")
   expect(apHtml).toContain("Walking During the Light")
+})
+
+test("shows explicit accessible copy feedback text when output is unavailable", () => {
+  const html = renderToStaticMarkup(<TextConverter defaultMode="title" />)
+  const copyAction = extractCopyActionMarkup(html)
+
+  expect(html).toContain('data-testid="copy-feedback"')
+  expect(html).toContain('role="status"')
+  expect(html).toContain('aria-live="polite"')
+  expect(html).toContain("Convert text to enable copy.")
+  expect(copyAction).toContain('disabled=""')
+})
+
+test("enables copy action and shows ready feedback when output exists", () => {
+  const html = renderToStaticMarkup(<TextConverter defaultMode="title" initialInput="hello world" />)
+  const copyAction = extractCopyActionMarkup(html)
+
+  expect(html).toContain("Copy result to clipboard.")
+  expect(copyAction).toContain('title="Copy Result"')
+  expect(copyAction).not.toContain('disabled=""')
 })
