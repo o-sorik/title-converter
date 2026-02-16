@@ -45,6 +45,7 @@ const STYLE_RULE_SUMMARY: Record<TitleCaseStyle, string> = {
 interface TextConverterProps {
     defaultMode?: ConversionType
     initialInput?: string
+    initialTitleStyle?: TitleCaseStyle
 }
 
 // Text Statistics Component
@@ -119,13 +120,17 @@ function ExplanationsPanel({
     )
 }
 
-export function TextConverter({ defaultMode = "title", initialInput = "" }: TextConverterProps) {
+export function TextConverter({
+    defaultMode = "title",
+    initialInput = "",
+    initialTitleStyle = "standard",
+}: TextConverterProps) {
     const [input, setInput] = React.useState(initialInput)
     const [activeType, setActiveType] = React.useState<ConversionType>(defaultMode)
     const [copied, setCopied] = React.useState(false)
     const [outputKey, setOutputKey] = React.useState(0)
     const [showExplanations, setShowExplanations] = React.useState(false)
-    const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>("standard")
+    const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>(initialTitleStyle)
     const feedbackEmail = process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ?? "support@titlecaseconverter.online"
 
     // Update active type if defaultMode changes (e.g. navigation)
@@ -339,6 +344,7 @@ export function TextConverter({ defaultMode = "title", initialInput = "" }: Text
                                             <TabsTrigger
                                                 key={style.id}
                                                 value={style.id}
+                                                data-active={titleStyle === style.id ? "true" : "false"}
                                                 className="h-8 px-3 flex-none"
                                             >
                                                 {style.label}

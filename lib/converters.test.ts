@@ -17,6 +17,22 @@ test('supports APA-style differences for 4+ letter prepositions', () => {
     expect(convert('walking into the light', 'title', { titleStyle: 'apa' })).toBe('Walking Into the Light')
 })
 
+test('updates title output when switching style contexts for the same input', () => {
+    const input = 'walking during the light'
+
+    const standard = convert(input, 'title', { titleStyle: 'standard' })
+    const ap = convert(input, 'title', { titleStyle: 'ap' })
+    const chicago = convert(input, 'title', { titleStyle: 'chicago' })
+    const mla = convert(input, 'title', { titleStyle: 'mla' })
+    const apa = convert(input, 'title', { titleStyle: 'apa' })
+
+    expect(standard).toBe('Walking during the Light')
+    expect(ap).toBe('Walking During the Light')
+    expect(chicago).toBe('Walking during the Light')
+    expect(mla).toBe('Walking during the Light')
+    expect(apa).toBe('Walking During the Light')
+})
+
 test('keeps long prepositions lowercase in chicago and mla styles', () => {
     expect(convert('walking during the light', 'title', { titleStyle: 'chicago' })).toBe('Walking during the Light')
     expect(convert('walking during the light', 'title', { titleStyle: 'mla' })).toBe('Walking during the Light')
