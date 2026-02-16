@@ -50,6 +50,7 @@ yarn-error.log*
 /.codex/
 /.agent/
 /_bmad/
+/_bmad-output/
 /.cursor/
 /.vscode/
 /.idea/
