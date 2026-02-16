@@ -67,6 +67,7 @@ test("mode controls expose keyboard-friendly toggle semantics", () => {
   expect((modeControls.match(/aria-pressed="/g) ?? []).length).toBe(10)
   expect(html).toContain('data-testid="convert-action"')
   expect(html).toContain(">Convert<")
+  expect(html).toContain('aria-keyshortcuts="Control+Enter Meta+Enter"')
 })
 
 test("style controls expose active style state and show expected options in title mode", () => {
@@ -114,4 +115,23 @@ test("enables copy action and shows ready feedback when output exists", () => {
   expect(html).toContain("Copy result to clipboard.")
   expect(copyAction).toContain('title="Copy Result"')
   expect(copyAction).not.toContain('disabled=""')
+})
+
+test("provides semantic labels for icon controls and textareas", () => {
+  const html = renderToStaticMarkup(<TextConverter defaultMode="title" initialInput="hello world" />)
+
+  expect(html).toContain('aria-label="Paste from clipboard"')
+  expect(html).toContain('aria-label="Clear input"')
+  expect(html).toContain('aria-label="Copy output"')
+  expect(html).toContain('aria-label="Input text"')
+  expect(html).toContain('aria-label="Converted output"')
+})
+
+test("includes helper/status relationships and responsive textarea sizing", () => {
+  const html = renderToStaticMarkup(<TextConverter defaultMode="title" />)
+
+  expect(html).toContain('id="converter-input-helper"')
+  expect(html).toContain('aria-describedby="converter-input-helper"')
+  expect(html).toContain('aria-describedby="copy-feedback"')
+  expect(html).toContain('min-h-[200px] md:min-h-[260px]')
 })

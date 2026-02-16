@@ -281,23 +281,6 @@ export function TextConverter({
                             </Button>
                         ))}
                     </div>
-                    <div className="flex items-center justify-center gap-3">
-                        <Button
-                            type="button"
-                            onClick={handleConvert}
-                            disabled={!input.trim()}
-                            data-testid="convert-action"
-                            className="min-w-32"
-                        >
-                            Convert
-                        </Button>
-                        {hasPendingChanges && output && (
-                            <p className="text-xs text-muted-foreground">
-                                Settings changed. Run convert to refresh output.
-                            </p>
-                        )}
-                    </div>
-
                     <div className="grid md:grid-cols-2 gap-6 relative">
                         {/* Input Area */}
                         <div className="space-y-2 group" data-testid="input-zone">
@@ -309,9 +292,10 @@ export function TextConverter({
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-8 w-8"
+                                        className="h-11 w-11 sm:h-8 sm:w-8"
                                         onClick={handlePaste}
                                         title="Paste from Clipboard"
+                                        aria-label="Paste from clipboard"
                                     >
                                         <ClipboardPaste className="h-4 w-4" />
                                         <span className="sr-only">Paste</span>
@@ -319,9 +303,10 @@ export function TextConverter({
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-8 w-8 hover:text-red-500"
+                                        className="h-11 w-11 sm:h-8 sm:w-8 hover:text-red-500"
                                         onClick={handleClear}
                                         title="Clear Input"
+                                        aria-label="Clear input"
                                     >
                                         <RotateCcw className="h-4 w-4" />
                                         <span className="sr-only">Clear</span>
@@ -332,9 +317,11 @@ export function TextConverter({
                                 <Textarea
                                     id="converter-input"
                                     placeholder="Type or paste your text here..."
-                                    className="min-h-[300px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-zinc-500 dark:placeholder:text-zinc-400"
+                                    className="min-h-[200px] md:min-h-[260px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-zinc-500 dark:placeholder:text-zinc-400"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
+                                    aria-describedby="converter-input-helper"
+                                    aria-label="Input text"
                                     onKeyDown={(e) => {
                                         if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
                                             e.preventDefault()
@@ -342,11 +329,12 @@ export function TextConverter({
                                         }
                                     }}
                                 />
-                                {!input && (
-                                    <div className="absolute bottom-4 left-6 text-xs text-zinc-500 dark:text-zinc-400 pointer-events-none animate-fadeIn">
-                                        Press <kbd className="px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 font-mono">⌘/Ctrl + V</kbd> to paste
-                                    </div>
-                                )}
+                                <div
+                                    id="converter-input-helper"
+                                    className={`absolute bottom-4 left-6 text-xs text-zinc-500 dark:text-zinc-400 pointer-events-none ${input ? "sr-only" : "animate-fadeIn"}`}
+                                >
+                                    Press <kbd className="px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 font-mono">⌘/Ctrl + V</kbd> to paste
+                                </div>
                             </div>
                             {input && <TextStats text={input} />}
                         </div>
@@ -373,11 +361,12 @@ export function TextConverter({
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-8 w-8 relative"
+                                        className="h-11 w-11 sm:h-8 sm:w-8 relative"
                                         onClick={handleCopy}
                                         disabled={!canCopy}
                                         title={copied ? "Copied!" : "Copy Result"}
                                         data-testid="copy-action"
+                                        aria-label="Copy output"
                                     >
                                         {copied ? (
                                             <Check className="h-4 w-4 text-green-500 animate-checkmark" />
@@ -401,11 +390,31 @@ export function TextConverter({
                                 key={outputKey}
                                 readOnly
                                 placeholder="Result will appear here..."
-                                className="min-h-[300px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-muted-foreground font-medium focus-visible:ring-0 animate-pulse-subtle"
+                                className="min-h-[200px] md:min-h-[260px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-muted-foreground font-medium focus-visible:ring-0 animate-pulse-subtle"
                                 value={output}
+                                aria-describedby="copy-feedback"
+                                aria-label="Converted output"
                             />
                             {output && <TextStats text={output} />}
                         </div>
+                    </div>
+                    <div className="pt-2 flex flex-col items-center gap-2">
+                        <Button
+                            type="button"
+                            onClick={handleConvert}
+                            disabled={!input.trim()}
+                            data-testid="convert-action"
+                            className="w-full sm:w-auto min-w-32 min-h-11"
+                            aria-keyshortcuts="Control+Enter Meta+Enter"
+                            title="Convert text (Ctrl/Cmd + Enter)"
+                        >
+                            Convert
+                        </Button>
+                        {hasPendingChanges && output && (
+                            <p className="text-xs text-muted-foreground text-center">
+                                Settings changed. Run convert to refresh output.
+                            </p>
+                        )}
                     </div>
 
                     {outputType === "title" && (
@@ -439,6 +448,7 @@ export function TextConverter({
                                     size="sm"
                                     className="h-8 gap-2 w-fit sm:justify-self-end"
                                     onClick={handleReportTitleStyleError}
+                                    aria-label="Report title style issue"
                                 >
                                     <Bug className="h-3.5 w-3.5" />
                                     Report error
