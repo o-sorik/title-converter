@@ -14,6 +14,7 @@ import { convert, convertWithExplanations, type ConversionType, type WordExplana
 import { createConversionSnapshot, hasPendingConversionChanges, syncSnapshotMode, type ConversionSnapshot } from "@/lib/conversion-session"
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
+import { getConverterContextStorageKey, parseConverterContextPayload } from "@/lib/converter-context"
 
 const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
     { id: "title", label: "Title Case" },
@@ -50,6 +51,9 @@ interface TextConverterProps {
     defaultMode?: ConversionType
     initialInput?: string
     initialTitleStyle?: TitleCaseStyle
+    initialOutputMode?: ConversionType
+    initialOutputTitleStyle?: TitleCaseStyle
+    initialContextRef?: string
 }
 
 // Text Statistics Component
@@ -128,11 +132,18 @@ export function TextConverter({
     defaultMode = "title",
     initialInput = "",
     initialTitleStyle = "standard",
+    initialOutputMode,
+    initialOutputTitleStyle,
+    initialContextRef,
 }: TextConverterProps) {
     const [input, setInput] = React.useState(initialInput)
     const [activeType, setActiveType] = React.useState<ConversionType>(defaultMode)
     const [conversionSnapshot, setConversionSnapshot] = React.useState<ConversionSnapshot | null>(
-        createConversionSnapshot(initialInput, defaultMode, initialTitleStyle)
+        createConversionSnapshot(
+            initialInput,
+            initialOutputMode ?? defaultMode,
+            initialOutputTitleStyle ?? initialTitleStyle
+        )
     )
     const [copied, setCopied] = React.useState(false)
     const [copyFeedbackState, setCopyFeedbackState] = React.useState<CopyFeedbackState>("idle")
@@ -140,23 +151,62 @@ export function TextConverter({
     const [outputKey, setOutputKey] = React.useState(initialInput ? 1 : 0)
     const [showExplanations, setShowExplanations] = React.useState(false)
     const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>(initialTitleStyle)
+    const preserveInitialOutputModeRef = React.useRef(Boolean(initialOutputMode))
     const feedbackEmail = process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ?? "support@titlecaseconverter.online"
     const outputTitleStyle = conversionSnapshot?.titleStyle ?? titleStyle
 
     // Update active type if defaultMode changes (e.g. navigation)
     React.useEffect(() => {
         setActiveType(defaultMode)
-        setConversionSnapshot((prev) => syncSnapshotMode(prev, defaultMode))
+        setConversionSnapshot((prev) => {
+            if (preserveInitialOutputModeRef.current) {
+                preserveInitialOutputModeRef.current = false
+                return prev
+            }
+            return syncSnapshotMode(prev, defaultMode)
+        })
     }, [defaultMode])
+
+    React.useEffect(() => {
+        if (!initialContextRef) return
+        try {
+            const raw = window.sessionStorage.getItem(getConverterContextStorageKey(initialContextRef))
+            if (!raw) return
+            const restored = parseConverterContextPayload(raw)
+            if (!restored) return
+
+            setInput(restored.input)
+            setActiveType(restored.mode)
+            setTitleStyle(restored.titleStyle)
+            setConversionSnapshot(
+                createConversionSnapshot(restored.input, restored.outputMode, restored.outputTitleStyle)
+            )
+            setOutputKey(restored.input ? 1 : 0)
+        } catch {
+            // no-op: context restoration is best-effort
+        }
+    }, [initialContextRef])
 
     const outputType = conversionSnapshot?.type ?? activeType
     const outputGuidance = React.useMemo(
-        () => getContextualRuleGuidance(activeType, titleStyle),
-        [activeType, titleStyle]
+        () => getContextualRuleGuidance(activeType, titleStyle, {
+            input,
+            mode: activeType,
+            titleStyle,
+            outputMode: outputType,
+            outputTitleStyle: outputTitleStyle,
+        }),
+        [activeType, titleStyle, input, outputType, outputTitleStyle]
     )
     const styleGuidance = React.useMemo(
-        () => getContextualRuleGuidance(activeType, titleStyle),
-        [activeType, titleStyle]
+        () => getContextualRuleGuidance(activeType, titleStyle, {
+            input,
+            mode: activeType,
+            titleStyle,
+            outputMode: outputType,
+            outputTitleStyle: outputTitleStyle,
+        }),
+        [activeType, titleStyle, input, outputType, outputTitleStyle]
     )
     const hasPendingChanges = hasPendingConversionChanges(conversionSnapshot, input, activeType, titleStyle)
     const outputSupportsExplanations = conversionSnapshot
@@ -182,6 +232,23 @@ export function TextConverter({
     const showVisibleCopyFeedback = copyFeedbackState === "success" || copyFeedbackState === "error"
     const copyFeedbackBadgeText =
         copyFeedbackState === "success" ? "Copied" : copyFeedbackState === "error" ? "Copy failed" : ""
+
+    React.useEffect(() => {
+        try {
+            window.sessionStorage.setItem(
+                getConverterContextStorageKey(),
+                JSON.stringify({
+                    input,
+                    mode: activeType,
+                    titleStyle,
+                    outputMode: outputType,
+                    outputTitleStyle,
+                })
+            )
+        } catch {
+            // no-op: persistence is best-effort
+        }
+    }, [input, activeType, titleStyle, outputType, outputTitleStyle])
 
     React.useEffect(() => {
         if (!outputSupportsExplanations && showExplanations) {
@@ -411,8 +478,6 @@ export function TextConverter({
                             >
                                 <Link
                                     href={outputGuidance.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
                                     className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
                                     aria-label={outputGuidance.description}
                                 >
@@ -485,8 +550,6 @@ export function TextConverter({
                             <div className="flex justify-start" data-testid="style-rules-entry">
                                 <Link
                                     href={styleGuidance.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
                                     className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
                                     aria-label={styleGuidance.description}
                                 >

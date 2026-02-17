@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
-import { getRulesGuideViewModel } from "@/lib/rules-guide-content"
+import { getRulesGuideViewModelWithContext } from "@/lib/rules-guide-content"
+import { parseConverterInitialStateFromSearchParams, toConverterContext } from "@/lib/converter-context"
 
 export const revalidate = 604800
 
@@ -25,7 +26,8 @@ export default async function CapitalizationRulesGuidePage({ searchParams }: Rul
     const resolvedParams = (await searchParams) ?? {}
     const styleParam = Array.isArray(resolvedParams.style) ? resolvedParams.style[0] : resolvedParams.style
     const modeParam = Array.isArray(resolvedParams.mode) ? resolvedParams.mode[0] : resolvedParams.mode
-    const model = getRulesGuideViewModel(styleParam, modeParam)
+    const converterInitialState = parseConverterInitialStateFromSearchParams(resolvedParams)
+    const model = getRulesGuideViewModelWithContext(styleParam, modeParam, toConverterContext(converterInitialState))
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-blue-50/30 to-purple-50/20 dark:from-zinc-950 dark:via-blue-950/20 dark:to-purple-950/10">

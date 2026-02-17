@@ -34,3 +34,23 @@ test("uses safe fallback return link when mode route is unsupported", async () =
   expect(html).toContain('href="/"')
   expect(html).toContain("Return to Title Case Converter")
 })
+
+test("keeps converter context in return link for round-trip continuity", async () => {
+  const page = await CapitalizationRulesGuidePage({
+    searchParams: Promise.resolve({
+      style: "ap",
+      mode: "title",
+      ctx_input: "walking during the light",
+      ctx_mode: "title",
+      ctx_style: "ap",
+      ctx_output_mode: "title",
+      ctx_output_style: "ap",
+    }),
+  })
+  const html = renderToStaticMarkup(page)
+
+  expect(html).toContain('href="/?ctx_ref=latest')
+  expect(html).toContain("ctx_mode=title")
+  expect(html).toContain("ctx_style=ap")
+  expect(html).toContain("ctx_output_mode=title")
+})

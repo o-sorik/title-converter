@@ -1,4 +1,5 @@
 import type { ConversionType, TitleCaseStyle } from "./converters"
+import { appendConverterContextToHref, type ConverterContext } from "./converter-context"
 
 export type GuidanceStyle = Exclude<TitleCaseStyle, "standard"> | "standard"
 
@@ -123,5 +124,19 @@ export function getRulesGuideViewModel(styleParam?: string, modeParam?: string):
     examples: EDGE_CASE_EXAMPLES,
     returnHref,
     returnLabel: returnHref === "/" ? "Return to Title Case Converter" : "Return to converter",
+  }
+}
+
+export function getRulesGuideViewModelWithContext(
+  styleParam?: string,
+  modeParam?: string,
+  converterContext?: ConverterContext | null
+): RulesGuideViewModel {
+  const model = getRulesGuideViewModel(styleParam, modeParam)
+  if (!converterContext) return model
+
+  return {
+    ...model,
+    returnHref: appendConverterContextToHref(model.returnHref, converterContext),
   }
 }

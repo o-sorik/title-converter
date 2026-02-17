@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest"
 
-import { getRulesGuideViewModel } from "./rules-guide-content"
+import { getRulesGuideViewModel, getRulesGuideViewModelWithContext } from "./rules-guide-content"
 
 describe("getRulesGuideViewModel", () => {
   test("returns style-relevant AP metadata and examples", () => {
@@ -31,5 +31,23 @@ describe("getRulesGuideViewModel", () => {
 
     expect(model.returnHref).toBe("/")
     expect(model.returnLabel).toBe("Return to Title Case Converter")
+  })
+
+  test("preserves converter context in return href when available", () => {
+    const model = getRulesGuideViewModelWithContext(
+      "ap",
+      "title",
+      {
+        input: "hello world",
+        mode: "title",
+        titleStyle: "ap",
+        outputMode: "title",
+        outputTitleStyle: "ap",
+      }
+    )
+
+    expect(model.returnHref).toContain("ctx_ref=latest")
+    expect(model.returnHref).toContain("ctx_mode=title")
+    expect(model.returnHref).toContain("ctx_output_mode=title")
   })
 })

@@ -118,8 +118,11 @@ test("shows style-contextual guidance entry points in title mode", () => {
   expect(html).toContain('data-testid="output-rules-entry"')
   expect(styleRulesEntry).toContain("AP rules")
   expect(outputRulesEntry).toContain("AP rules")
-  expect(styleRulesEntry).toContain('href="/capitalization-rules-guide?mode=title&amp;style=ap"')
-  expect(outputRulesEntry).toContain('href="/capitalization-rules-guide?mode=title&amp;style=ap"')
+  expect(styleRulesEntry).toContain('href="/capitalization-rules-guide?mode=title&amp;style=ap&amp;ctx_ref=latest')
+  expect(outputRulesEntry).toContain('href="/capitalization-rules-guide?mode=title&amp;style=ap&amp;ctx_ref=latest')
+  expect(styleRulesEntry).toContain("ctx_mode=title")
+  expect(styleRulesEntry).toContain("ctx_style=ap")
+  expect(styleRulesEntry).toContain("ctx_output_mode=title")
 })
 
 test("keeps non-title guidance visible without style-specific claims", () => {
@@ -129,7 +132,8 @@ test("keeps non-title guidance visible without style-specific claims", () => {
   expect(html).not.toContain('data-testid="style-rules-entry"')
   expect(html).toContain('data-testid="output-rules-entry"')
   expect(outputRulesEntry).toContain("Rules guide")
-  expect(outputRulesEntry).toContain('href="/capitalization-rules-guide?mode=sentence"')
+  expect(outputRulesEntry).toContain('href="/capitalization-rules-guide?mode=sentence&amp;ctx_ref=latest')
+  expect(outputRulesEntry).toContain("ctx_mode=sentence")
   expect(outputRulesEntry).not.toContain("AP rules")
   expect(outputRulesEntry).not.toContain("APA rules")
   expect(outputRulesEntry).not.toContain("MLA rules")

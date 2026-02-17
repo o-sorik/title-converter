@@ -4,12 +4,19 @@ import { ContentSection } from "@/components/content-section"
 import { WebApplicationJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/json-ld"
 import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
+import { parseConverterInitialStateFromSearchParams } from "@/lib/converter-context"
 
 export const revalidate = 86400
 
-export default function Home() {
+interface HomePageProps {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>
+}
+
+export default async function Home({ searchParams }: HomePageProps) {
   const config = HOME_PAGE_CONFIG;
   const siteUrl = "https://titlecaseconverter.online";
+  const converterContext = parseConverterInitialStateFromSearchParams((await searchParams) ?? {})
+  const defaultMode = converterContext.initialMode ?? config.mode
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-blue-50/30 to-purple-50/20 dark:from-zinc-950 dark:via-blue-950/20 dark:to-purple-950/10 gradient-animated">
@@ -57,7 +64,14 @@ export default function Home() {
             </div>
           </div>
 
-          <TextConverter defaultMode={config.mode} />
+          <TextConverter
+            defaultMode={defaultMode}
+            initialInput={converterContext.initialInput}
+            initialTitleStyle={converterContext.initialTitleStyle}
+            initialOutputMode={converterContext.initialOutputMode}
+            initialOutputTitleStyle={converterContext.initialOutputTitleStyle}
+            initialContextRef={converterContext.initialContextRef}
+          />
 
           {/* SEO Content Section */}
           <article className="prose prose-zinc dark:prose-invert max-w-none w-full">

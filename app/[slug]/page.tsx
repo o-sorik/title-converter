@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
 import { WebApplicationJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/json-ld"
 import type { Metadata } from "next"
+import { parseConverterInitialStateFromSearchParams } from "@/lib/converter-context"
 
 const siteUrl = "https://titlecaseconverter.online"
 export const revalidate = 604800
@@ -57,7 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 }
 
-export default async function ConverterPage({ params }: Props) {
+export default async function ConverterPage({ params, searchParams }: Props) {
     const { slug } = await params
     const config = SEO_CONFIG[slug]
 
@@ -67,6 +68,8 @@ export default async function ConverterPage({ params }: Props) {
 
     const pageUrl = `${siteUrl}/${slug}`
     const relatedLinks = getRelatedLinksForMode(config.mode)
+    const converterContext = parseConverterInitialStateFromSearchParams((await searchParams) ?? {})
+    const defaultMode = converterContext.initialMode ?? config.mode
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-blue-50/30 to-purple-50/20 dark:from-zinc-950 dark:via-blue-950/20 dark:to-purple-950/10 gradient-animated">
@@ -101,7 +104,14 @@ export default async function ConverterPage({ params }: Props) {
                     </div>
 
                     {/* Converter Section */}
-                    <TextConverter defaultMode={config.mode} />
+                    <TextConverter
+                        defaultMode={defaultMode}
+                        initialInput={converterContext.initialInput}
+                        initialTitleStyle={converterContext.initialTitleStyle}
+                        initialOutputMode={converterContext.initialOutputMode}
+                        initialOutputTitleStyle={converterContext.initialOutputTitleStyle}
+                        initialContextRef={converterContext.initialContextRef}
+                    />
 
                     {/* SEO Content Section */}
                     <article className="prose prose-zinc dark:prose-invert max-w-none w-full">
