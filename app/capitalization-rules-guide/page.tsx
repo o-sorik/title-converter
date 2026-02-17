@@ -1,12 +1,13 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
+import { getRulesGuideViewModel } from "@/lib/rules-guide-content"
 
 export const revalidate = 604800
 
 export const metadata: Metadata = {
-    title: "Capitalization Rules Guide (Coming Soon)",
-    description: "Coming soon: a comprehensive capitalization rules guide covering AP, APA, MLA, Chicago, examples, edge cases, and practical publishing workflows.",
+    title: "Capitalization Rules Guide - Edge Cases and Style Examples",
+    description: "Resolve ambiguous capitalization quickly with practical edge-case examples across AP, APA, MLA, Chicago, and standard title-style guidance.",
     robots: {
         index: false,
         follow: true,
@@ -16,41 +17,76 @@ export const metadata: Metadata = {
     },
 }
 
-export default function CapitalizationRulesGuidePage() {
+interface RulesGuidePageProps {
+    searchParams?: Promise<Record<string, string | string[] | undefined>>
+}
+
+export default async function CapitalizationRulesGuidePage({ searchParams }: RulesGuidePageProps) {
+    const resolvedParams = (await searchParams) ?? {}
+    const styleParam = Array.isArray(resolvedParams.style) ? resolvedParams.style[0] : resolvedParams.style
+    const modeParam = Array.isArray(resolvedParams.mode) ? resolvedParams.mode[0] : resolvedParams.mode
+    const model = getRulesGuideViewModel(styleParam, modeParam)
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-blue-50/30 to-purple-50/20 dark:from-zinc-950 dark:via-blue-950/20 dark:to-purple-950/10">
             <SiteHeader containerClassName="max-w-5xl" />
             <main className="container mx-auto py-10 px-4 sm:px-6 lg:px-8 max-w-4xl space-y-8">
                 <header className="space-y-3">
-                    <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Coming soon</p>
-                    <h1 className="text-4xl font-extrabold tracking-tight">Capitalization Rules: Full Guide</h1>
+                    <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Edge-case guidance</p>
+                    <h1 className="text-4xl font-extrabold tracking-tight">Capitalization Rules: Ambiguous Cases</h1>
                     <p className="text-lg text-muted-foreground">
-                        We are preparing a comprehensive guide on capitalization rules across AP, APA, MLA, Chicago, and modern digital publishing workflows.
+                        Practical examples for short words, punctuation, and subtitle complexity so you can verify uncertain cases without losing momentum.
                     </p>
                 </header>
 
                 <section className="space-y-4">
-                    <h2 className="text-2xl font-bold tracking-tight">What Will Be Included</h2>
-                    <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                        <li>Style-by-style comparison: AP vs APA vs MLA vs Chicago.</li>
-                        <li>Complete title case rule breakdown with examples.</li>
-                        <li>Edge cases: hyphenated terms, subtitles, acronyms, proper nouns, and brand casing.</li>
-                        <li>Practical checklists for blogs, newsletters, video titles, and editorial workflows.</li>
-                        <li>Internal links to converter tools for faster editing workflows.</li>
-                    </ul>
+                    <h2 className="text-2xl font-bold tracking-tight">Current Style Context</h2>
+                    <p className="text-muted-foreground">{model.styleSummary}</p>
+                    <p className="text-sm text-muted-foreground">
+                        Active style focus: <span className="font-semibold text-foreground">{model.styleTitle}</span>
+                    </p>
                 </section>
 
                 <section className="space-y-4">
-                    <h2 className="text-2xl font-bold tracking-tight">Quick Start Until Full Guide Is Live</h2>
+                    <h2 className="text-2xl font-bold tracking-tight">Common Ambiguous Cases</h2>
+                    <div className="space-y-4">
+                        {model.examples.map((example) => (
+                            <article key={example.caseLabel} className="rounded-xl border bg-white/70 dark:bg-zinc-900/60 p-5 space-y-3">
+                                <h3 className="text-lg font-semibold tracking-tight">{example.caseLabel}</h3>
+                                <p className="text-sm text-muted-foreground">
+                                    <span className="font-medium text-foreground">Input:</span> {example.input}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                    <span className="font-medium text-foreground">Recommended for current style:</span>{" "}
+                                    {example.outputs[model.activeStyle]}
+                                </p>
+                                <details className="rounded-lg border p-3">
+                                    <summary className="cursor-pointer text-sm font-medium">Compare all styles</summary>
+                                    <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
+                                        <li>Standard: {example.outputs.standard}</li>
+                                        <li>AP: {example.outputs.ap}</li>
+                                        <li>APA: {example.outputs.apa}</li>
+                                        <li>MLA: {example.outputs.mla}</li>
+                                        <li>Chicago: {example.outputs.chicago}</li>
+                                    </ul>
+                                </details>
+                                <p className="text-sm text-muted-foreground">{example.whyItMatters}</p>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-bold tracking-tight">Next Action</h2>
                     <p className="text-muted-foreground">
-                        Use the homepage converter for fast title cleanup, then run a quick manual review for brand names and style-guide specific exceptions.
+                        Return to the converter and apply the example that matches your editorial context, then run one more conversion check.
                     </p>
                     <div className="flex flex-wrap gap-3">
+                        <Link href={model.returnHref} className="inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors">
+                            {model.returnLabel}
+                        </Link>
                         <Link href="/" className="inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors">
                             Open Title Case Converter
-                        </Link>
-                        <Link href="/sentence-case-converter" className="inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors">
-                            Try Sentence Case Converter
                         </Link>
                     </div>
                 </section>
