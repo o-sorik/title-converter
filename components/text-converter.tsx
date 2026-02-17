@@ -15,6 +15,7 @@ import { createConversionSnapshot, hasPendingConversionChanges, syncSnapshotMode
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
 import { getConverterContextStorageKey, parseConverterContextPayload } from "@/lib/converter-context"
+import { runEditorialQaBatch, type EditorialQaResult } from "@/lib/editorial-qa"
 
 const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
     { id: "title", label: "Title Case" },
@@ -151,6 +152,8 @@ export function TextConverter({
     const [outputKey, setOutputKey] = React.useState(initialInput ? 1 : 0)
     const [showExplanations, setShowExplanations] = React.useState(false)
     const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>(initialTitleStyle)
+    const [qaBatchInput, setQaBatchInput] = React.useState("")
+    const [qaResult, setQaResult] = React.useState<EditorialQaResult | null>(null)
     const preserveInitialOutputModeRef = React.useRef(Boolean(initialOutputMode))
     const feedbackEmail = process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ?? "support@titlecaseconverter.online"
     const outputTitleStyle = conversionSnapshot?.titleStyle ?? titleStyle
@@ -232,6 +235,10 @@ export function TextConverter({
     const showVisibleCopyFeedback = copyFeedbackState === "success" || copyFeedbackState === "error"
     const copyFeedbackBadgeText =
         copyFeedbackState === "success" ? "Copied" : copyFeedbackState === "error" ? "Copy failed" : ""
+
+    React.useEffect(() => {
+        setQaResult(null)
+    }, [activeType, titleStyle])
 
     React.useEffect(() => {
         try {
@@ -328,6 +335,20 @@ export function TextConverter({
 
         const mailtoUrl = `mailto:${feedbackEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
         window.location.href = mailtoUrl
+    }
+
+    const handleRunEditorialQa = () => {
+        const result = runEditorialQaBatch(qaBatchInput, activeType, titleStyle)
+        setQaResult(result)
+    }
+
+    const handleReviewBatchItem = (text: string) => {
+        setInput(text)
+        const snapshot = createConversionSnapshot(text, activeType, titleStyle)
+        setConversionSnapshot(snapshot)
+        setCopied(false)
+        setCopyFeedbackState("idle")
+        setOutputKey((prev) => prev + 1)
     }
 
     return (
@@ -580,6 +601,78 @@ export function TextConverter({
                     {showExplanations && explanations.length > 0 && (
                         <ExplanationsPanel explanations={explanations} activeType={outputType} titleStyle={outputTitleStyle} />
                     )}
+
+                    <section
+                        className="mt-6 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 space-y-4"
+                        data-testid="editorial-qa-workflow"
+                        aria-label="Editorial QA Workflow"
+                    >
+                        <div className="space-y-1">
+                            <h3 className="text-sm font-semibold">Editorial QA Workflow</h3>
+                            <p className="text-xs text-muted-foreground">
+                                Process multiple headlines using one standard, then quickly review and correct outliers.
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                                Current standard: {CONVERSION_TYPES.find((type) => type.id === activeType)?.label}
+                                {activeType === "title" ? ` (${titleStyle.toUpperCase()})` : ""}
+                            </p>
+                        </div>
+
+                        <Textarea
+                            value={qaBatchInput}
+                            onChange={(e) => setQaBatchInput(e.target.value)}
+                            placeholder="Paste one headline per line for QA pass..."
+                            className="min-h-[120px] resize-y"
+                            aria-label="Editorial batch input"
+                        />
+
+                        <div className="flex flex-wrap items-center gap-3">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleRunEditorialQa}
+                                disabled={!qaBatchInput.trim()}
+                                data-testid="run-editorial-qa"
+                            >
+                                Run QA pass
+                            </Button>
+                            {qaResult && (
+                                <p className="text-xs text-muted-foreground">
+                                    {qaResult.consistentCount}/{qaResult.total} consistent, {qaResult.needsCorrectionCount} need correction
+                                </p>
+                            )}
+                        </div>
+
+                        {qaResult && qaResult.items.length > 0 && (
+                            <div className="space-y-2" data-testid="editorial-qa-results">
+                                {qaResult.items.map((item, index) => (
+                                    <article key={`${item.source}-${index}`} className="rounded-lg border p-3 space-y-2">
+                                        <div className="flex flex-wrap items-center justify-between gap-2">
+                                            <span className="text-xs font-medium">
+                                                {item.isConsistent ? "Consistent" : "Needs correction"}
+                                            </span>
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => handleReviewBatchItem(item.source)}
+                                            >
+                                                Review in converter
+                                            </Button>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground">
+                                            <span className="font-medium text-foreground">Input:</span> {item.source}
+                                        </p>
+                                        {!item.isConsistent && (
+                                            <p className="text-xs text-muted-foreground">
+                                                <span className="font-medium text-foreground">Recommended:</span> {item.converted}
+                                            </p>
+                                        )}
+                                    </article>
+                                ))}
+                            </div>
+                        )}
+                    </section>
                 </CardContent>
             </Card>
         </section>

@@ -35,6 +35,8 @@ test("renders converter workspace shell with required zones", () => {
   expect(html).toContain('data-testid="input-zone"')
   expect(html).toContain('data-testid="output-zone"')
   expect(html).toContain('data-testid="style-controls"')
+  expect(html).toContain('data-testid="editorial-qa-workflow"')
+  expect(html).toContain('data-testid="run-editorial-qa"')
   expect(html).toContain('id="converter-input"')
   expect(html).toContain('id="converter-output"')
   expect(html).toContain("Input Text")
@@ -105,6 +107,20 @@ test("style selection updates title output for the same input", () => {
 
   expect(standardHtml).toContain("Walking during the Light")
   expect(apHtml).toContain("Walking During the Light")
+})
+
+test("shows editorial QA standard context for current mode and style", () => {
+  const titleHtml = renderToStaticMarkup(
+    <TextConverter defaultMode="title" initialTitleStyle="ap" />
+  )
+  const sentenceHtml = renderToStaticMarkup(
+    <TextConverter defaultMode="sentence" />
+  )
+
+  expect(titleHtml).toContain("Editorial QA Workflow")
+  expect(titleHtml).toContain("Current standard: Title Case")
+  expect(titleHtml).toContain("(AP)")
+  expect(sentenceHtml).toContain("Current standard: Sentence case")
 })
 
 test("shows style-contextual guidance entry points in title mode", () => {
