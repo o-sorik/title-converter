@@ -1,5 +1,5 @@
 import { convert, type TitleCaseStyle } from "./converters"
-import { getRulesGuideViewModel, type GuidanceStyle } from "./rules-guide-content"
+import { getRulesGuideViewModel, type GuidanceExample, type GuidanceStyle } from "./rules-guide-content"
 
 const SUPPORTED_STYLES: TitleCaseStyle[] = ["standard", "ap", "chicago", "mla", "apa"]
 
@@ -18,24 +18,33 @@ export interface StyleGuidanceAlignmentReport {
   mismatches: StyleGuidanceAlignmentMismatch[]
 }
 
-export function runStyleGuidanceAlignmentQa(): StyleGuidanceAlignmentReport {
+interface StyleGuidanceAlignmentQaOptions {
+  examples?: GuidanceExample[]
+  styles?: TitleCaseStyle[]
+}
+
+export function runStyleGuidanceAlignmentQa(
+  options: StyleGuidanceAlignmentQaOptions = {}
+): StyleGuidanceAlignmentReport {
   const model = getRulesGuideViewModel("standard", "title")
+  const examples = options.examples ?? model.examples
+  const styles = options.styles ?? SUPPORTED_STYLES
   const mismatches: StyleGuidanceAlignmentMismatch[] = []
 
-  model.examples.forEach((example, index) => {
+  examples.forEach((example, index) => {
     const scenarioId = `scenario-${index + 1}`
 
-    SUPPORTED_STYLES.forEach((style) => {
+    styles.forEach((style) => {
       const expected = example.outputs[style]
       const actual = convert(example.input, "title", { titleStyle: style })
 
-      if (actual !== expected) {
+      if (!expected || actual !== expected) {
         mismatches.push({
           scenarioId,
           caseLabel: example.caseLabel,
           input: example.input,
           style,
-          expected,
+          expected: expected ?? "<missing style output>",
           actual,
         })
       }
@@ -43,8 +52,8 @@ export function runStyleGuidanceAlignmentQa(): StyleGuidanceAlignmentReport {
   })
 
   return {
-    totalComparisons: model.examples.length * SUPPORTED_STYLES.length,
-    stylesCovered: SUPPORTED_STYLES,
+    totalComparisons: examples.length * styles.length,
+    stylesCovered: styles,
     mismatches,
   }
 }
@@ -57,12 +66,11 @@ export function formatStyleGuidanceAlignmentMismatches(
   }
 
   const lines = mismatches.map((mismatch) => {
-    return [
-      `${mismatch.scenarioId} | ${mismatch.caseLabel} | style=${mismatch.style}`,
-      `input: ${mismatch.input}`,
-      `expected: ${mismatch.expected}`,
-      `actual: ${mismatch.actual}`,
-    ].join(" | ")
+    return `${mismatch.scenarioId} (${mismatch.caseLabel})
+  style: ${mismatch.style}
+  input: ${mismatch.input}
+  expected: ${mismatch.expected}
+  actual: ${mismatch.actual}`
   })
 
   return `Style guidance alignment mismatches detected (${mismatches.length}):\n${lines.join("\n")}`

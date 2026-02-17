@@ -156,6 +156,25 @@ test("keeps non-title guidance visible without style-specific claims", () => {
   expect(outputRulesEntry).not.toContain("Chicago rules")
 })
 
+test("updates guidance href and labels deterministically across style/mode contexts", () => {
+  const apTitleHtml = renderToStaticMarkup(
+    <TextConverter defaultMode="title" initialInput="walking during the light" initialTitleStyle="ap" />
+  )
+  const chicagoTitleHtml = renderToStaticMarkup(
+    <TextConverter defaultMode="title" initialInput="walking during the light" initialTitleStyle="chicago" />
+  )
+  const sentenceHtml = renderToStaticMarkup(
+    <TextConverter defaultMode="sentence" initialInput="walking during the light" initialTitleStyle="ap" />
+  )
+
+  expect(apTitleHtml).toContain("AP rules")
+  expect(apTitleHtml).toContain('href="/capitalization-rules-guide?mode=title&amp;style=ap&amp;ctx_ref=latest')
+  expect(chicagoTitleHtml).toContain("Chicago rules")
+  expect(chicagoTitleHtml).toContain('href="/capitalization-rules-guide?mode=title&amp;style=chicago&amp;ctx_ref=latest')
+  expect(sentenceHtml).toContain("Rules guide")
+  expect(sentenceHtml).toContain('href="/capitalization-rules-guide?mode=sentence&amp;ctx_ref=latest')
+})
+
 test("shows explicit accessible copy feedback text when output is unavailable", () => {
   const html = renderToStaticMarkup(<TextConverter defaultMode="title" />)
   const copyAction = extractCopyActionMarkup(html)

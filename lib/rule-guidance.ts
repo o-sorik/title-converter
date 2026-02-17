@@ -31,7 +31,7 @@ export function getContextualRuleGuidance(
     return {
       href,
       shortLabel: `${STYLE_LABELS[titleStyle]} rules`,
-      description: `Open ${STYLE_LABELS[titleStyle]} capitalization guidance for this title-case result.`,
+      description: `Open ${STYLE_LABELS[titleStyle]} capitalization guidance for this title-case context.`,
       isStyleSpecific: true,
     }
   }

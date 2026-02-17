@@ -3,19 +3,29 @@ import { describe, expect, test } from "vitest"
 import { getRulesGuideViewModel, getRulesGuideViewModelWithContext } from "./rules-guide-content"
 
 describe("getRulesGuideViewModel", () => {
-  test("returns style-relevant AP metadata and examples", () => {
+  test("returns style-relevant AP metadata and all ambiguity classes", () => {
     const model = getRulesGuideViewModel("ap", "title")
 
     expect(model.activeStyle).toBe("ap")
     expect(model.styleTitle).toContain("AP")
-    expect(model.examples.length).toBeGreaterThan(1)
+    expect(model.didFallbackToStandard).toBe(false)
+    expect(model.examples.length).toBeGreaterThanOrEqual(3)
+    expect(model.examples.map((example) => example.caseLabel)).toEqual(
+      expect.arrayContaining([
+        "Short connectors and prepositions",
+        "Subtitle after colon",
+        "Hyphenated and branded wording",
+      ])
+    )
     expect(model.examples[0]?.outputs.ap).toBe("Walking During the Light")
   })
 
-  test("falls back to standard style for unknown style params", () => {
+  test("falls back to standard style for unknown style params with explicit signal", () => {
     const model = getRulesGuideViewModel("unknown-style", "title")
 
     expect(model.activeStyle).toBe("standard")
+    expect(model.didFallbackToStandard).toBe(true)
+    expect(model.requestedStyle).toBe("unknown-style")
     expect(model.styleTitle).toContain("Standard")
   })
 
@@ -23,7 +33,7 @@ describe("getRulesGuideViewModel", () => {
     const model = getRulesGuideViewModel("mla", "sentence")
 
     expect(model.returnHref).toBe("/sentence-case-converter")
-    expect(model.returnLabel).toContain("Return")
+    expect(model.returnLabel).toBe("Return to Sentence Case Converter")
   })
 
   test("falls back to title converter when mode has no dedicated route", () => {

@@ -28,6 +28,19 @@ describe("converter context helpers", () => {
     expect(href).toContain("ctx_output_style=ap")
   })
 
+  test("preserves hash fragments when appending context", () => {
+    const href = appendConverterContextToHref("/capitalization-rules-guide?mode=title#examples", {
+      input: "walking during the light",
+      mode: "title",
+      titleStyle: "ap",
+      outputMode: "title",
+      outputTitleStyle: "ap",
+    })
+
+    expect(href).toContain("ctx_ref=latest")
+    expect(href.endsWith("#examples")).toBe(true)
+  })
+
   test("parses converter initial state from search params", () => {
     const result = parseConverterInitialStateFromSearchParams({
       ctx_input: "hello world",
@@ -43,6 +56,14 @@ describe("converter context helpers", () => {
     expect(result.initialOutputMode).toBe("title")
     expect(result.initialOutputTitleStyle).toBe("ap")
     expect(result.initialContextRef).toBeUndefined()
+  })
+
+  test("falls back invalid context ref to default latest key", () => {
+    const result = parseConverterInitialStateFromSearchParams({
+      ctx_ref: "../../unsafe-ref",
+    })
+
+    expect(result.initialContextRef).toBe(DEFAULT_CONVERTER_CONTEXT_REF)
   })
 
   test("ignores unsupported mode and style values", () => {
@@ -97,5 +118,6 @@ describe("converter context helpers", () => {
   test("returns storage key for context ref", () => {
     expect(getConverterContextStorageKey()).toContain(DEFAULT_CONVERTER_CONTEXT_REF)
     expect(getConverterContextStorageKey("custom-ref")).toContain("custom-ref")
+    expect(getConverterContextStorageKey("../../bad-key")).toContain(DEFAULT_CONVERTER_CONTEXT_REF)
   })
 })

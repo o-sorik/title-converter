@@ -19,6 +19,7 @@ export interface ConverterInitialState {
 
 export const DEFAULT_CONVERTER_CONTEXT_REF = "latest"
 const STORAGE_PREFIX = "tcc_ctx:"
+const CONTEXT_REF_PATTERN = /^[a-zA-Z0-9_-]{1,64}$/
 
 const VALID_MODES: ConversionType[] = [
   "title",
@@ -50,6 +51,11 @@ function asStyle(value?: string): TitleCaseStyle | undefined {
   return VALID_STYLES.includes(value as TitleCaseStyle) ? (value as TitleCaseStyle) : undefined
 }
 
+function normalizeContextRef(value?: string): string | undefined {
+  if (!value) return undefined
+  return CONTEXT_REF_PATTERN.test(value) ? value : DEFAULT_CONVERTER_CONTEXT_REF
+}
+
 export function appendConverterContextToHref(href: string, context: ConverterContext): string {
   const url = new URL(href, "https://titlecaseconverter.online")
   url.searchParams.set("ctx_ref", DEFAULT_CONVERTER_CONTEXT_REF)
@@ -57,7 +63,8 @@ export function appendConverterContextToHref(href: string, context: ConverterCon
   url.searchParams.set("ctx_style", context.titleStyle)
   url.searchParams.set("ctx_output_mode", context.outputMode)
   url.searchParams.set("ctx_output_style", context.outputTitleStyle)
-  return `${url.pathname}?${url.searchParams.toString()}`
+  const query = url.searchParams.toString()
+  return `${url.pathname}${query ? `?${query}` : ""}${url.hash}`
 }
 
 export function parseConverterInitialStateFromSearchParams(
@@ -68,7 +75,7 @@ export function parseConverterInitialStateFromSearchParams(
   const style = asStyle(firstValue(searchParams?.ctx_style))
   const outputMode = asMode(firstValue(searchParams?.ctx_output_mode))
   const outputStyle = asStyle(firstValue(searchParams?.ctx_output_style))
-  const contextRef = firstValue(searchParams?.ctx_ref)
+  const contextRef = normalizeContextRef(firstValue(searchParams?.ctx_ref))
 
   return {
     initialInput: input,
@@ -95,7 +102,8 @@ export function toConverterContext(state: ConverterInitialState): ConverterConte
 }
 
 export function getConverterContextStorageKey(contextRef = DEFAULT_CONVERTER_CONTEXT_REF): string {
-  return `${STORAGE_PREFIX}${contextRef}`
+  const safeRef = normalizeContextRef(contextRef) ?? DEFAULT_CONVERTER_CONTEXT_REF
+  return `${STORAGE_PREFIX}${safeRef}`
 }
 
 export function parseConverterContextPayload(raw: string): ConverterContext | null {

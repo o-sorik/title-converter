@@ -47,6 +47,11 @@ export default async function CapitalizationRulesGuidePage({ searchParams }: Rul
                     <p className="text-sm text-muted-foreground">
                         Active style focus: <span className="font-semibold text-foreground">{model.styleTitle}</span>
                     </p>
+                    {model.didFallbackToStandard && (
+                        <p className="text-sm text-amber-700 dark:text-amber-400">
+                            Unsupported style parameter detected. Showing Standard guidance for safety.
+                        </p>
+                    )}
                 </section>
 
                 <section className="space-y-4">

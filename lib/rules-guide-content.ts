@@ -13,6 +13,8 @@ export interface GuidanceExample {
 export interface RulesGuideViewModel {
   activeStyle: GuidanceStyle
   activeMode: string
+  requestedStyle?: string
+  didFallbackToStandard: boolean
   styleTitle: string
   styleSummary: string
   examples: GuidanceExample[]
@@ -102,28 +104,45 @@ const MODE_TO_RETURN_HREF: Partial<Record<ConversionType, string>> = {
   alternating: "/alternating-case-converter",
 }
 
-function normalizeStyle(styleParam?: string): GuidanceStyle {
+const MODE_TO_RETURN_LABEL: Partial<Record<ConversionType, string>> = {
+  title: "Return to Title Case Converter",
+  sentence: "Return to Sentence Case Converter",
+  lower: "Return to lower case converter",
+  upper: "Return to UPPER CASE converter",
+  camel: "Return to camelCase converter",
+  pascal: "Return to PascalCase converter",
+  snake: "Return to snake_case converter",
+  kebab: "Return to slug generator",
+  alternating: "Return to alternating-case converter",
+}
+
+function normalizeStyle(styleParam?: string): { style: GuidanceStyle; didFallbackToStandard: boolean } {
   const value = (styleParam ?? "standard").toLowerCase()
   if (value === "ap" || value === "apa" || value === "mla" || value === "chicago" || value === "standard") {
-    return value
+    return { style: value, didFallbackToStandard: false }
   }
-  return "standard"
+  return { style: "standard", didFallbackToStandard: true }
 }
 
 export function getRulesGuideViewModel(styleParam?: string, modeParam?: string): RulesGuideViewModel {
-  const activeStyle = normalizeStyle(styleParam)
+  const normalizedStyle = normalizeStyle(styleParam)
+  const activeStyle = normalizedStyle.style
   const styleMeta = STYLE_META[activeStyle]
   const activeMode = (modeParam ?? "title").toLowerCase()
   const returnHref = MODE_TO_RETURN_HREF[activeMode as ConversionType] ?? "/"
+  const returnLabel =
+    MODE_TO_RETURN_LABEL[activeMode as ConversionType] ?? "Return to Title Case Converter"
 
   return {
     activeStyle,
     activeMode,
+    requestedStyle: styleParam,
+    didFallbackToStandard: normalizedStyle.didFallbackToStandard,
     styleTitle: styleMeta.title,
     styleSummary: styleMeta.summary,
     examples: EDGE_CASE_EXAMPLES,
     returnHref,
-    returnLabel: returnHref === "/" ? "Return to Title Case Converter" : "Return to converter",
+    returnLabel,
   }
 }
 

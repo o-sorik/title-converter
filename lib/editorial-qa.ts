@@ -15,6 +15,10 @@ export interface EditorialQaResult {
   items: EditorialQaItem[]
 }
 
+function normalizeForQa(line: string): string {
+  return line.replace(/\s+/g, " ").trim()
+}
+
 function toStandardLabel(mode: ConversionType, titleStyle: TitleCaseStyle): string {
   if (mode === "title") return `title (${titleStyle.toUpperCase()})`
   return mode
@@ -27,16 +31,16 @@ export function runEditorialQaBatch(
 ): EditorialQaResult {
   const lines = rawBatchInput
     .split(/\r?\n/)
-    .map((line) => line.trim())
+    .map((line) => normalizeForQa(line))
     .filter((line) => line.length > 0)
 
   const items: EditorialQaItem[] = lines.map((line) => {
     const converted = convert(line, mode, mode === "title" ? { titleStyle } : undefined)
     return {
       source: line,
-      normalized: line,
+      normalized: normalizeForQa(line),
       converted,
-      isConsistent: line === converted,
+      isConsistent: normalizeForQa(line) === converted,
     }
   })
 
@@ -50,4 +54,3 @@ export function runEditorialQaBatch(
     items,
   }
 }
-

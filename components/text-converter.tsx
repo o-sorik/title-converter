@@ -191,17 +191,7 @@ export function TextConverter({
     }, [initialContextRef])
 
     const outputType = conversionSnapshot?.type ?? activeType
-    const outputGuidance = React.useMemo(
-        () => getContextualRuleGuidance(activeType, titleStyle, {
-            input,
-            mode: activeType,
-            titleStyle,
-            outputMode: outputType,
-            outputTitleStyle: outputTitleStyle,
-        }),
-        [activeType, titleStyle, input, outputType, outputTitleStyle]
-    )
-    const styleGuidance = React.useMemo(
+    const ruleGuidance = React.useMemo(
         () => getContextualRuleGuidance(activeType, titleStyle, {
             input,
             mode: activeType,
@@ -238,7 +228,7 @@ export function TextConverter({
 
     React.useEffect(() => {
         setQaResult(null)
-    }, [activeType, titleStyle])
+    }, [activeType, titleStyle, qaBatchInput])
 
     React.useEffect(() => {
         try {
@@ -498,11 +488,11 @@ export function TextConverter({
                                 data-testid="output-rules-entry"
                             >
                                 <Link
-                                    href={outputGuidance.href}
+                                    href={ruleGuidance.href}
                                     className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-                                    aria-label={outputGuidance.description}
+                                    aria-label={ruleGuidance.description}
                                 >
-                                    <span>{outputGuidance.shortLabel}</span>
+                                    <span>{ruleGuidance.shortLabel}</span>
                                     <ExternalLink className="h-3 w-3" />
                                 </Link>
                             </div>
@@ -570,11 +560,11 @@ export function TextConverter({
                             </p>
                             <div className="flex justify-start" data-testid="style-rules-entry">
                                 <Link
-                                    href={styleGuidance.href}
+                                    href={ruleGuidance.href}
                                     className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-                                    aria-label={styleGuidance.description}
+                                    aria-label={ruleGuidance.description}
                                 >
-                                    <span>{styleGuidance.shortLabel}</span>
+                                    <span>{ruleGuidance.shortLabel}</span>
                                     <ExternalLink className="h-3 w-3" />
                                 </Link>
                             </div>
@@ -656,6 +646,7 @@ export function TextConverter({
                                                 variant="ghost"
                                                 size="sm"
                                                 onClick={() => handleReviewBatchItem(item.source)}
+                                                aria-label={`Review batch item ${index + 1} in converter`}
                                             >
                                                 Review in converter
                                             </Button>

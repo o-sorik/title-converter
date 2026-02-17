@@ -38,4 +38,14 @@ describe("runEditorialQaBatch", () => {
     expect(result.total).toBe(1)
     expect(result.items[0]?.source).toBe("hello world")
   })
+
+  test("normalizes repeated spaces before consistency comparison", () => {
+    const result = runEditorialQaBatch("hello   world", "sentence", "standard")
+
+    expect(result.total).toBe(1)
+    expect(result.items[0]?.source).toBe("hello world")
+    expect(result.items[0]?.normalized).toBe("hello world")
+    expect(result.items[0]?.converted).toBe("Hello world")
+    expect(result.items[0]?.isConsistent).toBe(false)
+  })
 })

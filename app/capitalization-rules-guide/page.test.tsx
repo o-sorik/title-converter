@@ -22,7 +22,7 @@ test("shows clear return action to converter based on mode context", async () =>
 
   expect(html).toContain("Next Action")
   expect(html).toContain('href="/sentence-case-converter"')
-  expect(html).toContain("Return to converter")
+  expect(html).toContain("Return to Sentence Case Converter")
 })
 
 test("uses safe fallback return link when mode route is unsupported", async () => {
@@ -33,6 +33,16 @@ test("uses safe fallback return link when mode route is unsupported", async () =
 
   expect(html).toContain('href="/"')
   expect(html).toContain("Return to Title Case Converter")
+})
+
+test("shows explicit fallback notice when unsupported style param is provided", async () => {
+  const page = await CapitalizationRulesGuidePage({
+    searchParams: Promise.resolve({ style: "not-a-style", mode: "title" }),
+  })
+  const html = renderToStaticMarkup(page)
+
+  expect(html).toContain("Unsupported style parameter detected")
+  expect(html).toContain("Showing Standard guidance for safety")
 })
 
 test("keeps converter context in return link for round-trip continuity", async () => {
