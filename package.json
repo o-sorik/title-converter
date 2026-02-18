@@ -9,6 +9,7 @@
     "test": "vitest run",
     "lint": "eslint",
     "seo:qa": "node scripts/seo-qa.mjs",
+    "release:gate": "node scripts/release-gate.mjs",
     "template:qa": "node scripts/content-template-qa.mjs",
     "intent:qa": "node scripts/intent-ownership-qa.mjs",
     "ahrefs:intake": "node scripts/ahrefs-grammar101-intake.mjs",
