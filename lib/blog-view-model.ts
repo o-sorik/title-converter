@@ -138,5 +138,8 @@ export function getBlogArticleMetadataBySlug(slug: string) {
   return {
     title: article.title,
     description: article.excerpt,
+    alternates: {
+      canonical: `/blog/${article.slug}`,
+    },
   }
 }

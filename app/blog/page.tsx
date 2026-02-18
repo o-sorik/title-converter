@@ -10,6 +10,9 @@ export const revalidate = 86400
 export const metadata: Metadata = {
   title: "Blog",
   description: "Capitalization guides, comparisons, and practical writing tips.",
+  alternates: {
+    canonical: "/blog",
+  },
 }
 
 export default function BlogIndexPage() {

@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { HOME_PAGE_CONFIG } from "@/lib/seo-config"
 import { TextConverter } from "@/components/text-converter"
 import { ContentSection } from "@/components/content-section"
@@ -7,6 +8,17 @@ import { SiteFooter, SiteHeader } from "@/components/site-shell"
 import { parseConverterInitialStateFromSearchParams } from "@/lib/converter-context"
 
 export const revalidate = 86400
+const siteUrl = "https://titlecaseconverter.online"
+
+export const metadata: Metadata = {
+  title: {
+    absolute: HOME_PAGE_CONFIG.title,
+  },
+  description: HOME_PAGE_CONFIG.description,
+  alternates: {
+    canonical: siteUrl,
+  },
+}
 
 interface HomePageProps {
   searchParams?: Promise<Record<string, string | string[] | undefined>>
@@ -14,7 +26,6 @@ interface HomePageProps {
 
 export default async function Home({ searchParams }: HomePageProps) {
   const config = HOME_PAGE_CONFIG;
-  const siteUrl = "https://titlecaseconverter.online";
   const converterContext = parseConverterInitialStateFromSearchParams((await searchParams) ?? {})
   const defaultMode = converterContext.initialMode ?? config.mode
 

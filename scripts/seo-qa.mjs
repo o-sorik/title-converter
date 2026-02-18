@@ -11,6 +11,10 @@ function read(relPath) {
   return fs.readFileSync(abs, "utf8");
 }
 
+function containsAll(content, markers) {
+  return markers.every((marker) => content.includes(marker));
+}
+
 const checks = [
   {
     id: "layout-metadata-base",
@@ -45,6 +49,23 @@ const checks = [
     },
   },
   {
+    id: "home-metadata-canonical-title-description",
+    description: "Home route defines canonical + title + description metadata",
+    run: () => {
+      const content = read("app/page.tsx");
+      return (
+        !!content &&
+        containsAll(content, [
+          "export const metadata",
+          "absolute: HOME_PAGE_CONFIG.title",
+          "description: HOME_PAGE_CONFIG.description",
+          "alternates:",
+          "canonical: siteUrl",
+        ])
+      );
+    },
+  },
+  {
     id: "slug-revalidate",
     description: "Dynamic slug page has ISR revalidate",
     run: () => {
@@ -58,6 +79,22 @@ const checks = [
     run: () => {
       const content = read("app/[slug]/page.tsx");
       return !!content && content.includes("export const dynamicParams = false");
+    },
+  },
+  {
+    id: "slug-metadata-canonical-title-description",
+    description: "Converter slug route metadata includes canonical + title + description",
+    run: () => {
+      const content = read("app/[slug]/page.tsx");
+      return (
+        !!content &&
+        containsAll(content, [
+          "title: config.title",
+          "description: config.description",
+          "alternates:",
+          "canonical: pageUrl",
+        ])
+      );
     },
   },
   {
@@ -105,11 +142,45 @@ const checks = [
     },
   },
   {
+    id: "blog-index-metadata-canonical-title-description",
+    description: "Blog index route defines canonical + title + description metadata",
+    run: () => {
+      const content = read("app/blog/page.tsx");
+      return (
+        !!content &&
+        containsAll(content, [
+          "export const metadata",
+          'title: "Blog"',
+          'description: "Capitalization guides, comparisons, and practical writing tips."',
+          "alternates:",
+          'canonical: "/blog"',
+        ])
+      );
+    },
+  },
+  {
     id: "blog-categories-breadcrumb-jsonld",
     description: "Blog categories index includes BreadcrumbList JSON-LD",
     run: () => {
       const content = read("app/blog/categories/page.tsx");
       return !!content && content.includes("BreadcrumbListJsonLd");
+    },
+  },
+  {
+    id: "blog-categories-metadata-canonical-title-description",
+    description: "Blog categories index route defines canonical + title + description metadata",
+    run: () => {
+      const content = read("app/blog/categories/page.tsx");
+      return (
+        !!content &&
+        containsAll(content, [
+          "export const metadata",
+          'title: "Categories"',
+          'description: "Explore writing and capitalization categories."',
+          "alternates:",
+          'canonical: "/blog/categories"',
+        ])
+      );
     },
   },
   {
@@ -121,11 +192,60 @@ const checks = [
     },
   },
   {
+    id: "blog-category-metadata-canonical-title-description",
+    description: "Blog category detail metadata includes canonical + title + description",
+    run: () => {
+      const content = read("app/blog/categories/[category]/page.tsx");
+      return (
+        !!content &&
+        containsAll(content, [
+          "title: `${currentCategory.name} Guides`",
+          "description: currentCategory.description",
+          "alternates:",
+          "canonical: `/blog/categories/${currentCategory.id}`",
+        ])
+      );
+    },
+  },
+  {
     id: "blog-article-breadcrumb-jsonld",
     description: "Blog article page includes BreadcrumbList JSON-LD",
     run: () => {
       const content = read("app/blog/[slug]/page.tsx");
       return !!content && content.includes("BreadcrumbListJsonLd");
+    },
+  },
+  {
+    id: "blog-article-metadata-canonical-title-description",
+    description: "Blog article metadata source includes canonical + title + description",
+    run: () => {
+      const content = read("lib/blog-view-model.ts");
+      return (
+        !!content &&
+        containsAll(content, [
+          "title: article.title",
+          "description: article.excerpt",
+          "alternates:",
+          "canonical: `/blog/${article.slug}`",
+        ])
+      );
+    },
+  },
+  {
+    id: "rules-guide-metadata-canonical-title-description",
+    description: "Rules guide route defines canonical + title + description metadata",
+    run: () => {
+      const content = read("app/capitalization-rules-guide/page.tsx");
+      return (
+        !!content &&
+        containsAll(content, [
+          "export const metadata",
+          "title:",
+          "description:",
+          "alternates:",
+          'canonical: "https://titlecaseconverter.online/capitalization-rules-guide"',
+        ])
+      );
     },
   },
 ];

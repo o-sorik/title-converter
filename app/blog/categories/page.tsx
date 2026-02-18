@@ -9,6 +9,9 @@ export const revalidate = 86400
 export const metadata: Metadata = {
   title: "Categories",
   description: "Explore writing and capitalization categories.",
+  alternates: {
+    canonical: "/blog/categories",
+  },
 }
 
 export default function BlogCategoriesPage() {
