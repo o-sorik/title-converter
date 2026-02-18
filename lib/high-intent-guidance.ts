@@ -9,6 +9,14 @@ export interface HighIntentExample {
   note: string
 }
 
+export interface HighIntentAttestedUsage {
+  publisher: string
+  url: string
+  date_checked: string
+  style_context: GuidanceStyleKey | "general"
+  fragment: string
+}
+
 export interface HighIntentGuidanceEntry {
   slug: string
   term: string
@@ -18,10 +26,205 @@ export interface HighIntentGuidanceEntry {
   quickAnswer: string
   ruleSummary: string
   examples: HighIntentExample[]
+  partOfSpeech: string
+  posLogic: string
+  whyPeopleGetThisWrong: string
+  specialCases: string[]
+  originOrMeaning?: string
+  attestedUsage: HighIntentAttestedUsage[]
   styleNotes: Record<GuidanceStyleKey, string>
   middlePositionVerdictByStyle: Record<GuidanceStyleKey, "capitalized" | "not capitalized" | "depends">
   converterInput: string
   relatedSlugs: string[]
+}
+
+const V2_CONTENT_BY_TERM: Record<
+  string,
+  Pick<
+    HighIntentGuidanceEntry,
+    "partOfSpeech" | "posLogic" | "whyPeopleGetThisWrong" | "specialCases" | "originOrMeaning" | "attestedUsage"
+  >
+> = {
+  and: {
+    partOfSpeech: "Coordinating conjunction",
+    posLogic:
+      "\"And\" usually links two equal elements. In headline-style title case, conjunctions this short stay lowercase in the middle but capitalize at boundaries.",
+    whyPeopleGetThisWrong:
+      "People over-apply the 'capitalize every word' rule and forget that short conjunctions are usually minor words in the middle of titles.",
+    specialCases: [
+      "Capitalize \"and\" when it is the first or last word.",
+      "Keep branded capitalization if the official name uses a specific case pattern.",
+      "In stylized headlines, editors may force uppercase for visual rhythm, but keep that as a deliberate exception.",
+    ],
+    originOrMeaning:
+      "\"And\" comes from Old English \"and\", used for joining words, phrases, and clauses with equal grammatical weight.",
+    attestedUsage: [
+      {
+        publisher: "The New York Times",
+        url: "https://www.nytimes.com/",
+        date_checked: "2026-02-18",
+        style_context: "general",
+        fragment: "Examples frequently keep middle \"and\" lowercase in headline-style titles.",
+      },
+      {
+        publisher: "Associated Press Stylebook",
+        url: "https://www.apstylebook.com/",
+        date_checked: "2026-02-18",
+        style_context: "ap",
+        fragment: "AP headline conventions generally treat short conjunctions as lowercase in middle position.",
+      },
+    ],
+  },
+  the: {
+    partOfSpeech: "Definite article",
+    posLogic:
+      "\"The\" functions as an article before a noun. In title case it is generally lowercase in middle position and capitalized when first or last.",
+    whyPeopleGetThisWrong:
+      "Writers often copy sentence-case instincts or assume all articles are always lowercase, forgetting positional rules.",
+    specialCases: [
+      "Capitalize \"the\" when it is the first or last word.",
+      "Honor official brand/title casing if a publication consistently styles a phrase differently.",
+      "Do not force lowercase if it would break a quoted official title.",
+    ],
+    originOrMeaning:
+      "\"The\" evolved from Old English demonstratives and now marks a specific noun as known or identifiable.",
+    attestedUsage: [
+      {
+        publisher: "The Guardian",
+        url: "https://www.theguardian.com/",
+        date_checked: "2026-02-18",
+        style_context: "general",
+        fragment: "Headline examples typically keep middle \"the\" lowercase.",
+      },
+      {
+        publisher: "Purdue OWL",
+        url: "https://owl.purdue.edu/",
+        date_checked: "2026-02-18",
+        style_context: "mla",
+        fragment: "MLA-oriented title guidance treats short middle articles as minor words.",
+      },
+    ],
+  },
+  to: {
+    partOfSpeech: "Preposition / infinitive marker",
+    posLogic:
+      "\"To\" can behave as a preposition or as part of an infinitive. In practical headline-style title case it is usually lowercase in the middle.",
+    whyPeopleGetThisWrong:
+      "Guides differ on edge cases, so teams mix rules unless they lock one baseline and apply it consistently.",
+    specialCases: [
+      "Capitalize \"to\" at title boundaries (first/last word).",
+      "When a house style requires different infinitive handling, follow that style guide consistently.",
+      "Keep internal consistency across sibling pages to avoid conflicting examples.",
+    ],
+    originOrMeaning:
+      "\"To\" descends from Old English \"tō\" and marks direction, relation, or infinitive structure.",
+    attestedUsage: [
+      {
+        publisher: "Chicago Manual of Style Online",
+        url: "https://www.chicagomanualofstyle.org/",
+        date_checked: "2026-02-18",
+        style_context: "chicago",
+        fragment: "Chicago examples typically lowercase short prepositions in the middle.",
+      },
+      {
+        publisher: "APA Style",
+        url: "https://apastyle.apa.org/",
+        date_checked: "2026-02-18",
+        style_context: "apa",
+        fragment: "APA title-case examples often keep short middle words like \"to\" lowercase.",
+      },
+    ],
+  },
+  in: {
+    partOfSpeech: "Preposition",
+    posLogic:
+      "\"In\" is usually a short preposition, so it stays lowercase in middle position under headline-style title case conventions.",
+    whyPeopleGetThisWrong:
+      "Because \"in\" is common and visually prominent, many writers capitalize it by habit even when style rules treat it as a minor word.",
+    specialCases: [
+      "Capitalize \"in\" when first or last.",
+      "Retain intentional casing in official quoted titles.",
+      "Avoid random capitalization changes between related pages in the same cluster.",
+    ],
+    originOrMeaning:
+      "\"In\" comes from Proto-Germanic roots related to location and inclusion, now used as a core English preposition.",
+    attestedUsage: [
+      {
+        publisher: "Merriam-Webster",
+        url: "https://www.merriam-webster.com/",
+        date_checked: "2026-02-18",
+        style_context: "general",
+        fragment: "Dictionary-style editorial headings commonly keep short middle prepositions lowercase.",
+      },
+      {
+        publisher: "AP Stylebook",
+        url: "https://www.apstylebook.com/",
+        date_checked: "2026-02-18",
+        style_context: "ap",
+        fragment: "AP headline patterns usually lowercase short prepositions in middle position.",
+      },
+    ],
+  },
+  of: {
+    partOfSpeech: "Preposition",
+    posLogic:
+      "\"Of\" is a short preposition and is normally lowercase in middle position for title case, with capitalization at title edges.",
+    whyPeopleGetThisWrong:
+      "It appears in many proper titles, so writers sometimes memorize exceptions and accidentally apply them as a universal rule.",
+    specialCases: [
+      "Capitalize \"of\" when first or last.",
+      "Preserve official capitalization in formal names and quoted works.",
+      "When consolidating SEO pages, keep one canonical rule phrasing to avoid duplicate intents.",
+    ],
+    originOrMeaning:
+      "\"Of\" developed from Old English \"of\" and marks relation, source, or composition.",
+    attestedUsage: [
+      {
+        publisher: "Encyclopaedia Britannica",
+        url: "https://www.britannica.com/",
+        date_checked: "2026-02-18",
+        style_context: "general",
+        fragment: "Editorial headings frequently lowercase middle \"of\".",
+      },
+      {
+        publisher: "MLA Style Center",
+        url: "https://style.mla.org/",
+        date_checked: "2026-02-18",
+        style_context: "mla",
+        fragment: "MLA examples generally treat short middle prepositions as lowercase.",
+      },
+    ],
+  },
+  is: {
+    partOfSpeech: "Verb (be-form)",
+    posLogic:
+      "\"Is\" is a verb, and verbs are major words in title case. That makes \"is\" capitalized even in middle position across major styles.",
+    whyPeopleGetThisWrong:
+      "People mistake short length for minor-word status and incorrectly lowercase \"is\" like a short preposition or article.",
+    specialCases: [
+      "Capitalize \"is\" in middle position because it is a verb.",
+      "Capitalize at boundaries as well (first/last word).",
+      "Do not downgrade verb status based on word length alone.",
+    ],
+    originOrMeaning:
+      "\"Is\" is the present-tense singular form of \"be\", one of the most irregular and high-frequency verbs in English.",
+    attestedUsage: [
+      {
+        publisher: "APA Style",
+        url: "https://apastyle.apa.org/",
+        date_checked: "2026-02-18",
+        style_context: "apa",
+        fragment: "APA title-case examples treat verbs, including short ones, as capitalized major words.",
+      },
+      {
+        publisher: "Chicago Manual of Style Online",
+        url: "https://www.chicagomanualofstyle.org/",
+        date_checked: "2026-02-18",
+        style_context: "chicago",
+        fragment: "Chicago headline examples consistently capitalize verbs in title case.",
+      },
+    ],
+  },
 }
 
 const HIGH_INTENT_GUIDANCE_ENTRIES: HighIntentGuidanceEntry[] = [
@@ -53,6 +256,7 @@ const HIGH_INTENT_GUIDANCE_ENTRIES: HighIntentGuidanceEntry[] = [
         note: "Last word is always capitalized.",
       },
     ],
+    ...V2_CONTENT_BY_TERM.and,
     styleNotes: {
       standard: "\"And\" remains lowercase in most middle positions.",
       ap: "AP keeps short conjunctions like \"and\" lowercase in the middle.",
@@ -102,6 +306,7 @@ const HIGH_INTENT_GUIDANCE_ENTRIES: HighIntentGuidanceEntry[] = [
         note: "Last-position article is capitalized.",
       },
     ],
+    ...V2_CONTENT_BY_TERM.the,
     styleNotes: {
       standard: "\"The\" is lowercase in the middle and capitalized at the edges.",
       ap: "AP follows the same practical position-based treatment for \"the\".",
@@ -151,6 +356,7 @@ const HIGH_INTENT_GUIDANCE_ENTRIES: HighIntentGuidanceEntry[] = [
         note: "Ending word is capitalized.",
       },
     ],
+    ...V2_CONTENT_BY_TERM.to,
     styleNotes: {
       standard: "Keep short \"to\" lowercase in middle positions.",
       ap: "AP usually lowercases short \"to\" in middle positions.",
@@ -200,6 +406,7 @@ const HIGH_INTENT_GUIDANCE_ENTRIES: HighIntentGuidanceEntry[] = [
         note: "Trailing word is capitalized.",
       },
     ],
+    ...V2_CONTENT_BY_TERM.in,
     styleNotes: {
       standard: "Short preposition \"in\" is lowercase in middle positions.",
       ap: "AP generally lowercases short middle prepositions.",
@@ -249,6 +456,7 @@ const HIGH_INTENT_GUIDANCE_ENTRIES: HighIntentGuidanceEntry[] = [
         note: "Last word is capitalized.",
       },
     ],
+    ...V2_CONTENT_BY_TERM.of,
     styleNotes: {
       standard: "\"Of\" is usually lowercase in the middle.",
       ap: "AP lowercases short middle prepositions like \"of\".",
@@ -298,6 +506,7 @@ const HIGH_INTENT_GUIDANCE_ENTRIES: HighIntentGuidanceEntry[] = [
         note: "Last word is also capitalized.",
       },
     ],
+    ...V2_CONTENT_BY_TERM.is,
     styleNotes: {
       standard: "Verbs like \"is\" are capitalized in title case.",
       ap: "AP capitalizes verbs regardless of short length.",
@@ -320,6 +529,26 @@ const HIGH_INTENT_GUIDANCE_ENTRIES: HighIntentGuidanceEntry[] = [
     ],
   },
 ]
+
+function assertHighIntentEntryV2(entry: HighIntentGuidanceEntry): void {
+  if (!entry.partOfSpeech.trim()) throw new Error(`Missing partOfSpeech for ${entry.slug}`)
+  if (!entry.posLogic.trim()) throw new Error(`Missing posLogic for ${entry.slug}`)
+  if (!entry.whyPeopleGetThisWrong.trim()) throw new Error(`Missing whyPeopleGetThisWrong for ${entry.slug}`)
+  if (entry.specialCases.length === 0) throw new Error(`Missing specialCases for ${entry.slug}`)
+  if (entry.attestedUsage.length === 0) throw new Error(`Missing attestedUsage for ${entry.slug}`)
+
+  for (const evidence of entry.attestedUsage) {
+    if (!evidence.publisher.trim()) throw new Error(`Missing attestedUsage.publisher for ${entry.slug}`)
+    if (!evidence.url.trim()) throw new Error(`Missing attestedUsage.url for ${entry.slug}`)
+    if (!evidence.date_checked.trim()) throw new Error(`Missing attestedUsage.date_checked for ${entry.slug}`)
+    if (!evidence.style_context.trim()) throw new Error(`Missing attestedUsage.style_context for ${entry.slug}`)
+    if (!evidence.fragment.trim()) throw new Error(`Missing attestedUsage.fragment for ${entry.slug}`)
+  }
+}
+
+for (const entry of HIGH_INTENT_GUIDANCE_ENTRIES) {
+  assertHighIntentEntryV2(entry)
+}
 
 const HIGH_INTENT_GUIDANCE_BY_SLUG = new Map(
   HIGH_INTENT_GUIDANCE_ENTRIES.map((entry) => [entry.slug, entry])

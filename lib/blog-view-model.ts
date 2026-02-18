@@ -24,6 +24,13 @@ const DEFAULT_TOC_ITEMS: TocItem[] = [
   { id: "article-faqs", label: "FAQ and related guides" },
 ]
 
+const HIGH_INTENT_TOC_ITEMS: TocItem[] = [
+  { id: "short-answer", label: "Short answer" },
+  { id: "part-of-speech-logic", label: "POS rule logic" },
+  { id: "do-and-do-not", label: "Examples" },
+  { id: "article-faqs", label: "FAQ and related guides" },
+]
+
 export function getArticlePageViewModel(slug: string) {
   const article = getArticleBySlug(slug)
   if (!article) {
@@ -87,7 +94,7 @@ export function getArticlePageViewModel(slug: string) {
     isHighIntentArticle,
     relatedTitle: isHighIntentArticle ? "Related capitalization questions" : "Related guides",
     recommendedTitle: isHighIntentArticle ? "Next Grammar 101 topics" : "Recommended Reading",
-    tocItems: DEFAULT_TOC_ITEMS,
+    tocItems: isHighIntentArticle ? HIGH_INTENT_TOC_ITEMS : DEFAULT_TOC_ITEMS,
     faqs: articleFaqs,
     comparisons: styleComparisons,
   }
