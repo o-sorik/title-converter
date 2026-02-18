@@ -2,7 +2,15 @@ import Link from "next/link"
 import type { Article } from "@/components/blog/data"
 import { Button } from "@/components/ui/button"
 
-export function ArticleSidebar({ related, tocItems }: { related: Article[]; tocItems: { id: string; label: string }[] }) {
+export function ArticleSidebar({
+  related,
+  tocItems,
+  relatedTitle = "Related guides",
+}: {
+  related: Article[]
+  tocItems: { id: string; label: string }[]
+  relatedTitle?: string
+}) {
   return (
     <aside className="space-y-4 lg:sticky lg:top-20 lg:h-fit">
       <section className="rounded-3xl bg-gradient-to-br from-[#1747c8] to-[#123996] p-5 text-white shadow-lg md:p-6">
@@ -45,7 +53,7 @@ export function ArticleSidebar({ related, tocItems }: { related: Article[]; tocI
         </ul>
       </section>
       <section className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900/80">
-        <h2 className="text-base font-bold text-slate-950 dark:text-zinc-100">Related guides</h2>
+        <h2 className="text-base font-bold text-slate-950 dark:text-zinc-100">{relatedTitle}</h2>
         <div className="mt-3 space-y-3">
           {related.map((relatedArticle) => (
             <Link

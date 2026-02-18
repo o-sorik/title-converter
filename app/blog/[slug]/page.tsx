@@ -52,6 +52,8 @@ export default async function ArticlePage({ params }: Props) {
     articleUrl,
     articleImage,
     updatedIso,
+    relatedTitle,
+    recommendedTitle,
     tocItems,
     faqs,
     comparisons,
@@ -82,15 +84,15 @@ export default async function ArticlePage({ params }: Props) {
 
       <section className="grid gap-5 md:gap-6 lg:grid-cols-[2fr_1fr]">
         <ArticleMainContent article={article} />
-        <ArticleSidebar related={related} tocItems={tocItems} />
+        <ArticleSidebar related={related} tocItems={tocItems} relatedTitle={relatedTitle} />
       </section>
 
       <div id="article-faqs" className="scroll-mt-24">
         <FaqBlock title="Article FAQs" items={faqs} />
       </div>
 
-      <ArticleCardsGrid title="Recommended Reading" items={recommended} label="Recommended" />
-      <ArticleCardsGrid title="Related content" items={related} label="Related" />
+      <ArticleCardsGrid title={recommendedTitle} items={recommended} label="Recommended" />
+      <ArticleCardsGrid title={relatedTitle} items={related} label="Related" />
 
       <ArticlePrevNext prevArticle={prevArticle} nextArticle={nextArticle} />
 

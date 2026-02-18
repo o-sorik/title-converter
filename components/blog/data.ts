@@ -52,7 +52,7 @@ export const blogCategories: Category[] = [
     id: "grammar-101",
     name: "Grammar 101",
     description: "Rule essentials to build confidence before style-specific decisions.",
-    articleCount: 24,
+    articleCount: 30,
   },
   {
     id: "writing-tips",
@@ -74,6 +74,72 @@ export const blogArticles: Article[] = [
     readTime: "5 min read",
     image: "/images/blog/generated/apa-notebook-cover.webp",
     featured: true,
+  },
+  {
+    slug: "and-capitalized-in-title-case",
+    title: "Is \"And\" Capitalized in Title Case? Quick Rule + Examples",
+    excerpt:
+      "Fast answer for whether \"and\" should be capitalized in title case, plus examples and converter-ready workflow.",
+    categoryId: "grammar-101",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-02-18",
+    readTime: "4 min read",
+    image: "/images/blog/generated/checklist-desk-cover.webp",
+  },
+  {
+    slug: "the-capitalized-in-title-case",
+    title: "Is \"The\" Capitalized in Title Case? Position Rule Explained",
+    excerpt:
+      "Learn when \"the\" is capitalized in title case and where it should remain lowercase in real editorial headlines.",
+    categoryId: "grammar-101",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-02-18",
+    readTime: "4 min read",
+    image: "/images/blog/generated/style-guides-stack-cover.webp",
+  },
+  {
+    slug: "to-capitalized-in-title-case",
+    title: "Is \"To\" Capitalized in Title Case? Infinitive Cases Made Practical",
+    excerpt:
+      "Resolve \"to\" capitalization quickly with practical examples and style-aware checks you can apply immediately.",
+    categoryId: "grammar-101",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-02-18",
+    readTime: "5 min read",
+    image: "/images/blog/generated/laptop-workflow-cover.webp",
+  },
+  {
+    slug: "in-capitalized-in-title-case",
+    title: "Is \"In\" Capitalized in Title Case? Short Preposition Rule",
+    excerpt:
+      "A direct rule for capitalizing \"in\" in title case with examples for first, middle, and last-word positions.",
+    categoryId: "grammar-101",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-02-18",
+    readTime: "4 min read",
+    image: "/images/blog/generated/editing-hands-cover.webp",
+  },
+  {
+    slug: "of-capitalized-in-title-case",
+    title: "Is \"Of\" Capitalized in Title Case? Editorial Baseline",
+    excerpt:
+      "See when \"of\" stays lowercase and when positional rules require capitalization in title case headlines.",
+    categoryId: "grammar-101",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-02-18",
+    readTime: "4 min read",
+    image: "/images/blog/generated/ap-typewriter-cover.webp",
+  },
+  {
+    slug: "is-capitalized-in-title-case",
+    title: "Is \"Is\" Capitalized in Title Case? Verb Rule",
+    excerpt:
+      "Why verbs like \"is\" are capitalized in title case, with quick examples and converter validation workflow.",
+    categoryId: "grammar-101",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-02-18",
+    readTime: "4 min read",
+    image: "/images/blog/generated/apa-notebook-cover.webp",
   },
   {
     slug: "apa-citing-titles",

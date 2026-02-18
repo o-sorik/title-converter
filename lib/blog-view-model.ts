@@ -10,6 +10,7 @@ import {
   styleComparisons,
 } from "@/components/blog/data"
 import { toIsoDateTime } from "@/lib/blog-date"
+import { getHighIntentGuidanceBySlug, getHighIntentRelatedEntries } from "./high-intent-guidance"
 
 export type TocItem = {
   id: string
@@ -30,19 +31,44 @@ export function getArticlePageViewModel(slug: string) {
   }
 
   const category = getCategoryById(article.categoryId)
-  const related = getArticlesByCategory(article.categoryId)
-    .filter((candidate) => candidate.slug !== article.slug)
-    .slice(0, 3)
-  const recommended = blogArticles
+  const highIntentEntry = getHighIntentGuidanceBySlug(article.slug)
+  const isHighIntentArticle = Boolean(highIntentEntry)
+
+  const relatedFromHighIntent = highIntentEntry
+    ? getHighIntentRelatedEntries(highIntentEntry)
+        .map((entry) => getArticleBySlug(entry.slug))
+        .filter((candidate): candidate is NonNullable<typeof candidate> => Boolean(candidate))
+        .slice(0, 3)
+    : []
+
+  const defaultRelated = getArticlesByCategory(article.categoryId)
     .filter((candidate) => candidate.slug !== article.slug)
     .slice(0, 3)
 
+  const related = isHighIntentArticle ? relatedFromHighIntent : defaultRelated
+
+  const recommendedPool = isHighIntentArticle
+    ? getArticlesByCategory(article.categoryId)
+        .filter((candidate) => candidate.slug !== article.slug)
+        .filter((candidate) => !related.some((relatedArticle) => relatedArticle.slug === candidate.slug))
+    : blogArticles.filter((candidate) => candidate.slug !== article.slug)
+
+  const recommended = recommendedPool.slice(0, 3)
+
   const articleIndex = blogArticles.findIndex((candidate) => candidate.slug === article.slug)
-  const prevArticle = articleIndex > 0 ? blogArticles[articleIndex - 1] : null
-  const nextArticle =
-    articleIndex >= 0 && articleIndex < blogArticles.length - 1
-      ? blogArticles[articleIndex + 1]
-      : null
+  const defaultPrevArticle = articleIndex > 0 ? blogArticles[articleIndex - 1] : null
+  const defaultNextArticle =
+    articleIndex >= 0 && articleIndex < blogArticles.length - 1 ? blogArticles[articleIndex + 1] : null
+
+  const prevArticle = isHighIntentArticle
+    ? getArticlesByCategory(article.categoryId).find((candidate) => {
+        const candidateIntent = getHighIntentGuidanceBySlug(candidate.slug)
+        if (!candidateIntent || candidate.slug === article.slug) return false
+        return candidateIntent.relatedSlugs.includes(article.slug)
+      }) ?? null
+    : defaultPrevArticle
+
+  const nextArticle = isHighIntentArticle ? related[0] ?? null : defaultNextArticle
 
   const articleUrl = `https://titlecaseconverter.online/blog/${article.slug}`
   const articleImage = `https://titlecaseconverter.online${article.image}`
@@ -58,6 +84,9 @@ export function getArticlePageViewModel(slug: string) {
     articleUrl,
     articleImage,
     updatedIso,
+    isHighIntentArticle,
+    relatedTitle: isHighIntentArticle ? "Related capitalization questions" : "Related guides",
+    recommendedTitle: isHighIntentArticle ? "Next Grammar 101 topics" : "Recommended Reading",
     tocItems: DEFAULT_TOC_ITEMS,
     faqs: articleFaqs,
     comparisons: styleComparisons,
@@ -66,8 +95,9 @@ export function getArticlePageViewModel(slug: string) {
 
 export function getBlogIndexPageViewModel() {
   const featured = getFeaturedArticle()
-  const latest = blogArticles
+  const latest = [...blogArticles]
     .filter((article) => article.slug !== featured.slug)
+    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     .slice(0, 3)
 
   return {
