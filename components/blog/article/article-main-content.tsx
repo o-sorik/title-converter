@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import type { Article } from "@/components/blog/data"
+import type { ConverterContext } from "@/lib/converter-context"
 import { Grammar101Template } from "./grammar-101-template"
 import {
   getHighIntentConverterHref,
@@ -10,10 +11,16 @@ import {
   getHighIntentRelatedEntries,
 } from "@/lib/high-intent-guidance"
 
-export function ArticleMainContent({ article }: { article: Article }) {
+export function ArticleMainContent({
+  article,
+  converterContext,
+}: {
+  article: Article
+  converterContext?: ConverterContext | null
+}) {
   const highIntentEntry = getHighIntentGuidanceBySlug(article.slug)
   const relatedHighIntent = highIntentEntry ? getHighIntentRelatedEntries(highIntentEntry) : []
-  const converterHref = highIntentEntry ? getHighIntentConverterHref(highIntentEntry.converterInput) : "/"
+  const converterHref = highIntentEntry ? getHighIntentConverterHref(highIntentEntry.converterInput, converterContext) : "/"
 
   if (highIntentEntry) {
     return (

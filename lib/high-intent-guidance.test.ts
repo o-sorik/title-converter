@@ -1,6 +1,8 @@
 import { describe, expect, test } from "vitest"
 import {
+  getHighIntentBlogHref,
   getHighIntentConverterHref,
+  getHighIntentEntryFromInput,
   getHighIntentGuidanceBySlug,
   getHighIntentGuidanceSlugs,
   getHighIntentRelatedEntries,
@@ -47,6 +49,32 @@ describe("high-intent guidance catalog", () => {
     expect(href).toContain("ctx_style=standard")
     expect(href).toContain("ctx_output_mode=title")
     expect(href).toContain("ctx_input=how+to+scale+editorial+workflows")
+  })
+
+  test("matches high-intent entry from capitalization query input", () => {
+    const entry = getHighIntentEntryFromInput("Is and capitalized in a title?")
+    expect(entry?.slug).toBe("and-capitalized-in-title-case")
+  })
+
+  test("returns null when converter input does not match high-intent query shape", () => {
+    expect(getHighIntentEntryFromInput("how to write better headlines")).toBeNull()
+  })
+
+  test("builds blog continuity href with converter context", () => {
+    const entry = getHighIntentGuidanceBySlug("is-capitalized-in-title-case")
+    if (!entry) throw new Error("Expected known entry")
+    const href = getHighIntentBlogHref(entry, {
+      input: "is this production-ready",
+      mode: "title",
+      titleStyle: "ap",
+      outputMode: "title",
+      outputTitleStyle: "ap",
+    })
+
+    expect(href).toContain(`/blog/${entry.slug}?`)
+    expect(href).toContain("ctx_mode=title")
+    expect(href).toContain("ctx_style=ap")
+    expect(href).toContain("ctx_input=is+this+production-ready")
   })
 
   test("keeps template-required fields complete for all high-intent entries", () => {

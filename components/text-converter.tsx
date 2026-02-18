@@ -16,6 +16,7 @@ import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } 
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
 import { getConverterContextStorageKey, parseConverterContextPayload } from "@/lib/converter-context"
 import { runEditorialQaBatch, type EditorialQaResult } from "@/lib/editorial-qa"
+import { getHighIntentBlogHref, getHighIntentEntryFromInput } from "@/lib/high-intent-guidance"
 
 const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
     { id: "title", label: "Title Case" },
@@ -157,6 +158,18 @@ export function TextConverter({
     const preserveInitialOutputModeRef = React.useRef(Boolean(initialOutputMode))
     const feedbackEmail = process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ?? "support@titlecaseconverter.online"
     const outputTitleStyle = conversionSnapshot?.titleStyle ?? titleStyle
+    const outputType = conversionSnapshot?.type ?? activeType
+    const navigationContext = React.useMemo(
+        () => ({
+            input,
+            mode: activeType,
+            titleStyle,
+            // Navigation should preserve current user intent, not stale converted snapshot.
+            outputMode: activeType,
+            outputTitleStyle: titleStyle,
+        }),
+        [input, activeType, titleStyle]
+    )
 
     // Update active type if defaultMode changes (e.g. navigation)
     React.useEffect(() => {
@@ -190,16 +203,17 @@ export function TextConverter({
         }
     }, [initialContextRef])
 
-    const outputType = conversionSnapshot?.type ?? activeType
     const ruleGuidance = React.useMemo(
-        () => getContextualRuleGuidance(activeType, titleStyle, {
-            input,
-            mode: activeType,
-            titleStyle,
-            outputMode: outputType,
-            outputTitleStyle: outputTitleStyle,
-        }),
-        [activeType, titleStyle, input, outputType, outputTitleStyle]
+        () => getContextualRuleGuidance(activeType, titleStyle, navigationContext),
+        [activeType, titleStyle, navigationContext]
+    )
+    const matchedHighIntentEntry = React.useMemo(
+        () => getHighIntentEntryFromInput(input),
+        [input]
+    )
+    const highIntentContentHref = React.useMemo(
+        () => (matchedHighIntentEntry ? getHighIntentBlogHref(matchedHighIntentEntry, navigationContext) : null),
+        [matchedHighIntentEntry, navigationContext]
     )
     const hasPendingChanges = hasPendingConversionChanges(conversionSnapshot, input, activeType, titleStyle)
     const outputSupportsExplanations = conversionSnapshot
@@ -516,6 +530,30 @@ export function TextConverter({
                                 Settings changed. Run convert to refresh output.
                             </p>
                         )}
+                        <div
+                            className="flex flex-wrap items-center justify-center gap-3 pt-1 text-xs"
+                            data-testid="converter-content-continuity"
+                        >
+                            {highIntentContentHref ? (
+                                <Link
+                                    href={highIntentContentHref}
+                                    className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                                    aria-label="Open matched Grammar 101 guidance for this capitalization query"
+                                >
+                                    <span>Open matching Grammar 101 answer</span>
+                                    <ExternalLink className="h-3 w-3" />
+                                </Link>
+                            ) : (
+                                <Link
+                                    href="/blog/categories/grammar-101"
+                                    className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                                    aria-label="Browse Grammar 101 capitalization questions"
+                                >
+                                    <span>Browse Grammar 101 questions</span>
+                                    <ExternalLink className="h-3 w-3" />
+                                </Link>
+                            )}
+                        </div>
                     </div>
 
                     {activeType === "title" && (

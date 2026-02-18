@@ -34,4 +34,34 @@ describe("ArticleMainContent", () => {
     expect(html).toContain('href="/?ctx_ref=latest')
     expect(html).toContain("ctx_input=research+and+development+handbook")
   })
+
+  test("prefers converter context for return CTA when available", () => {
+    const html = renderToStaticMarkup(
+      <ArticleMainContent
+        article={{
+          slug: "is-capitalized-in-title-case",
+          title: "Is \"Is\" Capitalized in Title Case? Verb Rule",
+          excerpt: "Why verbs like is are capitalized.",
+          categoryId: "grammar-101",
+          author: "Oleh Kovalenko",
+          updatedAt: "2026-02-18",
+          readTime: "4 min read",
+          image: "/images/blog/generated/apa-notebook-cover.webp",
+        }}
+        converterContext={{
+          input: "is this production-ready",
+          mode: "title",
+          titleStyle: "ap",
+          outputMode: "title",
+          outputTitleStyle: "ap",
+        }}
+      />
+    )
+
+    expect(html).toContain('href="/?ctx_ref=latest')
+    expect(html).toContain("ctx_mode=title")
+    expect(html).toContain("ctx_style=ap")
+    expect(html).toContain("ctx_input=is+this+production-ready")
+    expect(html).not.toContain("ctx_input=why+this+is+important")
+  })
 })

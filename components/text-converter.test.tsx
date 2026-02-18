@@ -213,3 +213,45 @@ test("includes helper/status relationships and responsive textarea sizing", () =
   expect(html).toContain('aria-describedby="copy-feedback"')
   expect(html).toContain('min-h-[200px] md:min-h-[260px]')
 })
+
+test("shows matched Grammar 101 continuity link for high-intent capitalization query input", () => {
+  const html = renderToStaticMarkup(
+    <TextConverter defaultMode="title" initialInput="is and capitalized" initialTitleStyle="ap" />
+  )
+
+  expect(html).toContain('data-testid="converter-content-continuity"')
+  expect(html).toContain("Open matching Grammar 101 answer")
+  expect(html).toContain('href="/blog/and-capitalized-in-title-case?')
+  expect(html).toContain("ctx_mode=title")
+  expect(html).toContain("ctx_style=ap")
+  expect(html).toContain("ctx_input=is+and+capitalized")
+})
+
+test("shows Grammar 101 browse fallback when converter input does not match high-intent pattern", () => {
+  const html = renderToStaticMarkup(
+    <TextConverter defaultMode="title" initialInput="how to improve headline quality" />
+  )
+
+  expect(html).toContain('data-testid="converter-content-continuity"')
+  expect(html).toContain("Browse Grammar 101 questions")
+  expect(html).toContain('href="/blog/categories/grammar-101"')
+})
+
+test("uses current selected mode in continuity context even when snapshot output is stale", () => {
+  const html = renderToStaticMarkup(
+    <TextConverter
+      defaultMode="sentence"
+      initialInput="is and capitalized"
+      initialOutputMode="title"
+      initialOutputTitleStyle="ap"
+      initialTitleStyle="chicago"
+    />
+  )
+
+  expect(html).toContain('href="/blog/and-capitalized-in-title-case?')
+  expect(html).toContain("ctx_mode=sentence")
+  expect(html).toContain("ctx_style=chicago")
+  expect(html).toContain("ctx_output_mode=sentence")
+  expect(html).toContain("ctx_output_style=chicago")
+  expect(html).not.toContain("ctx_output_mode=title")
+})

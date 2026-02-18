@@ -8,6 +8,7 @@ import { ArticleHeader } from "@/components/blog/article/article-header"
 import { ArticleMainContent } from "@/components/blog/article/article-main-content"
 import { ArticlePrevNext } from "@/components/blog/article/article-prev-next"
 import { ArticleSidebar } from "@/components/blog/article/article-sidebar"
+import { parseConverterInitialStateFromSearchParams, toConverterContext } from "@/lib/converter-context"
 import {
   getArticlePageViewModel,
   getBlogArticleMetadataBySlug,
@@ -16,6 +17,7 @@ import {
 
 type Props = {
   params: Promise<{ slug: string }>
+  searchParams?: Promise<Record<string, string | string[] | undefined>>
 }
 
 export const revalidate = 604800
@@ -35,13 +37,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return metadata
 }
 
-export default async function ArticlePage({ params }: Props) {
+export default async function ArticlePage({ params, searchParams }: Props) {
   const siteUrl = "https://titlecaseconverter.online"
   const { slug } = await params
   const viewModel = getArticlePageViewModel(slug)
   if (!viewModel) {
     notFound()
   }
+  const converterInitialState = parseConverterInitialStateFromSearchParams((await searchParams) ?? {})
+  const converterContext = toConverterContext(converterInitialState)
   const {
     article,
     category,
@@ -83,7 +87,7 @@ export default async function ArticlePage({ params }: Props) {
       <ArticleHeader article={article} category={category} />
 
       <section className="grid gap-5 md:gap-6 lg:grid-cols-[2fr_1fr]">
-        <ArticleMainContent article={article} />
+        <ArticleMainContent article={article} converterContext={converterContext} />
         <ArticleSidebar related={related} tocItems={tocItems} relatedTitle={relatedTitle} />
       </section>
 

@@ -1,4 +1,5 @@
 import { appendConverterContextToHref } from "./converter-context"
+import type { ConverterContext } from "./converter-context"
 
 export type GuidanceStyleKey = "standard" | "ap" | "apa" | "mla" | "chicago"
 
@@ -323,6 +324,9 @@ const HIGH_INTENT_GUIDANCE_ENTRIES: HighIntentGuidanceEntry[] = [
 const HIGH_INTENT_GUIDANCE_BY_SLUG = new Map(
   HIGH_INTENT_GUIDANCE_ENTRIES.map((entry) => [entry.slug, entry])
 )
+const HIGH_INTENT_GUIDANCE_BY_TERM = new Map(
+  HIGH_INTENT_GUIDANCE_ENTRIES.map((entry) => [entry.term, entry])
+)
 
 export function getHighIntentGuidanceSlugs(): string[] {
   return HIGH_INTENT_GUIDANCE_ENTRIES.map((entry) => entry.slug)
@@ -338,17 +342,57 @@ export function getHighIntentRelatedEntries(entry: HighIntentGuidanceEntry): Hig
     .filter((candidate): candidate is HighIntentGuidanceEntry => Boolean(candidate))
 }
 
-export function getHighIntentConverterHref(converterInput: string): string {
-  const hrefWithContext = appendConverterContextToHref("/", {
+export function getHighIntentConverterHref(
+  converterInput: string,
+  converterContext?: ConverterContext | null
+): string {
+  const effectiveContext = converterContext ?? {
     input: converterInput,
     mode: "title",
-    titleStyle: "standard",
-    outputMode: "title",
-    outputTitleStyle: "standard",
-  })
+    titleStyle: "standard" as const,
+    outputMode: "title" as const,
+    outputTitleStyle: "standard" as const,
+  }
+
+  const hrefWithContext = appendConverterContextToHref("/", effectiveContext)
 
   const url = new URL(hrefWithContext, "https://titlecaseconverter.online")
-  url.searchParams.set("ctx_input", converterInput)
+  url.searchParams.set("ctx_input", effectiveContext.input || converterInput)
+  const query = url.searchParams.toString()
+  return `${url.pathname}${query ? `?${query}` : ""}${url.hash}`
+}
+
+function extractCandidateTerm(input: string): string | null {
+  const normalized = input.trim().toLowerCase().replace(/[^a-z\s?]/g, " ").replace(/\s+/g, " ").trim()
+  if (!normalized) return null
+
+  const patterns = [
+    /^is ([a-z]+) capitalized\b/,
+    /^should ([a-z]+) be capitalized\b/,
+    /^([a-z]+) capitalized\??$/,
+    /^([a-z]+)$/,
+  ]
+
+  for (const pattern of patterns) {
+    const match = normalized.match(pattern)
+    if (match?.[1]) return match[1]
+  }
+  return null
+}
+
+export function getHighIntentEntryFromInput(input: string): HighIntentGuidanceEntry | null {
+  const term = extractCandidateTerm(input)
+  if (!term) return null
+  return HIGH_INTENT_GUIDANCE_BY_TERM.get(term) ?? null
+}
+
+export function getHighIntentBlogHref(
+  entry: HighIntentGuidanceEntry,
+  converterContext: ConverterContext
+): string {
+  const hrefWithContext = appendConverterContextToHref(`/blog/${entry.slug}`, converterContext)
+  const url = new URL(hrefWithContext, "https://titlecaseconverter.online")
+  url.searchParams.set("ctx_input", converterContext.input)
   const query = url.searchParams.toString()
   return `${url.pathname}${query ? `?${query}` : ""}${url.hash}`
 }
