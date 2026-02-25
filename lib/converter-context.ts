@@ -111,17 +111,18 @@ export function parseConverterContextPayload(raw: string): ConverterContext | nu
     const value = JSON.parse(raw) as Partial<ConverterContext>
     if (!value || typeof value !== "object") return null
     if (typeof value.input !== "string") return null
-    if (!asMode(value.mode)) return null
-    if (!asStyle(value.titleStyle)) return null
-    if (!asMode(value.outputMode)) return null
-    if (!asStyle(value.outputTitleStyle)) return null
+    const mode = asMode(value.mode)
+    const titleStyle = asStyle(value.titleStyle)
+    const outputMode = asMode(value.outputMode)
+    const outputTitleStyle = asStyle(value.outputTitleStyle)
+    if (!mode || !titleStyle || !outputMode || !outputTitleStyle) return null
 
     return {
       input: value.input,
-      mode: value.mode,
-      titleStyle: value.titleStyle,
-      outputMode: value.outputMode,
-      outputTitleStyle: value.outputTitleStyle,
+      mode,
+      titleStyle,
+      outputMode,
+      outputTitleStyle,
     }
   } catch {
     return null

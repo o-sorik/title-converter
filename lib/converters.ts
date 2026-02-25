@@ -16,6 +16,8 @@ export interface ConvertOptions {
     titleStyle?: TitleCaseStyle;
 }
 
+const EXPLANATION_SNIPPET_LENGTH = 20;
+
 const ARTICLES = new Set([
     "a",
     "an",
@@ -353,17 +355,18 @@ function buildTitleTransforms(text: string, style: TitleCaseStyle): TitleWordTra
     });
 }
 
-function convertTitleCase(text: string, style: TitleCaseStyle): string {
-    const transforms = buildTitleTransforms(text, style);
+function applyTransforms(text: string, transforms: TitleWordTransform[]): string {
     let result = text;
     let offset = 0;
-
     for (const transform of transforms) {
         result = result.slice(0, transform.start + offset) + transform.converted + result.slice(transform.end + offset);
         offset += transform.converted.length - transform.word.length;
     }
-
     return result;
+}
+
+function convertTitleCase(text: string, style: TitleCaseStyle): string {
+    return applyTransforms(text, buildTitleTransforms(text, style));
 }
 
 function buildSentenceTransforms(text: string): TitleWordTransform[] {
@@ -419,17 +422,7 @@ export function convert(text: string, type: ConversionType, options: ConvertOpti
         case "upper": return text.toUpperCase();
         case "lower": return text.toLowerCase();
         case "sentence":
-            const sentenceTransforms = buildSentenceTransforms(text);
-            let sentenceResult = text;
-            let sentenceOffset = 0;
-            for (const transform of sentenceTransforms) {
-                sentenceResult =
-                    sentenceResult.slice(0, transform.start + sentenceOffset) +
-                    transform.converted +
-                    sentenceResult.slice(transform.end + sentenceOffset);
-                sentenceOffset += transform.converted.length - transform.word.length;
-            }
-            return sentenceResult;
+            return applyTransforms(text, buildSentenceTransforms(text));
         case "title":
             return convertTitleCase(text, titleStyle);
         case "camel":
@@ -477,12 +470,8 @@ export function convertWithExplanations(text: string, type: ConversionType, opti
     const titleStyle = options.titleStyle ?? "standard";
 
     switch (type) {
-        case "title":
-            // Title case with explanations
+        case "title": {
             const transforms = buildTitleTransforms(text, titleStyle);
-            let transformedText = text;
-            let transformOffset = 0;
-
             for (const transform of transforms) {
                 if (transform.word !== transform.converted) {
                     explanations.push({
@@ -492,22 +481,13 @@ export function convertWithExplanations(text: string, type: ConversionType, opti
                         type: transform.type,
                     });
                 }
-
-                transformedText =
-                    transformedText.slice(0, transform.start + transformOffset) +
-                    transform.converted +
-                    transformedText.slice(transform.end + transformOffset);
-                transformOffset += transform.converted.length - transform.word.length;
             }
-            output = transformedText;
+            output = applyTransforms(text, transforms);
             break;
+        }
 
-        case "sentence":
-            // Sentence case with explanations
+        case "sentence": {
             const sentenceTransforms = buildSentenceTransforms(text);
-            output = text;
-            let sentenceOffset = 0;
-
             for (const transform of sentenceTransforms) {
                 if (transform.word !== transform.converted) {
                     explanations.push({
@@ -517,21 +497,17 @@ export function convertWithExplanations(text: string, type: ConversionType, opti
                         type: transform.type,
                     });
                 }
-
-                output =
-                    output.slice(0, transform.start + sentenceOffset) +
-                    transform.converted +
-                    output.slice(transform.end + sentenceOffset);
-                sentenceOffset += transform.converted.length - transform.word.length;
             }
+            output = applyTransforms(text, sentenceTransforms);
             break;
+        }
 
         case "upper":
             output = text.toUpperCase();
             if (text !== output) {
                 explanations.push({
-                    word: text.substring(0, 20) + (text.length > 20 ? "..." : ""),
-                    converted: output.substring(0, 20) + (output.length > 20 ? "..." : ""),
+                    word: text.substring(0, EXPLANATION_SNIPPET_LENGTH) + (text.length > EXPLANATION_SNIPPET_LENGTH ? "..." : ""),
+                    converted: output.substring(0, EXPLANATION_SNIPPET_LENGTH) + (output.length > EXPLANATION_SNIPPET_LENGTH ? "..." : ""),
                     reason: "All text converted to uppercase",
                     type: "capitalized"
                 });
@@ -542,8 +518,8 @@ export function convertWithExplanations(text: string, type: ConversionType, opti
             output = text.toLowerCase();
             if (text !== output) {
                 explanations.push({
-                    word: text.substring(0, 20) + (text.length > 20 ? "..." : ""),
-                    converted: output.substring(0, 20) + (output.length > 20 ? "..." : ""),
+                    word: text.substring(0, EXPLANATION_SNIPPET_LENGTH) + (text.length > EXPLANATION_SNIPPET_LENGTH ? "..." : ""),
+                    converted: output.substring(0, EXPLANATION_SNIPPET_LENGTH) + (output.length > EXPLANATION_SNIPPET_LENGTH ? "..." : ""),
                     reason: "All text converted to lowercase",
                     type: "lowercased"
                 });

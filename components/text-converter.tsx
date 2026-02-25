@@ -18,6 +18,10 @@ import { getConverterContextStorageKey, parseConverterContextPayload } from "@/l
 import { runEditorialQaBatch, type EditorialQaResult } from "@/lib/editorial-qa"
 import { getHighIntentBlogHref, getHighIntentEntryFromInput } from "@/lib/high-intent-guidance"
 
+const MAX_VISIBLE_EXPLANATIONS = 15
+const COPY_FEEDBACK_DISMISS_MS = 2500
+const FEEDBACK_SNIPPET_CHAR_LIMIT = 280
+
 const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
     { id: "title", label: "Title Case" },
     { id: "sentence", label: "Sentence case" },
@@ -109,7 +113,7 @@ function ExplanationsPanel({
                 </p>
             )}
             <div className="space-y-2 max-h-48 overflow-y-auto">
-                {explanations.slice(0, 15).map((exp, i) => (
+                {explanations.slice(0, MAX_VISIBLE_EXPLANATIONS).map((exp, i) => (
                     <div key={i} className="flex items-center gap-3 text-sm">
                         <span className={`px-2 py-0.5 rounded-full text-xs font-mono ${exp.type === "capitalized"
                             ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
@@ -120,9 +124,9 @@ function ExplanationsPanel({
                         <span className="text-muted-foreground">{exp.reason}</span>
                     </div>
                 ))}
-                {explanations.length > 15 && (
+                {explanations.length > MAX_VISIBLE_EXPLANATIONS && (
                     <p className="text-xs text-muted-foreground italic">
-                        +{explanations.length - 15} more changes...
+                        +{explanations.length - MAX_VISIBLE_EXPLANATIONS} more changes...
                     </p>
                 )}
             </div>
@@ -272,7 +276,7 @@ export function TextConverter({
         const timeoutId = window.setTimeout(() => {
             setCopied(false)
             setCopyFeedbackState("idle")
-        }, 2500)
+        }, COPY_FEEDBACK_DISMISS_MS)
         return () => window.clearTimeout(timeoutId)
     }, [copyFeedbackState, copyFeedbackTick])
 
@@ -321,9 +325,8 @@ export function TextConverter({
     }
 
     const handleReportTitleStyleError = () => {
-        const snippetLimit = 280
-        const inputSnippet = input.trim().slice(0, snippetLimit) || "(empty)"
-        const outputSnippet = output.trim().slice(0, snippetLimit) || "(empty)"
+        const inputSnippet = input.trim().slice(0, FEEDBACK_SNIPPET_CHAR_LIMIT) || "(empty)"
+        const outputSnippet = output.trim().slice(0, FEEDBACK_SNIPPET_CHAR_LIMIT) || "(empty)"
         const subject = `[Title Style Feedback] ${titleStyle.toUpperCase()}`
         const body = [
             "Hi, I found a possible capitalization issue.",
