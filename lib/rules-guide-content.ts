@@ -10,6 +10,29 @@ export interface GuidanceExample {
   whyItMatters: string
 }
 
+export interface StyleGuideSection {
+  id: GuidanceStyle
+  name: string
+  fullName: string
+  description: string
+  keyRules: string[]
+  sourceUrl: string
+  sourceName: string
+  editionNote: string
+}
+
+export interface ComparisonScenario {
+  scenario: string
+  example: string
+  results: Record<GuidanceStyle, string>
+  notes: string
+}
+
+export interface RulesPageFAQ {
+  question: string
+  answer: string
+}
+
 export interface RulesGuideViewModel {
   activeStyle: GuidanceStyle
   activeMode: string
@@ -20,6 +43,12 @@ export interface RulesGuideViewModel {
   examples: GuidanceExample[]
   returnHref: string
   returnLabel: string
+}
+
+export interface RulesGuideHubViewModel extends RulesGuideViewModel {
+  styleGuides: StyleGuideSection[]
+  comparisonScenarios: ComparisonScenario[]
+  faqs: RulesPageFAQ[]
 }
 
 const STYLE_META: Record<GuidanceStyle, { title: string; summary: string }> = {
@@ -49,6 +78,199 @@ const STYLE_META: Record<GuidanceStyle, { title: string; summary: string }> = {
       "APA typically capitalizes prepositions and conjunctions with four or more letters; shorter ones are lowercased in middle positions.",
   },
 }
+
+export const STYLE_GUIDE_SECTIONS: StyleGuideSection[] = [
+  {
+    id: "ap",
+    name: "AP",
+    fullName: "Associated Press Stylebook",
+    description:
+      "The AP Stylebook is the primary reference for journalists, newsrooms, and digital media. It favors readability and consistency in headline casing, capitalizing longer prepositions while keeping short function words lowercase.",
+    keyRules: [
+      "Capitalize words with 5 or more letters, including prepositions and conjunctions",
+      "Lowercase articles (a, an, the) in middle positions",
+      "Always capitalize the first and last word of the title",
+      "Capitalize both parts of hyphenated compounds in most cases",
+    ],
+    sourceUrl: "https://www.apstylebook.com/",
+    sourceName: "AP Stylebook",
+    editionNote: "56th Edition (2024)",
+  },
+  {
+    id: "apa",
+    name: "APA",
+    fullName: "APA Publication Manual",
+    description:
+      "The APA Publication Manual is the standard for academic and scientific writing. Its title case rules capitalize words of four or more letters, creating a slightly more capitalized look than AP style.",
+    keyRules: [
+      "Capitalize words with 4 or more letters, including prepositions and conjunctions",
+      "Lowercase short conjunctions (and, but, or, nor, yet, so, for) under 4 letters",
+      "Lowercase short prepositions (at, by, in, of, on, to, up) under 4 letters",
+      "Always capitalize the first word after a colon, dash, or end punctuation",
+    ],
+    sourceUrl: "https://apastyle.apa.org/",
+    sourceName: "APA Style",
+    editionNote: "7th Edition (2019)",
+  },
+  {
+    id: "mla",
+    name: "MLA",
+    fullName: "MLA Handbook",
+    description:
+      "The MLA Handbook serves humanities scholars and literature students. Its title case conventions are close to Chicago style, keeping most prepositions and conjunctions lowercase regardless of length.",
+    keyRules: [
+      "Capitalize the first and last word of the title and subtitle",
+      "Lowercase articles, prepositions, and coordinating conjunctions in middle positions",
+      "Capitalize all other words, including long prepositions like \"between\" or \"through\"",
+      "Capitalize the first word after a colon",
+    ],
+    sourceUrl: "https://www.mla.org/",
+    sourceName: "MLA Handbook",
+    editionNote: "9th Edition (2021)",
+  },
+  {
+    id: "chicago",
+    name: "Chicago",
+    fullName: "The Chicago Manual of Style",
+    description:
+      "The Chicago Manual of Style is the gold standard for book publishing and formal editorial work. It uses a traditional approach that lowercases most prepositions and conjunctions in middle positions.",
+    keyRules: [
+      "Lowercase articles (a, an, the) in middle positions",
+      "Lowercase coordinating conjunctions (and, but, or, nor, yet, so, for)",
+      "Lowercase prepositions in middle positions regardless of length",
+      "Always capitalize the first and last word of title and subtitle",
+    ],
+    sourceUrl: "https://www.chicagomanualofstyle.org/",
+    sourceName: "Chicago Manual of Style",
+    editionNote: "17th Edition (2017)",
+  },
+  {
+    id: "standard",
+    name: "Standard",
+    fullName: "Standard Title Case",
+    description:
+      "Standard title case is a balanced default used when no specific style guide is required. It follows broadly accepted conventions: capitalizing major words while lowercasing most short function words in middle positions.",
+    keyRules: [
+      "Capitalize major words (nouns, verbs, adjectives, adverbs)",
+      "Lowercase articles, short prepositions, and short conjunctions in middle positions",
+      "Always capitalize the first and last word",
+      "Capitalize words after colons and major punctuation",
+    ],
+    sourceUrl: "https://titlecaseconverter.online/capitalization-rules-guide",
+    sourceName: "Title Case Converter",
+    editionNote: "General convention",
+  },
+]
+
+export const COMPARISON_SCENARIOS: ComparisonScenario[] = [
+  {
+    scenario: "Long preposition: \"across\" (6 letters)",
+    example: "running across the bridge at night",
+    results: {
+      standard: "Running across the Bridge at Night",
+      ap: "Running Across the Bridge at Night",
+      apa: "Running Across the Bridge at Night",
+      mla: "Running across the Bridge at Night",
+      chicago: "Running across the Bridge at Night",
+    },
+    notes: "AP and APA capitalize \"across\" (5+ and 4+ letters). Standard, MLA, and Chicago keep it lowercase.",
+  },
+  {
+    scenario: "Long preposition: \"between\" (7 letters)",
+    example: "the cat is between the boxes",
+    results: {
+      standard: "The Cat Is between the Boxes",
+      ap: "The Cat Is Between the Boxes",
+      apa: "The Cat Is Between the Boxes",
+      mla: "The Cat Is between the Boxes",
+      chicago: "The Cat Is between the Boxes",
+    },
+    notes: "Despite its length, only AP and APA capitalize \"between\". Chicago and MLA keep all prepositions lowercase.",
+  },
+  {
+    scenario: "Short preposition: \"with\" (4 letters)",
+    example: "writing with confidence and purpose",
+    results: {
+      standard: "Writing with Confidence and Purpose",
+      ap: "Writing with Confidence and Purpose",
+      apa: "Writing With Confidence and Purpose",
+      mla: "Writing with Confidence and Purpose",
+      chicago: "Writing with Confidence and Purpose",
+    },
+    notes: "Only APA capitalizes \"with\" (4+ letter threshold). All other styles keep it lowercase.",
+  },
+  {
+    scenario: "Short preposition: \"from\" (4 letters)",
+    example: "ideas from around the world",
+    results: {
+      standard: "Ideas from around the World",
+      ap: "Ideas from Around the World",
+      apa: "Ideas From Around the World",
+      mla: "Ideas from around the World",
+      chicago: "Ideas from around the World",
+    },
+    notes: "APA capitalizes both \"from\" (4 letters) and \"around\" (6 letters). AP capitalizes only \"around\" (5+ letters).",
+  },
+  {
+    scenario: "Subtitle after colon",
+    example: "title case rules: a practical guide",
+    results: {
+      standard: "Title Case Rules: A Practical Guide",
+      ap: "Title Case Rules: A Practical Guide",
+      apa: "Title Case Rules: A Practical Guide",
+      mla: "Title Case Rules: A Practical Guide",
+      chicago: "Title Case Rules: A Practical Guide",
+    },
+    notes: "All styles agree: the first word after a colon is always capitalized, even articles like \"a\".",
+  },
+  {
+    scenario: "Preposition \"about\" (5 letters)",
+    example: "the rules about writing and thinking",
+    results: {
+      standard: "The Rules about Writing and Thinking",
+      ap: "The Rules About Writing and Thinking",
+      apa: "The Rules About Writing and Thinking",
+      mla: "The Rules about Writing and Thinking",
+      chicago: "The Rules about Writing and Thinking",
+    },
+    notes: "AP capitalizes \"about\" at exactly 5 letters (its threshold). APA does too (4+ letters).",
+  },
+  {
+    scenario: "Preposition \"after\" (5 letters)",
+    example: "she walked along the river after lunch",
+    results: {
+      standard: "She Walked Along the River after Lunch",
+      ap: "She Walked Along the River After Lunch",
+      apa: "She Walked Along the River After Lunch",
+      mla: "She Walked Along the River after Lunch",
+      chicago: "She Walked Along the River after Lunch",
+    },
+    notes: "\"Along\" is capitalized by all styles (5+ letters), but \"after\" splits AP/APA from the rest.",
+  },
+]
+
+export const RULES_PAGE_FAQS: RulesPageFAQ[] = [
+  {
+    question: "Which capitalization style should I use?",
+    answer: "Use the style required by your publication or institution. AP style is standard for journalism and news, APA for academic and scientific papers, MLA for humanities essays, and Chicago for book publishing and formal editorial work.",
+  },
+  {
+    question: "What is the main difference between AP and Chicago title case?",
+    answer: "The key difference is how they treat longer prepositions. AP capitalizes prepositions with 5 or more letters (like \"Between\" and \"Through\"), while Chicago keeps all prepositions lowercase in middle positions regardless of length.",
+  },
+  {
+    question: "Should I capitalize \"is\" in a title?",
+    answer: "Yes. \"Is\" is a verb (a form of \"to be\"), and all major styles agree that verbs should always be capitalized in titles, even short ones.",
+  },
+  {
+    question: "Are there words that are always lowercase in titles?",
+    answer: "No word is always lowercase. Even articles like \"a\", \"an\", and \"the\" are capitalized when they appear as the first or last word of a title. In middle positions, articles, short prepositions, and short conjunctions are typically lowercase across all styles.",
+  },
+  {
+    question: "How do I capitalize a hyphenated word in a title?",
+    answer: "Most styles capitalize the first element of a hyphenated compound. For subsequent elements, capitalize them if they are major words (nouns, verbs, adjectives). Keep small function words lowercase, such as \"State-of-the-Art\" where \"of\" and \"the\" stay lowercase.",
+  },
+]
 
 const EDGE_CASE_EXAMPLES: GuidanceExample[] = [
   {
@@ -89,6 +311,45 @@ const EDGE_CASE_EXAMPLES: GuidanceExample[] = [
     },
     whyItMatters:
       "Hyphenation and brand casing are frequent edge cases where users should verify output quickly before publishing.",
+  },
+  {
+    caseLabel: "Infinitive \"to\" vs preposition \"to\"",
+    input: "to be or not to be",
+    outputs: {
+      standard: "To Be or Not to Be",
+      ap: "To Be or Not to Be",
+      chicago: "To Be or Not to Be",
+      mla: "To Be or Not to Be",
+      apa: "To Be or Not to Be",
+    },
+    whyItMatters:
+      "\"To\" as the first word is always capitalized. In middle positions, all styles lowercase it whether used as an infinitive marker or preposition.",
+  },
+  {
+    caseLabel: "Short verb \"is\" in the middle",
+    input: "she is an editor-in-chief",
+    outputs: {
+      standard: "She Is an Editor-in-Chief",
+      ap: "She Is an Editor-in-Chief",
+      chicago: "She Is an Editor-in-Chief",
+      mla: "She Is an Editor-in-Chief",
+      apa: "She Is an Editor-in-Chief",
+    },
+    whyItMatters:
+      "\"Is\" is a verb, not a preposition or conjunction, so all styles capitalize it. Many writers mistakenly lowercase short verbs.",
+  },
+  {
+    caseLabel: "4-letter preposition \"with\"",
+    input: "writing with confidence and purpose",
+    outputs: {
+      standard: "Writing with Confidence and Purpose",
+      ap: "Writing with Confidence and Purpose",
+      chicago: "Writing with Confidence and Purpose",
+      mla: "Writing with Confidence and Purpose",
+      apa: "Writing With Confidence and Purpose",
+    },
+    whyItMatters:
+      "APA's 4-letter threshold uniquely capitalizes \"with\" — the only style to do so. This is one of the most common APA-specific differences.",
   },
 ]
 
@@ -157,5 +418,22 @@ export function getRulesGuideViewModelWithContext(
   return {
     ...model,
     returnHref: appendConverterContextToHref(model.returnHref, converterContext),
+  }
+}
+
+export function getRulesGuideHubViewModel(
+  styleParam?: string,
+  modeParam?: string,
+  converterContext?: ConverterContext | null
+): RulesGuideHubViewModel {
+  const base = converterContext
+    ? getRulesGuideViewModelWithContext(styleParam, modeParam, converterContext)
+    : getRulesGuideViewModel(styleParam, modeParam)
+
+  return {
+    ...base,
+    styleGuides: STYLE_GUIDE_SECTIONS,
+    comparisonScenarios: COMPARISON_SCENARIOS,
+    faqs: RULES_PAGE_FAQS,
   }
 }

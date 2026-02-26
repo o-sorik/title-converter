@@ -368,16 +368,16 @@ export function TextConverter({
 
                     {/* Controls - Grouped by category */}
                     <div
-                        className="flex flex-wrap items-start justify-center gap-4 pb-4"
+                        className="flex flex-wrap items-start justify-center gap-2 sm:gap-4 pb-3 sm:pb-4"
                         aria-label="Mode Controls"
                         data-testid="mode-controls"
                     >
                         {CONVERSION_GROUPS.filter((group) => group.label !== "Fun" || (["alternating", "inverse"] as ConversionType[]).includes(activeType)).map((group) => (
-                            <div key={group.label} className="flex flex-col items-center gap-1.5">
+                            <div key={group.label} className="flex flex-col items-center gap-1 sm:gap-1.5">
                                 <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/60">
                                     {group.label}
                                 </span>
-                                <div className="flex flex-wrap justify-center gap-1.5">
+                                <div className="flex flex-wrap justify-center gap-1 sm:gap-1.5">
                                     {group.ids.map((id) => {
                                         const type = CONVERSION_TYPES.find((t) => t.id === id)!
                                         const tip = CONVERSION_TOOLTIPS[type.id]
@@ -390,7 +390,7 @@ export function TextConverter({
                                                         onClick={() => setActiveType(type.id)}
                                                         aria-pressed={activeType === type.id}
                                                         data-active={activeType === type.id ? "true" : "false"}
-                                                        className="rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-md"
+                                                        className="rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-md px-2 text-xs sm:px-3 sm:text-sm"
                                                     >
                                                         {type.label}
                                                     </Button>
@@ -453,7 +453,7 @@ export function TextConverter({
                                 <Textarea
                                     id="converter-input"
                                     placeholder="Type or paste your text here..."
-                                    className="min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-zinc-500 dark:placeholder:text-zinc-400"
+                                    className="min-h-[140px] sm:min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-zinc-500 dark:placeholder:text-zinc-400"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     aria-describedby="converter-input-helper"
@@ -526,7 +526,7 @@ export function TextConverter({
                                 key={outputKey}
                                 readOnly
                                 placeholder="Result will appear here..."
-                                className="min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-muted-foreground font-medium focus-visible:ring-0 animate-pulse-subtle"
+                                className="min-h-[140px] sm:min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-muted-foreground font-medium focus-visible:ring-0 animate-pulse-subtle"
                                 value={output}
                                 aria-describedby="copy-feedback"
                                 aria-label="Converted output"

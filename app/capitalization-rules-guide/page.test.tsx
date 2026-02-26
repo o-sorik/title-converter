@@ -9,7 +9,7 @@ test("renders style-relevant edge-case examples for selected style", async () =>
   })
   const html = renderToStaticMarkup(page)
 
-  expect(html).toContain("Edge-case guidance")
+  expect(html).toContain("Reference guide")
   expect(html).toContain("AP style guidance")
   expect(html).toContain("Walking During the Light")
 })
@@ -20,7 +20,7 @@ test("shows clear return action to converter based on mode context", async () =>
   })
   const html = renderToStaticMarkup(page)
 
-  expect(html).toContain("Next Action")
+  expect(html).toContain("Next Steps")
   expect(html).toContain('href="/sentence-case-converter"')
   expect(html).toContain("Return to Sentence Case Converter")
 })

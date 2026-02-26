@@ -98,19 +98,19 @@ const checks = [
     },
   },
   {
-    id: "guide-noindex",
-    description: "Coming-soon guide is set to noindex",
+    id: "guide-indexed",
+    description: "Rules guide is set to index",
     run: () => {
       const content = read("app/capitalization-rules-guide/page.tsx");
-      return !!content && content.includes("robots:") && content.includes("index: false");
+      return !!content && content.includes("robots:") && content.includes("index: true");
     },
   },
   {
-    id: "sitemap-guide-excluded",
-    description: "Sitemap excludes coming-soon guide",
+    id: "sitemap-guide-included",
+    description: "Sitemap includes rules guide",
     run: () => {
       const content = read("app/sitemap.ts");
-      return !!content && !content.includes("/capitalization-rules-guide");
+      return !!content && content.includes("/capitalization-rules-guide");
     },
   },
   {
