@@ -9,13 +9,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 
 import { convert, convertWithExplanations, type ConversionType, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
 import { createConversionSnapshot, hasPendingConversionChanges, syncSnapshotMode, type ConversionSnapshot } from "@/lib/conversion-session"
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
 import { getConverterContextStorageKey, parseConverterContextPayload } from "@/lib/converter-context"
-import { runEditorialQaBatch, type EditorialQaResult } from "@/lib/editorial-qa"
 import { getHighIntentBlogHref, getHighIntentEntryFromInput } from "@/lib/high-intent-guidance"
 
 const MAX_VISIBLE_EXPLANATIONS = 15
@@ -44,6 +44,25 @@ const TITLE_STYLES: { id: TitleCaseStyle; label: string; hint: string }[] = [
     { id: "mla", label: "MLA", hint: "Common humanities title style" },
     { id: "apa", label: "APA", hint: "Academic-friendly title style" },
 ]
+
+const CONVERSION_GROUPS: { label: string; ids: ConversionType[] }[] = [
+    { label: "Text Case", ids: ["title", "sentence", "upper", "lower"] },
+    { label: "Code Case", ids: ["camel", "pascal", "snake", "kebab"] },
+    { label: "Fun", ids: ["alternating", "inverse"] },
+]
+
+const CONVERSION_TOOLTIPS: Record<ConversionType, { desc: string; example: string }> = {
+    title:       { desc: "Capitalize major words per style guide", example: "Hello World" },
+    sentence:    { desc: "Capitalize the first word only",         example: "Hello world" },
+    upper:       { desc: "ALL CAPS — every letter uppercase",      example: "HELLO WORLD" },
+    lower:       { desc: "all lowercase — every letter",           example: "hello world" },
+    camel:       { desc: "Joined words, first word lowercase",     example: "helloWorld" },
+    pascal:      { desc: "Joined words, each capitalized",         example: "HelloWorld" },
+    snake:       { desc: "Words joined by underscores",            example: "hello_world" },
+    kebab:       { desc: "Words joined by hyphens (URL-safe)",     example: "hello-world" },
+    alternating: { desc: "Alternates upper and lower letters",     example: "hElLo WoRlD" },
+    inverse:     { desc: "Flips the case of each letter",          example: "hELLO wORLD" },
+}
 
 const STYLE_RULE_SUMMARY: Record<TitleCaseStyle, string> = {
     standard: "Lowercases most prepositions and conjunctions; capitalizes major words plus first/last positions.",
@@ -157,8 +176,6 @@ export function TextConverter({
     const [outputKey, setOutputKey] = React.useState(initialInput ? 1 : 0)
     const [showExplanations, setShowExplanations] = React.useState(false)
     const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>(initialTitleStyle)
-    const [qaBatchInput, setQaBatchInput] = React.useState("")
-    const [qaResult, setQaResult] = React.useState<EditorialQaResult | null>(null)
     const preserveInitialOutputModeRef = React.useRef(Boolean(initialOutputMode))
     const feedbackEmail = process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ?? "support@titlecaseconverter.online"
     const outputTitleStyle = conversionSnapshot?.titleStyle ?? titleStyle
@@ -243,10 +260,6 @@ export function TextConverter({
     const showVisibleCopyFeedback = copyFeedbackState === "success" || copyFeedbackState === "error"
     const copyFeedbackBadgeText =
         copyFeedbackState === "success" ? "Copied" : copyFeedbackState === "error" ? "Copy failed" : ""
-
-    React.useEffect(() => {
-        setQaResult(null)
-    }, [activeType, titleStyle, qaBatchInput])
 
     React.useEffect(() => {
         try {
@@ -344,20 +357,6 @@ export function TextConverter({
         window.location.href = mailtoUrl
     }
 
-    const handleRunEditorialQa = () => {
-        const result = runEditorialQaBatch(qaBatchInput, activeType, titleStyle)
-        setQaResult(result)
-    }
-
-    const handleReviewBatchItem = (text: string) => {
-        setInput(text)
-        const snapshot = createConversionSnapshot(text, activeType, titleStyle)
-        setConversionSnapshot(snapshot)
-        setCopied(false)
-        setCopyFeedbackState("idle")
-        setOutputKey((prev) => prev + 1)
-    }
-
     return (
         <section
             className="w-full max-w-5xl mx-auto p-4 space-y-8"
@@ -367,25 +366,57 @@ export function TextConverter({
             <Card className="border-0 shadow-2xl bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm ring-1 ring-zinc-200 dark:ring-zinc-800">
                 <CardContent className="space-y-6 pt-6">
 
-                    {/* Controls - Top for ez access */}
+                    {/* Controls - Grouped by category */}
                     <div
-                        className="flex flex-wrap items-center justify-center gap-2 pb-4"
+                        className="flex flex-wrap items-start justify-center gap-4 pb-4"
                         aria-label="Mode Controls"
                         data-testid="mode-controls"
                     >
-                        {CONVERSION_TYPES.map((type) => (
-                            <Button
-                                key={type.id}
-                                variant={activeType === type.id ? "default" : "outline"}
-                                onClick={() => setActiveType(type.id)}
-                                aria-pressed={activeType === type.id}
-                                data-active={activeType === type.id ? "true" : "false"}
-                                className="rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-md"
-                            >
-                                {type.label}
-                            </Button>
+                        {CONVERSION_GROUPS.filter((group) => group.label !== "Fun" || (["alternating", "inverse"] as ConversionType[]).includes(activeType)).map((group) => (
+                            <div key={group.label} className="flex flex-col items-center gap-1.5">
+                                <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/60">
+                                    {group.label}
+                                </span>
+                                <div className="flex flex-wrap justify-center gap-1.5">
+                                    {group.ids.map((id) => {
+                                        const type = CONVERSION_TYPES.find((t) => t.id === id)!
+                                        const tip = CONVERSION_TOOLTIPS[type.id]
+                                        return (
+                                            <Tooltip key={type.id} delayDuration={300}>
+                                                <TooltipTrigger asChild>
+                                                    <Button
+                                                        size="sm"
+                                                        variant={activeType === type.id ? "default" : "outline"}
+                                                        onClick={() => setActiveType(type.id)}
+                                                        aria-pressed={activeType === type.id}
+                                                        data-active={activeType === type.id ? "true" : "false"}
+                                                        className="rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-md"
+                                                    >
+                                                        {type.label}
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent
+                                                    side="bottom"
+                                                    sideOffset={6}
+                                                    className="p-0 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-xl max-w-[200px]"
+                                                >
+                                                    <div className="px-3 pt-2.5 pb-2 space-y-1.5">
+                                                        <p className="text-[11px] leading-snug text-muted-foreground">{tip.desc}</p>
+                                                        <div className="flex items-center gap-1.5 font-mono text-[11px]">
+                                                            <span className="text-muted-foreground/60">Hello World</span>
+                                                            <span className="text-muted-foreground/40">→</span>
+                                                            <span className="font-semibold text-primary">{tip.example}</span>
+                                                        </div>
+                                                    </div>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        )
+                                    })}
+                                </div>
+                            </div>
                         ))}
                     </div>
+
                     <div className="grid md:grid-cols-2 gap-6 relative">
                         {/* Input Area */}
                         <div className="space-y-2 group" data-testid="input-zone">
@@ -422,7 +453,7 @@ export function TextConverter({
                                 <Textarea
                                     id="converter-input"
                                     placeholder="Type or paste your text here..."
-                                    className="min-h-[200px] md:min-h-[260px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-zinc-500 dark:placeholder:text-zinc-400"
+                                    className="min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-zinc-500 dark:placeholder:text-zinc-400"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     aria-describedby="converter-input-helper"
@@ -495,7 +526,7 @@ export function TextConverter({
                                 key={outputKey}
                                 readOnly
                                 placeholder="Result will appear here..."
-                                className="min-h-[200px] md:min-h-[260px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-muted-foreground font-medium focus-visible:ring-0 animate-pulse-subtle"
+                                className="min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-muted-foreground font-medium focus-visible:ring-0 animate-pulse-subtle"
                                 value={output}
                                 aria-describedby="copy-feedback"
                                 aria-label="Converted output"
@@ -537,24 +568,26 @@ export function TextConverter({
                             className="flex flex-wrap items-center justify-center gap-3 pt-1 text-xs"
                             data-testid="converter-content-continuity"
                         >
-                            {highIntentContentHref ? (
-                                <Link
-                                    href={highIntentContentHref}
-                                    className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-                                    aria-label="Open matched Grammar 101 guidance for this capitalization query"
-                                >
-                                    <span>Open matching Grammar 101 answer</span>
-                                    <ExternalLink className="h-3 w-3" />
-                                </Link>
-                            ) : (
-                                <Link
-                                    href="/blog/categories/grammar-101"
-                                    className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-                                    aria-label="Browse Grammar 101 capitalization questions"
-                                >
-                                    <span>Browse Grammar 101 questions</span>
-                                    <ExternalLink className="h-3 w-3" />
-                                </Link>
+                            <Link
+                                href="/blog/categories/grammar-101"
+                                className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                                aria-label="Browse Grammar 101 capitalization questions"
+                            >
+                                <span>Grammar 101</span>
+                                <ExternalLink className="h-3 w-3" />
+                            </Link>
+                            {highIntentContentHref && (
+                                <>
+                                    <span className="text-muted-foreground/40">·</span>
+                                    <Link
+                                        href={highIntentContentHref}
+                                        className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                                        aria-label="Open matched Grammar 101 guidance for this capitalization query"
+                                    >
+                                        <span>See matched answer</span>
+                                        <ExternalLink className="h-3 w-3" />
+                                    </Link>
+                                </>
                             )}
                         </div>
                     </div>
@@ -633,78 +666,12 @@ export function TextConverter({
                         <ExplanationsPanel explanations={explanations} activeType={outputType} titleStyle={outputTitleStyle} />
                     )}
 
-                    <section
-                        className="mt-6 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 space-y-4"
-                        data-testid="editorial-qa-workflow"
-                        aria-label="Editorial QA Workflow"
-                    >
-                        <div className="space-y-1">
-                            <h3 className="text-sm font-semibold">Editorial QA Workflow</h3>
-                            <p className="text-xs text-muted-foreground">
-                                Process multiple headlines using one standard, then quickly review and correct outliers.
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                                Current standard: {CONVERSION_TYPES.find((type) => type.id === activeType)?.label}
-                                {activeType === "title" ? ` (${titleStyle.toUpperCase()})` : ""}
-                            </p>
-                        </div>
-
-                        <Textarea
-                            value={qaBatchInput}
-                            onChange={(e) => setQaBatchInput(e.target.value)}
-                            placeholder="Paste one headline per line for QA pass..."
-                            className="min-h-[120px] resize-y"
-                            aria-label="Editorial batch input"
-                        />
-
-                        <div className="flex flex-wrap items-center gap-3">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={handleRunEditorialQa}
-                                disabled={!qaBatchInput.trim()}
-                                data-testid="run-editorial-qa"
-                            >
-                                Run QA pass
-                            </Button>
-                            {qaResult && (
-                                <p className="text-xs text-muted-foreground">
-                                    {qaResult.consistentCount}/{qaResult.total} consistent, {qaResult.needsCorrectionCount} need correction
-                                </p>
-                            )}
-                        </div>
-
-                        {qaResult && qaResult.items.length > 0 && (
-                            <div className="space-y-2" data-testid="editorial-qa-results">
-                                {qaResult.items.map((item, index) => (
-                                    <article key={`${item.source}-${index}`} className="rounded-lg border p-3 space-y-2">
-                                        <div className="flex flex-wrap items-center justify-between gap-2">
-                                            <span className="text-xs font-medium">
-                                                {item.isConsistent ? "Consistent" : "Needs correction"}
-                                            </span>
-                                            <Button
-                                                type="button"
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() => handleReviewBatchItem(item.source)}
-                                                aria-label={`Review batch item ${index + 1} in converter`}
-                                            >
-                                                Review in converter
-                                            </Button>
-                                        </div>
-                                        <p className="text-xs text-muted-foreground">
-                                            <span className="font-medium text-foreground">Input:</span> {item.source}
-                                        </p>
-                                        {!item.isConsistent && (
-                                            <p className="text-xs text-muted-foreground">
-                                                <span className="font-medium text-foreground">Recommended:</span> {item.converted}
-                                            </p>
-                                        )}
-                                    </article>
-                                ))}
-                            </div>
-                        )}
-                    </section>
+                    <p className="text-center text-xs text-muted-foreground pt-2">
+                        Checking multiple headlines?{" "}
+                        <Link href="/batch-checker" className="underline underline-offset-4 hover:text-foreground">
+                            Open Batch Headline Checker →
+                        </Link>
+                    </p>
                 </CardContent>
             </Card>
         </section>

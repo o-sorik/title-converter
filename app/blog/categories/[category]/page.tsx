@@ -12,15 +12,13 @@ import {
 import {
   ArticleCard,
   BottomCta,
+  CategoryChips,
   CategoryHero,
-  CategorySearchBar,
   ComparisonCards,
   ExploreMore,
   FaqBlock,
   FeaturedArticle,
-  TopicPills,
 } from "@/components/blog/sections"
-import { Button } from "@/components/ui/button"
 
 type Props = {
   params: Promise<{ category: string }>
@@ -74,18 +72,13 @@ export default async function CategoryDetailPage({ params }: Props) {
       />
       <CategoryHero category={currentCategory} />
 
-      <TopicPills items={["All", "Basics", "Citations", "Headings", "Common Mistakes"]} />
-      <CategorySearchBar />
+      <CategoryChips categories={blogCategories} activeId={currentCategory.id} />
 
       <FeaturedArticle article={featured} />
 
       <section className="grid gap-4 md:grid-cols-3">
         {rest.length > 0 ? rest.map((article) => <ArticleCard key={article.slug} article={article} />) : null}
       </section>
-
-      <div className="flex justify-center">
-        <Button variant="outline">Load More Guides</Button>
-      </div>
 
       <ComparisonCards items={styleComparisons} />
 

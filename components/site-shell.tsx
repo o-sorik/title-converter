@@ -17,6 +17,7 @@ type SiteFooterProps = {
 const primaryLinks = [
   { href: "/blog", label: "Guides" },
   { href: "/capitalization-rules-guide", label: "Rules" },
+  { href: "/batch-checker", label: "Batch Checker" },
 ]
 
 const footerColumns = [
@@ -26,6 +27,7 @@ const footerColumns = [
       { href: "/", label: "Title Case" },
       { href: "/sentence-case-converter", label: "Sentence Case" },
       { href: "/slug-generator", label: "Slug Generator" },
+      { href: "/batch-checker", label: "Batch Checker" },
     ],
   },
   {

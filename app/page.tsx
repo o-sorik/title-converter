@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { HOME_PAGE_CONFIG } from "@/lib/seo-config"
 import { TextConverter } from "@/components/text-converter"
+import { AudienceSection } from "@/components/audience-section"
 import { ContentSection } from "@/components/content-section"
 import { WebApplicationJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/json-ld"
 import { Toaster } from "@/components/ui/sonner"
@@ -83,6 +84,8 @@ export default async function Home({ searchParams }: HomePageProps) {
             initialOutputTitleStyle={converterContext.initialOutputTitleStyle}
             initialContextRef={converterContext.initialContextRef}
           />
+
+          <AudienceSection />
 
           {/* SEO Content Section */}
           <article className="prose prose-zinc dark:prose-invert max-w-none w-full">

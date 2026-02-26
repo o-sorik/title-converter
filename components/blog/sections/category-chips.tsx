@@ -4,14 +4,14 @@ import type { Category } from "@/components/blog/data"
 
 export function CategoryChips({ categories, activeId }: { categories: Category[]; activeId?: string }) {
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-1 border-b border-slate-200 dark:border-zinc-700 pb-0">
       <Link
         href="/blog/categories"
         className={cn(
-          "rounded-full border px-4 py-2 text-xs font-semibold transition-colors",
+          "inline-block pb-2.5 text-[11px] font-bold uppercase tracking-widest transition-colors",
           !activeId
-            ? "border-blue-700 bg-blue-700 text-white"
-            : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:text-blue-700"
+            ? "border-b-2 border-blue-700 text-blue-700 -mb-px"
+            : "text-slate-400 dark:text-zinc-500 hover:text-slate-900 dark:hover:text-zinc-100"
         )}
       >
         All
@@ -23,10 +23,10 @@ export function CategoryChips({ categories, activeId }: { categories: Category[]
             key={category.id}
             href={`/blog/categories/${category.id}`}
             className={cn(
-              "rounded-full border px-4 py-2 text-xs font-semibold transition-colors",
+              "inline-block pb-2.5 text-[11px] font-bold uppercase tracking-widest transition-colors",
               isActive
-                ? "border-blue-700 bg-blue-700 text-white"
-                : "border-slate-200 bg-white text-slate-700 hover:border-blue-200 hover:text-blue-700"
+                ? "border-b-2 border-blue-700 text-blue-700 -mb-px"
+                : "text-slate-400 dark:text-zinc-500 hover:text-slate-900 dark:hover:text-zinc-100"
             )}
           >
             {category.name}

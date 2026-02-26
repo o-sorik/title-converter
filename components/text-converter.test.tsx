@@ -35,12 +35,11 @@ test("renders converter workspace shell with required zones", () => {
   expect(html).toContain('data-testid="input-zone"')
   expect(html).toContain('data-testid="output-zone"')
   expect(html).toContain('data-testid="style-controls"')
-  expect(html).toContain('data-testid="editorial-qa-workflow"')
-  expect(html).toContain('data-testid="run-editorial-qa"')
   expect(html).toContain('id="converter-input"')
   expect(html).toContain('id="converter-output"')
   expect(html).toContain("Input Text")
   expect(html).toContain("Title Style")
+  expect(html).toContain('href="/batch-checker"')
 })
 
 test("workspace shell remains usable without auth or onboarding copy", () => {
@@ -73,10 +72,10 @@ test.each([
 
 test("mode controls expose keyboard-friendly toggle semantics", () => {
   const html = renderToStaticMarkup(<TextConverter defaultMode="title" />)
-  const modeControls = extractModeControlsMarkup(html)
 
   expect(html).toContain('aria-label="Mode Controls"')
-  expect((modeControls.match(/aria-pressed="/g) ?? []).length).toBe(10)
+  // 8 mode buttons in default (title) mode — Fun group is hidden unless activeType is alternating/inverse
+  expect((html.match(/aria-pressed="/g) ?? []).length).toBe(8)
   expect(html).toContain('data-testid="convert-action"')
   expect(html).toContain(">Convert<")
   expect(html).toContain('aria-keyshortcuts="Control+Enter Meta+Enter"')
@@ -107,20 +106,6 @@ test("style selection updates title output for the same input", () => {
 
   expect(standardHtml).toContain("Walking during the Light")
   expect(apHtml).toContain("Walking During the Light")
-})
-
-test("shows editorial QA standard context for current mode and style", () => {
-  const titleHtml = renderToStaticMarkup(
-    <TextConverter defaultMode="title" initialTitleStyle="ap" />
-  )
-  const sentenceHtml = renderToStaticMarkup(
-    <TextConverter defaultMode="sentence" />
-  )
-
-  expect(titleHtml).toContain("Editorial QA Workflow")
-  expect(titleHtml).toContain("Current standard: Title Case")
-  expect(titleHtml).toContain("(AP)")
-  expect(sentenceHtml).toContain("Current standard: Sentence case")
 })
 
 test("shows style-contextual guidance entry points in title mode", () => {
@@ -211,7 +196,7 @@ test("includes helper/status relationships and responsive textarea sizing", () =
   expect(html).toContain('id="converter-input-helper"')
   expect(html).toContain('aria-describedby="converter-input-helper"')
   expect(html).toContain('aria-describedby="copy-feedback"')
-  expect(html).toContain('min-h-[200px] md:min-h-[260px]')
+  expect(html).toContain('min-h-[160px] md:min-h-[200px]')
 })
 
 test("shows matched Grammar 101 continuity link for high-intent capitalization query input", () => {
@@ -220,21 +205,23 @@ test("shows matched Grammar 101 continuity link for high-intent capitalization q
   )
 
   expect(html).toContain('data-testid="converter-content-continuity"')
-  expect(html).toContain("Open matching Grammar 101 answer")
+  expect(html).toContain("See matched answer")
   expect(html).toContain('href="/blog/and-capitalized-in-title-case?')
   expect(html).toContain("ctx_mode=title")
   expect(html).toContain("ctx_style=ap")
   expect(html).toContain("ctx_input=is+and+capitalized")
 })
 
-test("shows Grammar 101 browse fallback when converter input does not match high-intent pattern", () => {
+test("shows Grammar 101 browse link when converter input does not match high-intent pattern", () => {
   const html = renderToStaticMarkup(
     <TextConverter defaultMode="title" initialInput="how to improve headline quality" />
   )
 
   expect(html).toContain('data-testid="converter-content-continuity"')
-  expect(html).toContain("Browse Grammar 101 questions")
+  expect(html).toContain("Grammar 101")
   expect(html).toContain('href="/blog/categories/grammar-101"')
+  // No matched answer link when there is no high-intent match
+  expect(html).not.toContain("See matched answer")
 })
 
 test("uses current selected mode in continuity context even when snapshot output is stale", () => {

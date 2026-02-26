@@ -15,6 +15,7 @@ export type Article = {
   readTime: string
   image: string
   featured?: boolean
+  verifiedFor?: string
 }
 
 export type Comparison = {
@@ -74,6 +75,7 @@ export const blogArticles: Article[] = [
     readTime: "5 min read",
     image: "/images/blog/generated/apa-notebook-cover.webp",
     featured: true,
+    verifiedFor: "APA 7th Edition",
   },
   {
     slug: "and-capitalized-in-title-case",

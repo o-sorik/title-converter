@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
+import { Space_Grotesk } from "next/font/google"
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-geist-sans",
+  display: "swap",
+})
 
 const siteUrl = "https://titlecaseconverter.online";
 
@@ -62,7 +69,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={spaceGrotesk.variable} suppressHydrationWarning>
       <body
         suppressHydrationWarning
         className="antialiased min-h-screen bg-background text-foreground"

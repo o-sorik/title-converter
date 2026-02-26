@@ -1,8 +1,9 @@
 import type { Metadata } from "next"
 import { BreadcrumbListJsonLd } from "@/components/json-ld"
-import { BottomCta, CategorySearchBar, ComparisonCards, FaqBlock } from "@/components/blog/sections"
+import { BottomCta, CategoryChips, ComparisonCards, FaqBlock } from "@/components/blog/sections"
 import { CategoriesGrid, CategoriesHero, PopularGuidesStrip } from "@/components/blog/pages"
 import { getBlogCategoriesPageViewModel } from "@/lib/blog-view-model"
+import { blogCategories } from "@/components/blog/data"
 
 export const revalidate = 86400
 
@@ -30,7 +31,7 @@ export default function BlogCategoriesPage() {
       />
       <CategoriesHero />
 
-      <CategorySearchBar />
+      <CategoryChips categories={blogCategories} />
 
       <CategoriesGrid categories={categories} />
 
