@@ -18,7 +18,7 @@ export function BlogBreadcrumbs({ items }: BlogBreadcrumbsProps) {
         return (
           <span key={`${item.label}-${index}`}>
             {item.href && !isLast ? (
-              <Link href={item.href} className="hover:text-blue-700 dark:hover:text-blue-300">
+              <Link href={item.href} className="transition-colors hover:text-blue-700 dark:hover:text-blue-300">
                 {item.label}
               </Link>
             ) : (

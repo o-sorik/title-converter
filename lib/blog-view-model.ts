@@ -92,7 +92,7 @@ export function getArticlePageViewModel(slug: string) {
     articleImage,
     updatedIso,
     isHighIntentArticle,
-    relatedTitle: isHighIntentArticle ? "Related capitalization questions" : "Related guides",
+    relatedTitle: isHighIntentArticle ? "Related Capitalization Questions" : "Related Guides",
     recommendedTitle: isHighIntentArticle ? "Next Grammar 101 topics" : "Recommended Reading",
     tocItems: isHighIntentArticle ? HIGH_INTENT_TOC_ITEMS : DEFAULT_TOC_ITEMS,
     faqs: articleFaqs,

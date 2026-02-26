@@ -19,7 +19,7 @@ describe("getArticlePageViewModel", () => {
     if (!model) return
 
     expect(model.isHighIntentArticle).toBe(true)
-    expect(model.relatedTitle).toBe("Related capitalization questions")
+    expect(model.relatedTitle).toBe("Related Capitalization Questions")
     expect(model.recommendedTitle).toBe("Next Grammar 101 topics")
     expect(model.related.map((item) => item.slug)).toEqual([
       "the-capitalized-in-title-case",
@@ -36,7 +36,7 @@ describe("getArticlePageViewModel", () => {
     if (!model) return
 
     expect(model.isHighIntentArticle).toBe(false)
-    expect(model.relatedTitle).toBe("Related guides")
+    expect(model.relatedTitle).toBe("Related Guides")
     expect(model.recommendedTitle).toBe("Recommended Reading")
     expect(model.related.length).toBeGreaterThan(0)
   })

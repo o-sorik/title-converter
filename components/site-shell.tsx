@@ -52,7 +52,7 @@ export function SiteHeader({ containerClassName }: SiteHeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <div className={cn("container mx-auto flex h-14 items-center justify-between px-4", containerClassName)}>
-        <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold tracking-tight sm:text-base">
+        <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold tracking-tight transition-opacity hover:opacity-80 sm:text-base">
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
             T
           </span>
@@ -82,7 +82,7 @@ export function SiteFooter({ containerClassName }: SiteFooterProps) {
     <footer className="border-t bg-background/70">
       <div className={cn("container mx-auto grid gap-8 px-4 py-10 sm:grid-cols-[1.3fr_1fr_1fr_1fr]", containerClassName)}>
         <div className="space-y-3">
-          <Link href="/" className="inline-flex items-center gap-2 text-base font-semibold">
+          <Link href="/" className="inline-flex items-center gap-2 text-base font-semibold transition-opacity hover:opacity-80">
             <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
               T
             </span>

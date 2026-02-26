@@ -33,7 +33,7 @@ export function ArticleSidebar({
         <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-zinc-300">
           {tocItems.map((item) => (
             <li key={`mobile-${item.id}`}>
-              <Link href={`#${item.id}`} className="hover:text-blue-700 dark:hover:text-blue-300">
+              <Link href={`#${item.id}`} className="transition-colors hover:text-blue-700 dark:hover:text-blue-300">
                 {item.label}
               </Link>
             </li>
@@ -45,7 +45,7 @@ export function ArticleSidebar({
         <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-zinc-300">
           {tocItems.map((item) => (
             <li key={`desktop-${item.id}`}>
-              <Link href={`#${item.id}`} className="hover:text-blue-700 dark:hover:text-blue-300">
+              <Link href={`#${item.id}`} className="transition-colors hover:text-blue-700 dark:hover:text-blue-300">
                 {item.label}
               </Link>
             </li>

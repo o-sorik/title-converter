@@ -10,7 +10,7 @@ export function FeaturedArticle({ article }: { article: Article }) {
 
   return (
     <article className="group space-y-0">
-      <div className="overflow-hidden rounded-2xl">
+      <Link href={`/blog/${article.slug}`} className="block overflow-hidden rounded-2xl">
         <Image
           src={article.image}
           alt={article.title}
@@ -18,7 +18,7 @@ export function FeaturedArticle({ article }: { article: Article }) {
           height={630}
           className="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
         />
-      </div>
+      </Link>
 
       <div className="border-t border-b border-slate-900 dark:border-zinc-200 my-5 py-3 flex justify-between items-baseline">
         <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-zinc-400">
