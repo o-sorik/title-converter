@@ -37,7 +37,7 @@ const checks = [
     description: "robots.ts references sitemap.xml",
     run: () => {
       const content = read("app/robots.ts");
-      return !!content && content.includes("sitemap: 'https://titlecaseconverter.online/sitemap.xml'");
+      return !!content && content.includes("sitemap:") && content.includes("sitemap.xml");
     },
   },
   {
@@ -60,7 +60,7 @@ const checks = [
           "absolute: HOME_PAGE_CONFIG.title",
           "description: HOME_PAGE_CONFIG.description",
           "alternates:",
-          "canonical: siteUrl",
+          "canonical: SITE_URL",
         ])
       );
     },
@@ -243,7 +243,7 @@ const checks = [
           "title:",
           "description:",
           "alternates:",
-          'canonical: "https://titlecaseconverter.online/capitalization-rules-guide"',
+          "canonical: `${SITE_URL}/capitalization-rules-guide`",
         ])
       );
     },

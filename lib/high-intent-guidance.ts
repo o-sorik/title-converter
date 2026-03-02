@@ -1,6 +1,7 @@
 import { appendConverterContextToHref } from "./converter-context"
 import type { ConverterContext } from "./converter-context"
 import { HIGH_INTENT_GUIDANCE_ENTRIES } from "./high-intent-guidance-data"
+import { SITE_URL } from "@/lib/constants"
 
 export type GuidanceStyleKey = "standard" | "ap" | "apa" | "mla" | "chicago"
 
@@ -94,7 +95,7 @@ export function getHighIntentConverterHref(
 
   const hrefWithContext = appendConverterContextToHref("/", effectiveContext)
 
-  const url = new URL(hrefWithContext, "https://titlecaseconverter.online")
+  const url = new URL(hrefWithContext, SITE_URL)
   url.searchParams.set("ctx_input", effectiveContext.input || converterInput)
   const query = url.searchParams.toString()
   return `${url.pathname}${query ? `?${query}` : ""}${url.hash}`
@@ -129,7 +130,7 @@ export function getHighIntentBlogHref(
   converterContext: ConverterContext
 ): string {
   const hrefWithContext = appendConverterContextToHref(`/blog/${entry.slug}`, converterContext)
-  const url = new URL(hrefWithContext, "https://titlecaseconverter.online")
+  const url = new URL(hrefWithContext, SITE_URL)
   url.searchParams.set("ctx_input", converterContext.input)
   const query = url.searchParams.toString()
   return `${url.pathname}${query ? `?${query}` : ""}${url.hash}`

@@ -117,6 +117,16 @@ const ADVERBIAL_PARTICLES = new Set([
     "along",
 ]);
 
+const CONTRACTION_SUFFIXES = new Set([
+    "t",
+    "s",
+    "ll",
+    "ve",
+    "re",
+    "d",
+    "m",
+]);
+
 const COMMON_BASE_VERBS = new Set([
     "add",
     "back",
@@ -166,36 +176,73 @@ const COMMON_BASE_VERBS = new Set([
 const KNOWN_ACRONYMS = new Set([
     "AI",
     "API",
+    "AWS",
+    "CEO",
+    "CFO",
+    "CIA",
+    "COO",
     "CPU",
+    "CRM",
     "CSS",
+    "CTO",
+    "DNS",
+    "ERP",
     "EU",
+    "FBI",
+    "FTP",
     "GDP",
     "GPU",
     "HTML",
     "HTTP",
     "HTTPS",
     "ID",
+    "IP",
     "JSON",
     "JS",
+    "KPI",
+    "MBA",
     "ML",
+    "MVP",
     "NASA",
+    "NATO",
     "PDF",
+    "PhD",
+    "RAM",
+    "ROI",
+    "RSS",
+    "SDK",
     "SEO",
     "SQL",
+    "SSH",
+    "TCP",
     "UI",
     "UK",
     "UN",
     "URL",
+    "USB",
     "USA",
     "UX",
+    "VPN",
+    "WHO",
+    "XML",
 ]);
 
 function capitalize(word: string): string {
-    return word
-        .split(/(['’])/)
-        .map((segment) => {
-            if (segment === "'" || segment === "’") return segment;
+    const parts = word.split(/(\u0027|\u2018|\u2019)/);
+    let firstSegmentDone = false;
+
+    return parts
+        .map((segment, i) => {
+            if (segment === "’" || segment === "\u2018" || segment === "\u2019") return segment;
             if (!segment) return segment;
+            if (!firstSegmentDone) {
+                firstSegmentDone = true;
+                return segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase();
+            }
+            // After apostrophe: contraction suffix → lowercase, name part → capitalize
+            if (CONTRACTION_SUFFIXES.has(segment.toLowerCase())) {
+                return segment.toLowerCase();
+            }
             return segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase();
         })
         .join("");
@@ -252,7 +299,11 @@ function getCanonicalAcronym(word: string): string | null {
     const upper = word.toUpperCase();
     if (KNOWN_ACRONYMS.has(upper)) return upper;
     if (/^[A-Za-z](?:\.[A-Za-z])+\.?$/.test(word)) return upper;
-    if (/[0-9]/.test(word) && /^[A-Za-z0-9]{2,}$/.test(word)) return upper;
+    if (/[0-9]/.test(word) && /^[A-Za-z0-9]{2,}$/.test(word)) {
+        if (/^\d+(st|nd|rd|th)$/i.test(word)) return null;
+        if (/^[A-Z0-9]+$/.test(word)) return upper;
+        return null;
+    }
     return null;
 }
 

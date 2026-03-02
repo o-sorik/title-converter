@@ -1,11 +1,12 @@
 import { MetadataRoute } from 'next'
 import { CONVERTER_SLUGS } from '@/lib/seo-config'
 import { blogArticles, blogCategories } from '@/components/blog/data'
+import { SITE_URL } from '@/lib/constants'
 
 export const revalidate = 86400
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://titlecaseconverter.online'
+    const baseUrl = SITE_URL
 
     // Static pages
     const routes: MetadataRoute.Sitemap = [
