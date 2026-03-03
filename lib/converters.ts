@@ -232,7 +232,7 @@ function capitalize(word: string): string {
     let firstSegmentDone = false;
 
     return parts
-        .map((segment, i) => {
+        .map((segment) => {
             if (segment === "’" || segment === "\u2018" || segment === "\u2019") return segment;
             if (!segment) return segment;
             if (!firstSegmentDone) {
