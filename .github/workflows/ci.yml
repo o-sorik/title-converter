@@ -47,16 +47,23 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+          script_stop: true
+          command_timeout: 5m
           script: |
             cd /var/www/titlecaseconverter
             git pull origin main
             docker compose build --no-cache
             docker compose up -d
-            sleep 15
-            if docker compose ps | grep -q "healthy"; then
-              echo "Deploy successful – container is healthy"
-            else
-              echo "Warning: container may not be healthy yet"
-              docker compose ps
-              exit 1
-            fi
+            echo "Waiting for container to become healthy..."
+            for i in $(seq 1 12); do
+              if docker compose ps | grep -q "healthy"; then
+                echo "Deploy successful – container is healthy"
+                exit 0
+              fi
+              echo "Attempt $i/12 – not healthy yet, waiting 10s..."
+              sleep 10
+            done
+            echo "Container did not become healthy in 120s"
+            docker compose ps
+            docker compose logs --tail 20
+            exit 1
