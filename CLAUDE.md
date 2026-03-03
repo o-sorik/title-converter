@@ -8,7 +8,7 @@ Free online tool that converts text to Title Case, Sentence Case, camelCase, Pas
 - **Styling:** Tailwind CSS v4 + shadcn/ui (New York style)
 - **Testing:** Vitest 4
 - **Linting:** ESLint 9 with Next.js core-web-vitals + TypeScript config
-- **Deployment:** Vercel (SSG + ISR)
+- **Deployment:** Hetzner VPS (Docker + Nginx)
 - **Path alias:** `@/*` maps to project root
 
 ## Commands
@@ -29,6 +29,29 @@ npm run secrets:scan     # Scan for leaked secrets
 ```
 
 **Before any release, always run: `npm run release:gate`**
+
+## Deployment
+
+Production runs on a Hetzner VPS via Docker + Nginx reverse proxy.
+
+- **Server:** `web-prod-1` (CPX22: 2 vCPU, 4 GB RAM, 80 GB SSD, Nuremberg)
+- **IP:** `78.47.113.198` | **SSH user:** `deploy`
+- **Stack:** Docker Compose → Next.js standalone container on `127.0.0.1:3000` → Nginx SSL termination
+- **SSL:** Let's Encrypt (Certbot, auto-renew)
+- **DNS:** Namecheap A records → Hetzner IP
+- **Canonical host:** `https://titlecaseconverter.online` (apex, no `www`)
+- **GitHub repo:** `o-sorik/title-converter` (server uses read-only deploy key)
+
+Quick deploy:
+```bash
+ssh deploy@78.47.113.198
+cd /var/www/titlecaseconverter
+git pull origin main
+docker compose build --no-cache
+docker compose up -d
+```
+
+Full runbook: `docs/ops/DEPLOY_RUNBOOK_HETZNER.md`
 
 ## Project Structure
 
@@ -56,6 +79,11 @@ lib/                            # Business logic and utilities
   conversion-session.ts         # Converter state snapshots
   utils.ts                      # cn() utility (clsx + tailwind-merge)
 scripts/                        # Operational scripts (.mjs)
+  deploy.sh                     # Server deploy script (git pull + docker rebuild)
+nginx/                          # Nginx config templates
+  titlecaseconverter.conf       # Reverse proxy config for the site
+Dockerfile                      # Multi-stage build (deps → builder → runner)
+docker-compose.yml              # Production container config (port 3000, healthcheck)
 docs/ops/                       # Operational documentation (15+ docs)
 data/seo/ahrefs/                # Ahrefs keyword data imports
 ```
@@ -122,11 +150,18 @@ Before making significant changes, consult the relevant doc in `docs/ops/`:
 | `CONTENT_TEMPLATE_V1.md` | Template for "Is X Capitalized?" pages |
 | `BLOG_SEO_DESIGN_REQUIREMENTS.md` | Before changing blog templates |
 | `SEO_QA_CHECKLIST.md` | Pre-release SEO validation |
-| `DEPLOY_RUNBOOK_VERCEL.md` | Deployment procedures |
+| `DEPLOY_RUNBOOK_HETZNER.md` | Deployment procedures (Hetzner VPS + Docker + Nginx) |
 | `SESSION_BRIEF.md` | Current session state and recent work |
 | `EXPERIMENTS.md` | Active SEO and workflow experiments |
 
 Full roadmap: `ROADMAP.md` in project root.
+
+## Knowledge Base
+
+Strategic KB for this project: `/Users/user/Documents/Claude/titlecaseconverter/`
+
+Contains: SEO strategy, content plan, brand voice, current tasks, changelog.
+- `prompts/` — ready-made Claude Code prompt templates (code review, UI/UX audit) — copy and paste into session
 
 ## Guardrails
 

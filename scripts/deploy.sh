@@ -5,7 +5,7 @@ set -e
 # Usage: ssh deploy@78.47.113.198 'bash -s' < scripts/deploy.sh
 
 APP_DIR="/var/www/titlecaseconverter"
-REPO_URL="git@github.com:YOUR_USERNAME/titlecaseconverter.git"  # TODO: update with real repo URL
+REPO_URL="git@github.com:o-sorik/title-converter.git"
 
 echo "==> Deploying titlecaseconverter.online..."
 
