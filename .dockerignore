@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+.gitignore
+*.md
+docs
+.env.local
+.env*.local
+_bmad-output
+data
