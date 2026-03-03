@@ -119,29 +119,6 @@ export function HowToJsonLd({
     )
 }
 
-// Combined schema for homepage
-export function HomePageJsonLd() {
-    const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Title Case Converter Online",
-        "description": "Free online tool to convert text between various cases including Title Case, Sentence Case, camelCase, PascalCase, snake_case, and more.",
-        "url": "https://titlecaseconverter.online",
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://titlecaseconverter.online/?q={search_term_string}",
-            "query-input": "required name=search_term_string"
-        }
-    }
-
-    return (
-        <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-    )
-}
-
 // BlogPosting schema for article pages
 export function BlogPostingJsonLd({
     headline,

@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { IconArrowRight } from "@tabler/icons-react"
 import type { Article } from "@/components/blog/data"
 import { getCategoryById } from "@/components/blog/data"
 import { formatBlogDate } from "@/lib/blog-date"
@@ -8,7 +8,7 @@ export function ArticleCard({ article }: { article: Article }) {
   const category = getCategoryById(article.categoryId)
 
   return (
-    <article className="group flex h-full flex-col border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-900/60 rounded-2xl p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
+    <article className="group flex h-full flex-col border border-zinc-200 dark:border-zinc-700 bg-white/70 dark:bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:bg-white/90 dark:hover:bg-zinc-900/70">
       <div className="border-l-4 border-blue-700 group-hover:border-blue-500 pl-4 flex flex-col grow transition-colors duration-200">
         <div className="flex items-center justify-between mb-3 text-[10px] font-bold uppercase tracking-[0.15em]">
           <span className="text-blue-700 dark:text-blue-400">{category?.name ?? "Guide"}</span>
@@ -31,7 +31,7 @@ export function ArticleCard({ article }: { article: Article }) {
             href={`/blog/${article.slug}`}
             className="inline-flex items-center gap-1 font-semibold text-blue-700 dark:text-blue-400 hover:underline underline-offset-4 shrink-0 ml-2"
           >
-            Read <ArrowRight className="h-3 w-3" />
+            Read <IconArrowRight className="h-3 w-3" />
           </Link>
         </div>
       </div>

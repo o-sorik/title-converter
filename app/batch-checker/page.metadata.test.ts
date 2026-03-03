@@ -1,7 +1,8 @@
 import { expect, test } from "vitest"
 import { metadata, revalidate } from "./page"
+import { SITE_URL } from "@/lib/constants"
 
-const canonicalUrl = "https://titlecaseconverter.online/batch-checker"
+const canonicalUrl = `${SITE_URL}/batch-checker`
 
 test("batch-checker metadata has correct canonical URL", () => {
     expect(metadata.alternates?.canonical).toBe(canonicalUrl)

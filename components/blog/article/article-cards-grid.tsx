@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { IconArrowRight } from "@tabler/icons-react"
 import type { Article } from "@/components/blog/data"
 
 export function ArticleCardsGrid({
@@ -30,7 +30,7 @@ export function ArticleCardsGrid({
               </h3>
               <p className="text-sm text-slate-600 dark:text-zinc-400">{article.excerpt}</p>
               <Link href={`/blog/${article.slug}`} className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-blue-700 transition-all hover:gap-2 dark:text-blue-400 dark:hover:text-blue-300">
-                Read guide <ArrowRight className="h-3 w-3" />
+                Read guide <IconArrowRight className="h-3 w-3" />
               </Link>
             </div>
           </article>

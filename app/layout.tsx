@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google"
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
+import { SITE_URL } from "@/lib/constants"
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-space-grotesk",
   display: "swap",
 })
 
-const siteUrl = "https://titlecaseconverter.online";
+const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -18,18 +19,6 @@ export const metadata: Metadata = {
     template: "%s | Title Case Converter Online",
   },
   description: "Free online tool to convert text to Title Case, Sentence Case, camelCase, PascalCase, snake_case, kebab-case, and more. Instant conversion with smart capitalization rules.",
-  keywords: [
-    "title case converter",
-    "text case converter",
-    "capitalize text",
-    "sentence case",
-    "camelCase converter",
-    "PascalCase converter",
-    "snake_case converter",
-    "kebab-case converter",
-    "text formatting tool",
-    "capitalization tool",
-  ],
   authors: [{ name: "Antigravity" }],
   creator: "Antigravity",
   publisher: "Antigravity",

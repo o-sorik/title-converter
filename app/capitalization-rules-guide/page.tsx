@@ -5,8 +5,7 @@ import { BreadcrumbListJsonLd, FAQPageJsonLd } from "@/components/json-ld"
 import { getRulesGuideHubViewModel } from "@/lib/rules-guide-content"
 import { parseConverterInitialStateFromSearchParams, toConverterContext } from "@/lib/converter-context"
 import type { GuidanceStyle } from "@/lib/rules-guide-content"
-
-const siteUrl = "https://titlecaseconverter.online"
+import { SITE_URL } from "@/lib/constants"
 
 export const revalidate = 604800
 
@@ -18,13 +17,13 @@ export const metadata: Metadata = {
         follow: true,
     },
     alternates: {
-        canonical: "https://titlecaseconverter.online/capitalization-rules-guide",
+        canonical: `${SITE_URL}/capitalization-rules-guide`,
     },
     openGraph: {
         title: "Capitalization Rules by Style — AP, APA, MLA, Chicago",
         description: "Compare title capitalization rules across AP, APA, MLA, and Chicago style guides.",
         type: "website",
-        url: `${siteUrl}/capitalization-rules-guide`,
+        url: `${SITE_URL}/capitalization-rules-guide`,
         siteName: "Title Case Converter Online",
         locale: "en_US",
     },
@@ -53,8 +52,8 @@ export default async function CapitalizationRulesGuidePage({ searchParams }: Rul
             <SiteHeader containerClassName="max-w-5xl" />
 
             <BreadcrumbListJsonLd items={[
-                { name: "Home", item: siteUrl },
-                { name: "Capitalization Rules Guide", item: `${siteUrl}/capitalization-rules-guide` },
+                { name: "Home", item: SITE_URL },
+                { name: "Capitalization Rules Guide", item: `${SITE_URL}/capitalization-rules-guide` },
             ]} />
             <FAQPageJsonLd faqs={model.faqs} />
 

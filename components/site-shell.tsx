@@ -1,7 +1,10 @@
 "use client"
 
 import Link from "next/link"
+import { useState } from "react"
+import { IconMenu2, IconX } from "@tabler/icons-react"
 import { buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
 import { ConverterNav } from "@/components/converter-nav"
 import { cn } from "@/lib/utils"
@@ -49,17 +52,20 @@ const footerColumns = [
 ]
 
 export function SiteHeader({ containerClassName }: SiteHeaderProps) {
+  const [mobileOpen, setMobileOpen] = useState(false)
+
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <div className={cn("container mx-auto flex h-14 items-center justify-between px-4", containerClassName)}>
-        <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold tracking-tight transition-opacity hover:opacity-80 sm:text-base">
+        <Link href="/" onClick={() => setMobileOpen(false)} className="inline-flex items-center gap-2 text-sm font-semibold tracking-tight transition-opacity hover:opacity-80 sm:text-base">
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
             T
           </span>
           <span className="hidden sm:inline">TitleCase</span>
         </Link>
 
-        <div className="flex items-center gap-1 sm:gap-2">
+        {/* Desktop nav */}
+        <div className="hidden items-center gap-1 sm:flex sm:gap-2">
           {primaryLinks.map((link) => (
             <Link
               key={link.href}
@@ -72,7 +78,42 @@ export function SiteHeader({ containerClassName }: SiteHeaderProps) {
           <ConverterNav />
           <ModeToggle />
         </div>
+
+        {/* Mobile controls */}
+        <div className="flex items-center gap-1 sm:hidden">
+          <ModeToggle />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="px-2"
+            aria-label="Toggle menu"
+            onClick={() => setMobileOpen((v) => !v)}
+          >
+            {mobileOpen ? <IconX className="h-5 w-5" /> : <IconMenu2 className="h-5 w-5" />}
+          </Button>
+        </div>
       </div>
+
+      {/* Mobile menu panel */}
+      {mobileOpen && (
+        <div className="border-t bg-background px-4 py-3 sm:hidden">
+          <nav className="flex flex-col gap-1">
+            {primaryLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "justify-start")}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className="pt-1">
+              <ConverterNav />
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
   )
 }

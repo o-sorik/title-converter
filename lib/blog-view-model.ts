@@ -11,6 +11,7 @@ import {
 } from "@/components/blog/data"
 import { toIsoDateTime } from "@/lib/blog-date"
 import { getHighIntentGuidanceBySlug, getHighIntentRelatedEntries } from "./high-intent-guidance"
+import { SITE_URL } from "@/lib/constants"
 
 export type TocItem = {
   id: string
@@ -77,8 +78,8 @@ export function getArticlePageViewModel(slug: string) {
 
   const nextArticle = isHighIntentArticle ? related[0] ?? null : defaultNextArticle
 
-  const articleUrl = `https://titlecaseconverter.online/blog/${article.slug}`
-  const articleImage = `https://titlecaseconverter.online${article.image}`
+  const articleUrl = `${SITE_URL}/blog/${article.slug}`
+  const articleImage = `${SITE_URL}${article.image}`
   const updatedIso = toIsoDateTime(article.updatedAt)
 
   return {

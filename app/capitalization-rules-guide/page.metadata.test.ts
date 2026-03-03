@@ -1,7 +1,8 @@
 import { describe, expect, test } from "vitest"
 import { metadata, revalidate } from "./page"
+import { SITE_URL } from "@/lib/constants"
 
-const canonicalUrl = "https://titlecaseconverter.online/capitalization-rules-guide"
+const canonicalUrl = `${SITE_URL}/capitalization-rules-guide`
 
 describe("capitalization-rules-guide metadata", () => {
     test("has correct canonical URL", () => {

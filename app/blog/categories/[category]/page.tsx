@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { BreadcrumbListJsonLd } from "@/components/json-ld"
+import { SITE_URL } from "@/lib/constants"
 import {
   blogCategories,
   blogArticles,
@@ -48,7 +49,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CategoryDetailPage({ params }: Props) {
-  const siteUrl = "https://titlecaseconverter.online"
   const { category } = await params
   const currentCategory = getCategoryById(category)
 
@@ -64,10 +64,10 @@ export default async function CategoryDetailPage({ params }: Props) {
     <>
       <BreadcrumbListJsonLd
         items={[
-          { name: "Home", item: siteUrl },
-          { name: "Blog", item: `${siteUrl}/blog` },
-          { name: "Categories", item: `${siteUrl}/blog/categories` },
-          { name: currentCategory.name, item: `${siteUrl}/blog/categories/${currentCategory.id}` },
+          { name: "Home", item: SITE_URL },
+          { name: "Blog", item: `${SITE_URL}/blog` },
+          { name: "Categories", item: `${SITE_URL}/blog/categories` },
+          { name: currentCategory.name, item: `${SITE_URL}/blog/categories/${currentCategory.id}` },
         ]}
       />
       <CategoryHero category={currentCategory} />

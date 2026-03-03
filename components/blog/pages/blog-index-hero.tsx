@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { IconArrowRight } from "@tabler/icons-react"
 
 export function BlogIndexHero() {
   return (
@@ -24,7 +24,7 @@ export function BlogIndexHero() {
               href="/"
               className="inline-flex items-center gap-1 text-blue-700 dark:text-blue-400 hover:underline underline-offset-4"
             >
-              Start Converting <ArrowRight className="h-3.5 w-3.5" />
+              Start Converting <IconArrowRight className="h-3.5 w-3.5" />
             </Link>
             <Link
               href="/blog/categories"
@@ -36,7 +36,7 @@ export function BlogIndexHero() {
         </div>
       </div>
 
-      <hr className="border-t border-slate-200 dark:border-zinc-700" />
+      <hr className="border-t border-zinc-200 dark:border-zinc-700" />
     </section>
   )
 }

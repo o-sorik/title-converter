@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { IconArrowRight } from "@tabler/icons-react"
 import type { Article } from "@/components/blog/data"
 import { getCategoryById } from "@/components/blog/data"
 import { formatBlogDate } from "@/lib/blog-date"
@@ -44,7 +44,7 @@ export function FeaturedArticle({ article }: { article: Article }) {
             href={`/blog/${article.slug}`}
             className="inline-flex items-center gap-1 hover:gap-2 font-semibold text-blue-700 dark:text-blue-400 hover:underline underline-offset-4 shrink-0 ml-4 transition-all duration-150"
           >
-            Read guide <ArrowRight className="h-3 w-3" />
+            Read guide <IconArrowRight className="h-3 w-3" />
           </Link>
         </div>
       </div>

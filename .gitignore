@@ -55,6 +55,12 @@ yarn-error.log*
 /.vscode/
 /.idea/
 
+# temp / generated artifacts
+/output/
+/stitch_assets/
+/tmp/
+/video/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

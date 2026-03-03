@@ -16,7 +16,7 @@ export function CategoryHero({ category }: { category: Category }) {
       <BlogBreadcrumbs items={breadcrumbItems} />
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between lg:gap-8">
         <div className="space-y-3 lg:max-w-3xl lg:flex-1">
-          <p className="text-xs font-semibold uppercase tracking-wide text-blue-700 dark:text-blue-300">{category.articleCount} articles</p>
+
           <h1 className="text-5xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-6xl">
             {category.name} <span className="text-blue-700 dark:text-blue-300">Capitalization Guides</span>
           </h1>
@@ -31,7 +31,7 @@ export function CategoryHero({ category }: { category: Category }) {
           </div>
         </div>
         <div className="hidden lg:block lg:w-80 lg:shrink-0">
-          <div className="relative rounded-3xl border border-blue-100 bg-white p-8 shadow-sm dark:border-blue-500/30 dark:bg-zinc-900/80">
+          <div className="relative rounded-3xl border border-blue-100 dark:border-blue-500/30 bg-white/70 dark:bg-zinc-900/50 backdrop-blur-sm p-8 shadow-sm">
             <div className="absolute -right-3 -top-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500 text-white shadow-md">
               <span className="text-lg">✦</span>
             </div>

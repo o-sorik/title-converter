@@ -1,5 +1,6 @@
 import type { ConversionType, TitleCaseStyle } from "./converters"
 import { appendConverterContextToHref, type ConverterContext } from "./converter-context"
+import { SITE_URL } from "@/lib/constants"
 
 export type GuidanceStyle = Exclude<TitleCaseStyle, "standard"> | "standard"
 
@@ -156,7 +157,7 @@ export const STYLE_GUIDE_SECTIONS: StyleGuideSection[] = [
       "Always capitalize the first and last word",
       "Capitalize words after colons and major punctuation",
     ],
-    sourceUrl: "https://titlecaseconverter.online/capitalization-rules-guide",
+    sourceUrl: `${SITE_URL}/capitalization-rules-guide`,
     sourceName: "Title Case Converter",
     editionNote: "General convention",
   },

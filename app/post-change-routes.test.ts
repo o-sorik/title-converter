@@ -3,6 +3,7 @@ import sitemap from "./sitemap"
 import { CONVERTER_SLUGS } from "@/lib/seo-config"
 import { blogArticles, blogCategories } from "@/components/blog/data"
 import { getBlogArticleMetadataBySlug } from "@/lib/blog-view-model"
+import { SITE_URL } from "@/lib/constants"
 
 describe("post-change route validation", () => {
   test("sitemap contains all priority static routes and no duplicates", () => {
@@ -11,26 +12,24 @@ describe("post-change route validation", () => {
     const unique = new Set(urls)
 
     expect(unique.size).toBe(urls.length)
-    expect(urls).toContain("https://titlecaseconverter.online")
-    expect(urls).toContain("https://titlecaseconverter.online/blog")
-    expect(urls).toContain("https://titlecaseconverter.online/blog/categories")
+    expect(urls).toContain(SITE_URL)
+    expect(urls).toContain(`${SITE_URL}/blog`)
+    expect(urls).toContain(`${SITE_URL}/blog/categories`)
   })
 
   test("sitemap contains all converter, category, and article routes", () => {
     const entries = sitemap()
     const urls = new Set(entries.map((entry) => entry.url))
-    const baseUrl = "https://titlecaseconverter.online"
-
     for (const slug of CONVERTER_SLUGS) {
-      expect(urls.has(`${baseUrl}/${slug}`)).toBe(true)
+      expect(urls.has(`${SITE_URL}/${slug}`)).toBe(true)
     }
 
     for (const category of blogCategories) {
-      expect(urls.has(`${baseUrl}/blog/categories/${category.id}`)).toBe(true)
+      expect(urls.has(`${SITE_URL}/blog/categories/${category.id}`)).toBe(true)
     }
 
     for (const article of blogArticles) {
-      expect(urls.has(`${baseUrl}/blog/${article.slug}`)).toBe(true)
+      expect(urls.has(`${SITE_URL}/blog/${article.slug}`)).toBe(true)
     }
   })
 

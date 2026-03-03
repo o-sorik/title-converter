@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest'
 import { convert } from './converters'
+import type { ConversionType } from './converters'
 
 test('converts to title case', () => {
     expect(convert('hello world', 'title')).toBe('Hello World')
@@ -142,4 +143,160 @@ test('preserves dotted acronyms', () => {
 test('handles sentence boundaries with quotes and parentheses', () => {
     expect(convert('he said "HELLO." then LEFT.', 'sentence')).toBe('He said "hello." Then left.')
     expect(convert('(what IS this?) YES it is.', 'sentence')).toBe('(What is this?) Yes it is.')
+})
+
+// --- Contractions ---
+
+test('handles contractions correctly in title case', () => {
+    expect(convert("don't stop the music", 'title')).toBe("Don't Stop the Music")
+    expect(convert("it's a wonderful life", 'title')).toBe("It's a Wonderful Life")
+    expect(convert("we'll always have paris", 'title')).toBe("We'll Always Have Paris")
+    expect(convert("they're not ready yet", 'title')).toBe("They're Not Ready Yet")
+    expect(convert("i've been waiting", 'title')).toBe("I've Been Waiting")
+    expect(convert("she'd rather stay", 'title')).toBe("She'd Rather Stay")
+    expect(convert("can't stop won't stop", 'title')).toBe("Can't Stop Won't Stop")
+})
+
+test('handles contractions in sentence case', () => {
+    expect(convert("DON'T STOP THE MUSIC", 'sentence')).toBe("Don't stop the music")
+    expect(convert("IT'S A WONDERFUL LIFE", 'sentence')).toBe("It's a wonderful life")
+})
+
+test('preserves apostrophe names alongside contractions', () => {
+    expect(convert("o'neill can't believe it", 'title')).toBe("O'Neill Can't Believe It")
+    expect(convert("d'artagnan won't surrender", 'title')).toBe("D'Artagnan Won't Surrender")
+})
+
+// --- Possessives ---
+
+test('handles possessives correctly in title case', () => {
+    expect(convert("john's greatest adventure", 'title')).toBe("John's Greatest Adventure")
+    expect(convert("the company's new strategy", 'title')).toBe("The Company's New Strategy")
+})
+
+test('handles possessives in sentence case', () => {
+    expect(convert("JOHN'S GREATEST ADVENTURE", 'sentence')).toBe("John's greatest adventure")
+})
+
+// --- Ordinals and numbers ---
+
+test('does not uppercase ordinals in title case', () => {
+    expect(convert('the 3rd annual report', 'title')).toBe('The 3rd Annual Report')
+    expect(convert('21st century solutions', 'title')).toBe('21st Century Solutions')
+    expect(convert('the 1st and 2nd place winners', 'title')).toBe('The 1st and 2nd Place Winners')
+})
+
+test('preserves already-uppercase alphanumeric acronyms', () => {
+    expect(convert('B2B marketing strategy', 'title')).toBe('B2B Marketing Strategy')
+    expect(convert('using S3 and EC2 on AWS', 'title')).toBe('Using S3 and EC2 on AWS')
+})
+
+test('does not force-uppercase letter-digit-letter words', () => {
+    expect(convert('the h2o molecule', 'title')).toBe('The H2o Molecule')
+})
+
+// --- New acronyms ---
+
+test('preserves newly added acronyms in title case', () => {
+    expect(convert('fbi and cia report', 'title')).toBe('FBI and CIA Report')
+    expect(convert('a guide for the ceo and cto', 'title')).toBe('A Guide for the CEO and CTO')
+    expect(convert('deploying to aws with sdk', 'title')).toBe('Deploying to AWS with SDK')
+    expect(convert('dns and vpn configuration', 'title')).toBe('DNS and VPN Configuration')
+    expect(convert('tracking roi and kpi metrics', 'title')).toBe('Tracking ROI and KPI Metrics')
+})
+
+test('preserves newly added acronyms in sentence case', () => {
+    expect(convert('the fbi investigation', 'sentence')).toBe('The FBI investigation')
+    expect(convert('ask the ceo about roi', 'sentence')).toBe('Ask the CEO about ROI')
+})
+
+// --- Alternating case ---
+
+test('converts to alternating case', () => {
+    expect(convert('hello world', 'alternating')).toBe('hElLo wOrLd')
+    expect(convert('Hello World', 'alternating')).toBe('hElLo wOrLd')
+    expect(convert('HELLO', 'alternating')).toBe('hElLo')
+})
+
+test('alternating case includes spaces in character index', () => {
+    expect(convert('ab cd', 'alternating')).toBe('aB Cd')
+})
+
+// --- Inverse case ---
+
+test('converts to inverse case', () => {
+    expect(convert('Hello World', 'inverse')).toBe('hELLO wORLD')
+    expect(convert('hello world', 'inverse')).toBe('HELLO WORLD')
+    expect(convert('HELLO WORLD', 'inverse')).toBe('hello world')
+})
+
+test('inverse case preserves numbers and flips letters', () => {
+    expect(convert('Hello 123 World', 'inverse')).toBe('hELLO 123 wORLD')
+})
+
+// --- Empty and whitespace ---
+
+test('handles empty string for all modes', () => {
+    const modes: ConversionType[] = ['title', 'upper', 'lower', 'sentence', 'camel', 'pascal', 'snake', 'kebab', 'alternating', 'inverse']
+    for (const mode of modes) {
+        expect(convert('', mode)).toBe('')
+    }
+})
+
+test('handles whitespace-only input', () => {
+    expect(convert('   ', 'title')).toBe('   ')
+    expect(convert('   ', 'upper')).toBe('   ')
+    expect(convert('   ', 'lower')).toBe('   ')
+    expect(convert('   ', 'sentence')).toBe('   ')
+})
+
+// --- Pascal and kebab expanded ---
+
+test('converts various inputs to pascal case', () => {
+    expect(convert('hello world', 'pascal')).toBe('HelloWorld')
+    expect(convert('Hello World', 'pascal')).toBe('HelloWorld')
+    expect(convert('hello_world', 'pascal')).toBe('HelloWorld')
+    expect(convert('hello-world', 'pascal')).toBe('HelloWorld')
+    expect(convert('helloWorld', 'pascal')).toBe('HelloWorld')
+    expect(convert('HELLO WORLD', 'pascal')).toBe('HelloWorld')
+})
+
+test('converts various inputs to kebab case', () => {
+    expect(convert('hello world', 'kebab')).toBe('hello-world')
+    expect(convert('Hello World', 'kebab')).toBe('hello-world')
+    expect(convert('hello_world', 'kebab')).toBe('hello-world')
+    expect(convert('HELLO WORLD', 'kebab')).toBe('hello-world')
+    expect(convert('helloWorld', 'kebab')).toBe('hello-world')
+})
+
+// --- Multiple consecutive spaces ---
+
+test('preserves multiple consecutive spaces in title case', () => {
+    expect(convert('hello  world', 'title')).toBe('Hello  World')
+    expect(convert('hello   world', 'title')).toBe('Hello   World')
+})
+
+test('preserves multiple consecutive spaces in sentence case', () => {
+    expect(convert('HELLO  WORLD', 'sentence')).toBe('Hello  world')
+})
+
+// --- Parentheses and quotes ---
+
+test('handles parenthesized text in title case', () => {
+    expect(convert('(hello world)', 'title')).toBe('(Hello World)')
+})
+
+test('handles quoted text in title case', () => {
+    expect(convert('"hello world"', 'title')).toBe('"Hello World"')
+})
+
+// --- All 5 styles with hyphenated preposition compounds ---
+
+test('all five styles handle hyphenated compounds with prepositions', () => {
+    const input = 'a run-through of the plan'
+    expect(convert(input, 'title', { titleStyle: 'standard' })).toBe('A Run-through of the Plan')
+    expect(convert(input, 'title', { titleStyle: 'ap' })).toBe('A Run-Through of the Plan')
+    expect(convert(input, 'title', { titleStyle: 'apa' })).toBe('A Run-Through of the Plan')
+    expect(convert(input, 'title', { titleStyle: 'mla' })).toBe('A Run-through of the Plan')
+    expect(convert(input, 'title', { titleStyle: 'chicago' })).toBe('A Run-through of the Plan')
 })

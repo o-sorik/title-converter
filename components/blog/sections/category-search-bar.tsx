@@ -1,4 +1,4 @@
-import { Search } from "lucide-react"
+import { IconSearch } from "@tabler/icons-react"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -13,7 +13,7 @@ export function CategorySearchBar() {
     <div className="rounded-2xl border border-slate-200 bg-white p-3">
       <div className="grid gap-3 md:grid-cols-[1fr_180px]">
         <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <IconSearch className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <Input className="pl-9" placeholder="Search guides and categories..." />
         </div>
         <Select defaultValue="latest">

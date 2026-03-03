@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Copy, RotateCcw, ClipboardPaste, Check, Info, Bug, ExternalLink } from "lucide-react"
+import { IconCopy, IconRotateClockwise, IconClipboard, IconCheck, IconInfoCircle, IconBug, IconExternalLink } from "@tabler/icons-react"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -30,7 +30,7 @@ const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
     { id: "camel", label: "camelCase" },
     { id: "pascal", label: "PascalCase" },
     { id: "snake", label: "snake_case" },
-    { id: "kebab", label: "url-writing-case" },
+    { id: "kebab", label: "URL Slug" },
     { id: "alternating", label: "aLtErNaTiNg" },
     { id: "inverse", label: "InVeRsE cAsE" },
 ]
@@ -122,7 +122,7 @@ function ExplanationsPanel({
     return (
         <div className="mt-4 p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 animate-slideUp">
             <h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <Info className="h-4 w-4 text-blue-500" />
+                <IconInfoCircle className="h-4 w-4 text-blue-500" />
                 Why was it capitalized this way?
             </h4>
             {activeType === "title" && (
@@ -433,7 +433,7 @@ export function TextConverter({
                                         title="Paste from Clipboard"
                                         aria-label="Paste from clipboard"
                                     >
-                                        <ClipboardPaste className="h-4 w-4" />
+                                        <IconClipboard className="h-4 w-4" />
                                         <span className="sr-only">Paste</span>
                                     </Button>
                                     <Button
@@ -444,7 +444,7 @@ export function TextConverter({
                                         title="Clear Input"
                                         aria-label="Clear input"
                                     >
-                                        <RotateCcw className="h-4 w-4" />
+                                        <IconRotateClockwise className="h-4 w-4" />
                                         <span className="sr-only">Clear</span>
                                     </Button>
                                 </div>
@@ -505,9 +505,9 @@ export function TextConverter({
                                         aria-label="Copy output"
                                     >
                                         {copied ? (
-                                            <Check className="h-4 w-4 text-green-500 animate-checkmark" />
+                                            <IconCheck className="h-4 w-4 text-green-500 animate-checkmark" />
                                         ) : (
-                                            <Copy className="h-4 w-4" />
+                                            <IconCopy className="h-4 w-4" />
                                         )}
                                         <span className="sr-only">Copy</span>
                                     </Button>
@@ -525,8 +525,8 @@ export function TextConverter({
                                 id="converter-output"
                                 key={outputKey}
                                 readOnly
-                                placeholder="Result will appear here..."
-                                className="min-h-[140px] sm:min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-muted-foreground font-medium focus-visible:ring-0 animate-pulse-subtle"
+                                placeholder="Result Will Appear Here..."
+                                className="min-h-[140px] sm:min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 text-muted-foreground font-medium focus-visible:ring-0 animate-pulse-subtle"
                                 value={output}
                                 aria-describedby="copy-feedback"
                                 aria-label="Converted output"
@@ -541,7 +541,7 @@ export function TextConverter({
                                     aria-label={ruleGuidance.description}
                                 >
                                     <span>{ruleGuidance.shortLabel}</span>
-                                    <ExternalLink className="h-3 w-3" />
+                                    <IconExternalLink className="h-3 w-3" />
                                 </Link>
                             </div>
                             {output && <TextStats text={output} />}
@@ -574,7 +574,7 @@ export function TextConverter({
                                 aria-label="Browse Grammar 101 capitalization questions"
                             >
                                 <span>Grammar 101</span>
-                                <ExternalLink className="h-3 w-3" />
+                                <IconExternalLink className="h-3 w-3" />
                             </Link>
                             {highIntentContentHref && (
                                 <>
@@ -585,7 +585,7 @@ export function TextConverter({
                                         aria-label="Open matched Grammar 101 guidance for this capitalization query"
                                     >
                                         <span>See matched answer</span>
-                                        <ExternalLink className="h-3 w-3" />
+                                        <IconExternalLink className="h-3 w-3" />
                                     </Link>
                                 </>
                             )}
@@ -594,53 +594,46 @@ export function TextConverter({
 
                     {activeType === "title" && (
                         <div className="space-y-2 pt-1" data-testid="style-controls">
-                            <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-x-4 gap-y-2 items-end">
-                                <p className="text-sm font-medium text-muted-foreground text-left">Title Style</p>
-                                <p className="text-sm font-medium text-muted-foreground text-left sm:text-right">
-                                    Found an issue?
-                                </p>
-                                <Tabs
-                                    value={titleStyle}
-                                    onValueChange={(value) => setTitleStyle(value as TitleCaseStyle)}
-                                    className="w-fit"
-                                >
-                                    <TabsList className="w-fit h-auto flex-wrap justify-start gap-1 p-1 bg-zinc-100 dark:bg-zinc-900">
-                                        {TITLE_STYLES.map((style) => (
-                                            <TabsTrigger
-                                                key={style.id}
-                                                value={style.id}
-                                                data-active={titleStyle === style.id ? "true" : "false"}
-                                                className="h-8 px-3 flex-none"
-                                            >
-                                                {style.label}
-                                            </TabsTrigger>
-                                        ))}
-                                    </TabsList>
-                                </Tabs>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    className="h-8 gap-2 w-fit sm:justify-self-end"
-                                    onClick={handleReportTitleStyleError}
-                                    aria-label="Report title style issue"
-                                >
-                                    <Bug className="h-3.5 w-3.5" />
-                                    Report error
-                                </Button>
-                            </div>
+                            <p className="text-sm font-medium text-muted-foreground text-left">Title Style</p>
+                            <Tabs
+                                value={titleStyle}
+                                onValueChange={(value) => setTitleStyle(value as TitleCaseStyle)}
+                                className="w-fit"
+                            >
+                                <TabsList className="w-fit h-auto flex-wrap justify-start gap-1 p-1 bg-zinc-100 dark:bg-zinc-900">
+                                    {TITLE_STYLES.map((style) => (
+                                        <TabsTrigger
+                                            key={style.id}
+                                            value={style.id}
+                                            data-active={titleStyle === style.id ? "true" : "false"}
+                                            className="h-8 px-3 flex-none"
+                                        >
+                                            {style.label}
+                                        </TabsTrigger>
+                                    ))}
+                                </TabsList>
+                            </Tabs>
                             <p className="text-xs text-muted-foreground text-left">
                                 {TITLE_STYLES.find((style) => style.id === titleStyle)?.hint}
                             </p>
-                            <div className="flex justify-start" data-testid="style-rules-entry">
+                            <div className="flex items-center justify-between" data-testid="style-rules-entry">
                                 <Link
                                     href={ruleGuidance.href}
                                     className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
                                     aria-label={ruleGuidance.description}
                                 >
                                     <span>{ruleGuidance.shortLabel}</span>
-                                    <ExternalLink className="h-3 w-3" />
+                                    <IconExternalLink className="h-3 w-3" />
                                 </Link>
+                                <button
+                                    type="button"
+                                    onClick={handleReportTitleStyleError}
+                                    aria-label="Report title style issue"
+                                    className="inline-flex items-center gap-1 text-xs text-muted-foreground/60 hover:text-muted-foreground underline-offset-4 hover:underline"
+                                >
+                                    <IconBug className="h-3 w-3" />
+                                    <span>Report error</span>
+                                </button>
                             </div>
                         </div>
                     )}
@@ -655,7 +648,7 @@ export function TextConverter({
                                 className={`rounded-full gap-2 transition-all ${showExplanations ? 'bg-blue-500 hover:bg-blue-600 text-white' : ''}`}
                                 title="See why each word was capitalized"
                             >
-                                <Info className="h-4 w-4" />
+                                <IconInfoCircle className="h-4 w-4" />
                                 {showExplanations ? "Hide Explanations" : "Show Explanations"}
                             </Button>
                         </div>

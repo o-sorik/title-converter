@@ -1,9 +1,9 @@
 import Link from "next/link"
-import { BookOpen, BarChart2, FileText, Code2, PenLine } from "lucide-react"
+import { IconBook, IconChartBar, IconFileText, IconTerminal, IconPencil } from "@tabler/icons-react"
 
 const AUDIENCES = [
     {
-        icon: BookOpen,
+        icon: IconBook,
         title: "Students and Academics",
         styleTag: "APA · MLA",
         description:
@@ -12,7 +12,7 @@ const AUDIENCES = [
         href: "/blog/apa-7-title-case-guide",
     },
     {
-        icon: BarChart2,
+        icon: IconChartBar,
         title: "Content Marketers and SEOs",
         styleTag: "AP · Standard",
         description:
@@ -21,7 +21,7 @@ const AUDIENCES = [
         href: "/blog/ap-title-capitalization-basics",
     },
     {
-        icon: FileText,
+        icon: IconFileText,
         title: "Editors and Publishers",
         styleTag: "Chicago",
         description:
@@ -30,7 +30,7 @@ const AUDIENCES = [
         href: "/blog/categories/chicago",
     },
     {
-        icon: Code2,
+        icon: IconTerminal,
         title: "Developers",
         styleTag: "camelCase · snake_case",
         description:
@@ -39,7 +39,7 @@ const AUDIENCES = [
         href: "/camel-case-converter",
     },
     {
-        icon: PenLine,
+        icon: IconPencil,
         title: "Writers and Bloggers",
         styleTag: "Chicago · Standard",
         description:

@@ -2,8 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { ChevronDown } from "lucide-react"
-import { IconBinary, IconBraces, IconBrackets, IconCode, IconLetterCaseLower, IconLetterCaseUpper, IconLink, IconMoodSmile, IconPilcrow, IconTypography } from "@tabler/icons-react"
+import { IconBinary, IconBraces, IconBrackets, IconChevronDown, IconCode, IconLetterCaseLower, IconLetterCaseUpper, IconLink, IconMoodSmile, IconPilcrow, IconTypography } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -85,7 +84,7 @@ export function ConverterNav() {
                 <Button variant="ghost" size="sm" className="gap-1">
                     <span className="hidden sm:inline">All Converters</span>
                     <span className="sm:hidden">Converters</span>
-                    <ChevronDown className="h-4 w-4" />
+                    <IconChevronDown className="h-4 w-4" />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[min(92vw,720px)] p-2">

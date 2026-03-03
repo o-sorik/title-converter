@@ -4,11 +4,11 @@ import { BatchChecker } from "@/components/batch-checker"
 import { WebApplicationJsonLd } from "@/components/json-ld"
 import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
+import { SITE_URL } from "@/lib/constants"
 
 export const revalidate = 604800
 
-const siteUrl = "https://titlecaseconverter.online"
-const pageUrl = `${siteUrl}/batch-checker`
+const pageUrl = `${SITE_URL}/batch-checker`
 
 const title = "Batch Headline Checker — Editorial QA Tool"
 const description =

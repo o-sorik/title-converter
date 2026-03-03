@@ -4,6 +4,7 @@ import { BottomCta, CategoryChips, ComparisonCards, FaqBlock } from "@/component
 import { CategoriesGrid, CategoriesHero, PopularGuidesStrip } from "@/components/blog/pages"
 import { getBlogCategoriesPageViewModel } from "@/lib/blog-view-model"
 import { blogCategories } from "@/components/blog/data"
+import { SITE_URL } from "@/lib/constants"
 
 export const revalidate = 86400
 
@@ -16,7 +17,6 @@ export const metadata: Metadata = {
 }
 
 export default function BlogCategoriesPage() {
-  const siteUrl = "https://titlecaseconverter.online"
   const viewModel = getBlogCategoriesPageViewModel()
   const { categories, popular, comparisons, faqs } = viewModel
 
@@ -24,9 +24,9 @@ export default function BlogCategoriesPage() {
     <>
       <BreadcrumbListJsonLd
         items={[
-          { name: "Home", item: siteUrl },
-          { name: "Blog", item: `${siteUrl}/blog` },
-          { name: "Categories", item: `${siteUrl}/blog/categories` },
+          { name: "Home", item: SITE_URL },
+          { name: "Blog", item: `${SITE_URL}/blog` },
+          { name: "Categories", item: `${SITE_URL}/blog/categories` },
         ]}
       />
       <CategoriesHero />

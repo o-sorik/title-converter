@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { IconArrowRight } from "@tabler/icons-react"
 import type { Comparison } from "@/components/blog/data"
 
 export function ComparisonCards({ items }: { items: Comparison[] }) {
@@ -17,7 +17,7 @@ export function ComparisonCards({ items }: { items: Comparison[] }) {
             </h3>
             <p className="mt-2 text-sm text-slate-600 dark:text-zinc-400">{item.summary}</p>
             <Link href={item.href} className="mt-4 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-blue-700 transition-all hover:gap-2 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
-              Read comparison <ArrowRight className="h-3 w-3" />
+              Read comparison <IconArrowRight className="h-3 w-3" />
             </Link>
           </article>
         ))}

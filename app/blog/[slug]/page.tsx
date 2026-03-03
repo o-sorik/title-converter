@@ -14,6 +14,7 @@ import {
   getBlogArticleMetadataBySlug,
   getBlogArticleSlugs,
 } from "@/lib/blog-view-model"
+import { SITE_URL } from "@/lib/constants"
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -38,7 +39,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ArticlePage({ params, searchParams }: Props) {
-  const siteUrl = "https://titlecaseconverter.online"
   const { slug } = await params
   const viewModel = getArticlePageViewModel(slug)
   if (!viewModel) {
@@ -68,9 +68,9 @@ export default async function ArticlePage({ params, searchParams }: Props) {
       <ReadingProgressBar targetId="article-content" />
       <BreadcrumbListJsonLd
         items={[
-          { name: "Home", item: siteUrl },
-          { name: "Blog", item: `${siteUrl}/blog` },
-          ...(category ? [{ name: category.name, item: `${siteUrl}/blog/categories/${category.id}` }] : []),
+          { name: "Home", item: SITE_URL },
+          { name: "Blog", item: `${SITE_URL}/blog` },
+          ...(category ? [{ name: category.name, item: `${SITE_URL}/blog/categories/${category.id}` }] : []),
           { name: article.title, item: articleUrl },
         ]}
       />

@@ -4,6 +4,7 @@ import { BreadcrumbListJsonLd } from "@/components/json-ld"
 import { BottomCta, CategoryChips, ComparisonCards, FaqBlock, FeaturedArticle, ArticleCard } from "@/components/blog/sections"
 import { BlogIndexHero, BlogWritingTipsPanel } from "@/components/blog/pages"
 import { getBlogIndexPageViewModel } from "@/lib/blog-view-model"
+import { SITE_URL } from "@/lib/constants"
 
 export const revalidate = 86400
 
@@ -16,7 +17,6 @@ export const metadata: Metadata = {
 }
 
 export default function BlogIndexPage() {
-  const siteUrl = "https://titlecaseconverter.online"
   const viewModel = getBlogIndexPageViewModel()
   const { featured, latest, categories, comparisons, faqs } = viewModel
 
@@ -24,8 +24,8 @@ export default function BlogIndexPage() {
     <>
       <BreadcrumbListJsonLd
         items={[
-          { name: "Home", item: siteUrl },
-          { name: "Blog", item: `${siteUrl}/blog` },
+          { name: "Home", item: SITE_URL },
+          { name: "Blog", item: `${SITE_URL}/blog` },
         ]}
       />
       <BlogIndexHero />

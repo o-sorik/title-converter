@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { HOME_PAGE_CONFIG } from "@/lib/seo-config"
+import { SITE_URL } from "@/lib/constants"
 import { TextConverter } from "@/components/text-converter"
 import { AudienceSection } from "@/components/audience-section"
 import { ContentSection } from "@/components/content-section"
@@ -9,7 +10,6 @@ import { SiteFooter, SiteHeader } from "@/components/site-shell"
 import { parseConverterInitialStateFromSearchParams } from "@/lib/converter-context"
 
 export const revalidate = 86400
-const siteUrl = "https://titlecaseconverter.online"
 
 export const metadata: Metadata = {
   title: {
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   description: HOME_PAGE_CONFIG.description,
   alternates: {
-    canonical: siteUrl,
+    canonical: SITE_URL,
   },
 }
 
@@ -36,7 +36,7 @@ export default async function Home({ searchParams }: HomePageProps) {
       <WebApplicationJsonLd
         name={config.h1}
         description={config.description}
-        url={siteUrl}
+        url={SITE_URL}
       />
       <HowToJsonLd
         name={`How to use ${config.h1}`}
@@ -51,16 +51,16 @@ export default async function Home({ searchParams }: HomePageProps) {
 
       <SiteHeader containerClassName="max-w-5xl" />
 
-      <main className="container mx-auto py-10 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-3.5rem)] flex flex-col items-center">
-        <div className="w-full max-w-5xl space-y-16">
-          <div className="text-center space-y-4 mb-8">
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-br from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-500 bg-clip-text text-transparent">
+      <main className="container mx-auto pt-6 pb-10 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-3.5rem)] flex flex-col items-center">
+        <div className="w-full max-w-5xl space-y-12">
+          <div className="text-center space-y-3 mb-4">
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-br from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-500 bg-clip-text text-transparent">
               {config.h1}
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base text-muted-foreground max-w-2xl mx-auto">
               Capitalize titles with practical AP, APA, MLA, and Chicago-friendly rules in one click.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground">
+            <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
               <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
                 <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                 Free

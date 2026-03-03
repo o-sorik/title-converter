@@ -1,4 +1,5 @@
 import type { ConversionType, TitleCaseStyle } from "./converters"
+import { SITE_URL } from "@/lib/constants"
 
 export interface ConverterContext {
   input: string
@@ -57,7 +58,7 @@ function normalizeContextRef(value?: string): string | undefined {
 }
 
 export function appendConverterContextToHref(href: string, context: ConverterContext): string {
-  const url = new URL(href, "https://titlecaseconverter.online")
+  const url = new URL(href, SITE_URL)
   url.searchParams.set("ctx_ref", DEFAULT_CONVERTER_CONTEXT_REF)
   url.searchParams.set("ctx_mode", context.mode)
   url.searchParams.set("ctx_style", context.titleStyle)

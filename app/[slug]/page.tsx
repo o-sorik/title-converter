@@ -1,15 +1,15 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { SEO_CONFIG, CONVERTER_SLUGS } from "@/lib/seo-config"
+import { SITE_URL } from "@/lib/constants"
 import { TextConverter } from "@/components/text-converter"
 import { ModeContentSection, getRelatedLinksForMode } from "@/components/mode-content-section"
 import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
-import { WebApplicationJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/json-ld"
+import { WebApplicationJsonLd, FAQPageJsonLd } from "@/components/json-ld"
 import type { Metadata } from "next"
 import { parseConverterInitialStateFromSearchParams } from "@/lib/converter-context"
 
-const siteUrl = "https://titlecaseconverter.online"
 export const revalidate = 604800
 export const dynamicParams = false
 
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         return {}
     }
 
-    const pageUrl = `${siteUrl}/${slug}`
+    const pageUrl = `${SITE_URL}/${slug}`
 
     return {
         title: config.title,
@@ -66,7 +66,7 @@ export default async function ConverterPage({ params, searchParams }: Props) {
         notFound()
     }
 
-    const pageUrl = `${siteUrl}/${slug}`
+    const pageUrl = `${SITE_URL}/${slug}`
     const relatedLinks = getRelatedLinksForMode(config.mode)
     const converterContext = parseConverterInitialStateFromSearchParams((await searchParams) ?? {})
     const defaultMode = converterContext.initialMode ?? config.mode
@@ -78,15 +78,6 @@ export default async function ConverterPage({ params, searchParams }: Props) {
                 name={config.h1}
                 description={config.description}
                 url={pageUrl}
-            />
-            <HowToJsonLd
-                name={`How to use ${config.h1}`}
-                description={config.content.intro}
-                steps={[
-                    { name: "Enter your text", text: "Type or paste the text you want to convert into the input field." },
-                    { name: "View results instantly", text: "The converted text will appear in the output field in real-time." },
-                    { name: "Copy your text", text: "Click the copy button to copy the converted text to your clipboard." },
-                ]}
             />
             {config.faqs && <FAQPageJsonLd faqs={config.faqs} />}
 
