@@ -5,21 +5,27 @@
 - Updated by: Claude + Owner
 
 ## Where We Are
-- Current phase/epic: **Production is LIVE.** Site deployed on Hetzner VPS. Post-launch SEO measurement window can begin.
-- What is already done: full blog system, shared site shell, modular components, JSON-LD structured data, production VPS setup (Docker + Nginx + SSL), DNS configured, www→apex redirect working, HTTPS enforced.
-- What is in progress: GSC/GA4/Bing Webmaster connections, metadata pass for priority URLs, analytics instrumentation, CI/CD pipeline setup.
+- Current phase/epic: **Production is LIVE. CI/CD is GREEN.** Full pipeline: push to `main` → lint + test + SEO QA → auto-deploy to Hetzner.
+- What is already done: full blog system, shared site shell, modular components, JSON-LD structured data, production VPS (Docker + Nginx + SSL), CI/CD pipeline (GitHub Actions), DNS, www→apex redirect, HTTPS enforced.
+- What is in progress: GSC/GA4/Bing Webmaster connections, staging environment planning.
 
 ## Top 3 Next Actions
 - [ ] Connect GSC, GA4, Bing Webmaster Tools – start collecting SEO metrics.
-- [ ] Complete metadata pass (`title`/`description`/canonical) for priority converter + blog URLs and re-run SEO QA.
-- [ ] Set up GitHub Actions CI/CD for automated deploy on push to `main`.
+- [ ] Set up uptime monitoring (UptimeRobot or similar).
+- [ ] Design staging/prod environment strategy (preview deploys, branch-based staging).
+
+## Backlog (Tech)
+- [ ] Cloudflare CDN (optional – evaluate latency first)
+- [ ] Staging environment on same server (separate Docker container + subdomain)
+- [ ] Complete metadata pass for priority converter + blog URLs
 
 ## Active Blockers
-- None – site is live and serving traffic.
+- None – site is live, CI/CD is operational.
 
 ## Decisions Since Last Session
 - See `docs/ops/DECISIONS.md` entries: `D-0001` to `D-0015`.
 - **D-0016 (2026-03-03):** Migrated from Vercel to self-hosted Hetzner VPS. Rationale: full control over infrastructure, multi-project support on single server, cost efficiency (~€5/mo for CPX22).
+- **D-0017 (2026-03-03):** GitHub Actions CI/CD. Pipeline: lint → test → SEO QA → SSH deploy. Healthcheck loop with 120s timeout.
 
 ## Infrastructure Milestone (2026-03-03)
 Deployed `titlecaseconverter.online` to production:
@@ -29,6 +35,7 @@ Deployed `titlecaseconverter.online` to production:
 - Dual firewall (Hetzner Cloud + UFW)
 - Multi-stage Docker build with Next.js standalone output
 - SSL: Let's Encrypt with auto-renewal
+- CI/CD: GitHub Actions → auto-deploy on push to `main`
 - Full runbook: `docs/ops/DEPLOY_RUNBOOK_HETZNER.md`
 
 ## Metrics Snapshot (Quick)
@@ -51,3 +58,4 @@ Deployed `titlecaseconverter.online` to production:
 - [x] **Server security hardened** – SSH key-only, dual firewall, fail2ban.
 - [x] **SSL configured** – Let's Encrypt cert, auto-renewal, HSTS header.
 - [x] **Deploy runbook created** – `DEPLOY_RUNBOOK_HETZNER.md`.
+- [x] **CI/CD pipeline live** – GitHub Actions: lint + test + SEO QA + auto-deploy.

@@ -52,5 +52,6 @@ This document defines where core systems live and how to validate them before sh
 ## Known Current Risks
 - Blog and converter metadata coverage must be completed for all priority URLs.
 - Content scale risk: cannibalization and thin-content drift without strict URL intent mapping.
-- No CI/CD pipeline yet – deploys are manual SSH + docker compose.
 - GSC/GA4/Bing Webmaster not yet connected – no SEO data collection.
+- No uptime monitoring – downtime goes unnoticed until manual check.
+- No staging environment – all deploys go straight to production.

@@ -79,8 +79,48 @@ Internet → Hetzner Cloud Firewall (22/80/443)
 
 Server is designed for multi-project hosting – add another Docker container on a different port, add an Nginx server block, run Certbot for the new domain. Done.
 
+## CI/CD (added same day)
+
+Set up GitHub Actions pipeline – `.github/workflows/ci.yml`:
+- **Quality gate:** lint → test → SEO QA (runs on every push and PR to `main`)
+- **Auto-deploy:** if quality passes + push to `main` → SSH to server → `git pull` → `docker compose build` → `docker compose up -d`
+- **Healthcheck:** retry loop, 12 attempts × 10s = 120s max wait
+- **Secrets:** `SERVER_HOST`, `SERVER_USER`, `SERVER_SSH_KEY` in GitHub Actions secrets
+- **Environment:** `production` (can add approval rules later)
+
+Debugging highlights: SEO QA caught uncommitted metadata changes, deploy script needed longer healthcheck timeout (15s → 120s retry loop).
+
 ## What's next
 
-- GitHub Actions CI/CD (auto-deploy on push to `main`)
 - GSC + GA4 + Bing Webmaster connections
-- Cloudflare CDN (optional – Hetzner in EU already has solid latency for target audience)
+- Uptime monitoring (UptimeRobot or similar)
+- Staging environment (separate container + subdomain on same server)
+- Cloudflare CDN (optional – evaluate latency to target audience first)
+
+## Ideas to explore later
+
+Not planned, just things worth thinking about when there's time.
+
+**Performance:**
+- Nginx-level caching for SSG pages – skip Node.js for static HTML entirely
+- Image optimization pipeline (Sharp + Next.js Image with self-hosted loader)
+- HTTP/2 tuning for critical resources
+
+**Reliability:**
+- Automated backups – cron job snapshotting .env.local + configs to Hetzner Storage Box
+- Docker memory/CPU limits in docker-compose – protect against one project eating all resources
+- Log rotation – Docker logs grow forever without `max-size` / `max-file` config
+
+**Developer experience:**
+- Preview deploys for PRs – temp container on unique port + wildcard subdomain (`pr-42.titlecaseconverter.online`)
+- Dependabot / Renovate – auto PRs for npm dependency updates
+- PostgreSQL in Docker – if ever need comments, analytics storage, or A/B tests
+
+**SEO/Measurement:**
+- Lighthouse CI in GitHub Actions – block merges if Core Web Vitals drop below threshold
+- Self-hosted analytics (Plausible or Umami in Docker) – privacy-friendly, no cookie banners, own your data
+
+**Security:**
+- Nginx rate limiting – protect against brute force and scraping
+- `unattended-upgrades` – auto-install OS security patches
+- Docker image scanning (Trivy or Snyk) in CI – catch vulnerabilities in base images
