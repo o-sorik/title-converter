@@ -41,6 +41,7 @@ export function BatchChecker() {
     const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>("standard")
     const [batchInput, setBatchInput] = React.useState("")
     const [qaResult, setQaResult] = React.useState<EditorialQaResult | null>(null)
+    const [runId, setRunId] = React.useState(0)
 
     // Clear results when mode, style, or input changes
     React.useEffect(() => {
@@ -49,6 +50,7 @@ export function BatchChecker() {
 
     const handleRunQa = () => {
         const result = runEditorialQaBatch(batchInput, mode, titleStyle)
+        setRunId(id => id + 1)
         setQaResult(result)
     }
 
@@ -150,11 +152,12 @@ export function BatchChecker() {
                     <div className="space-y-2" data-testid="qa-results">
                         {qaResult.items.map((item, index) => (
                             <article
-                                key={`${item.source}-${index}`}
-                                className={`rounded-lg border p-3 space-y-2 ${item.isConsistent
+                                key={`${runId}-${item.source}-${index}`}
+                                className={`animate-result-reveal rounded-lg border p-3 space-y-2 ${item.isConsistent
                                     ? "border-zinc-200 dark:border-zinc-800"
                                     : "border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-950/20"
                                 }`}
+                                style={{ animationDelay: `${index * 50}ms`, animationFillMode: "backwards" }}
                             >
                                 <div className="flex flex-wrap items-center justify-between gap-2">
                                     <span className={`text-xs font-medium ${item.isConsistent ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>

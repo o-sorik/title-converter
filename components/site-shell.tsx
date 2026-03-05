@@ -1,12 +1,12 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
-import { IconMenu2, IconX } from "@tabler/icons-react"
+import { useState, useEffect } from "react"
+import { IconChevronDown, IconMenu2, IconX } from "@tabler/icons-react"
 import { buttonVariants } from "@/components/ui/button"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { ConverterNav } from "@/components/converter-nav"
+import { ConverterNav, MENU_ITEMS } from "@/components/converter-nav"
 import { cn } from "@/lib/utils"
 
 type SiteHeaderProps = {
@@ -53,9 +53,20 @@ const footerColumns = [
 
 export function SiteHeader({ containerClassName }: SiteHeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [convertersOpen, setConvertersOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 0)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+    <header className={cn(
+      "sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70 transition-shadow duration-300",
+      scrolled && "shadow-md"
+    )}>
       <div className={cn("container mx-auto flex h-14 items-center justify-between px-4", containerClassName)}>
         <Link href="/" onClick={() => setMobileOpen(false)} className="inline-flex items-center gap-2 text-sm font-semibold tracking-tight transition-opacity hover:opacity-80 sm:text-base">
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
@@ -108,8 +119,29 @@ export function SiteHeader({ containerClassName }: SiteHeaderProps) {
                 {link.label}
               </Link>
             ))}
+            {/* Converters accordion */}
             <div className="pt-1">
-              <ConverterNav />
+              <button
+                onClick={() => setConvertersOpen((v) => !v)}
+                className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "w-full justify-between")}
+              >
+                Converters
+                <IconChevronDown className={cn("h-4 w-4 transition-transform duration-200", convertersOpen && "rotate-180")} />
+              </button>
+              {convertersOpen && (
+                <div className="mt-1 flex flex-col gap-0.5 pl-2">
+                  {MENU_ITEMS.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => { setMobileOpen(false); setConvertersOpen(false) }}
+                      className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "justify-start text-muted-foreground hover:text-foreground")}
+                    >
+                      {item.title}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </nav>
         </div>

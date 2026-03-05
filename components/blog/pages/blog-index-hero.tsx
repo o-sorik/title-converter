@@ -1,9 +1,11 @@
 import Link from "next/link"
 import { IconArrowRight } from "@tabler/icons-react"
+import { ParallaxHeroBg } from "@/components/parallax-hero-bg"
 
 export function BlogIndexHero() {
   return (
-    <section className="space-y-6 py-6">
+    <section className="relative overflow-hidden space-y-6 py-6">
+      <ParallaxHeroBg />
       <div className="border-t-2 border-slate-900 dark:border-zinc-100 pt-5">
         <div className="flex items-baseline justify-between text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-zinc-500 animate-fadeIn" style={{ animationDelay: "80ms" }}>
           <span>Grammar &amp; Style Guides</span>

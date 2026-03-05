@@ -170,6 +170,17 @@
   }
 }
 
+@keyframes glow-dot {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0px 0px oklch(0.7 0.17 160 / 0);
+  }
+  50% {
+    opacity: 0.5;
+    box-shadow: 0 0 6px 2px oklch(0.7 0.17 160 / 0.5);
+  }
+}
+
 @keyframes checkmark {
   0% {
     transform: scale(0) rotate(0deg);
@@ -197,6 +208,78 @@
 
 .animate-checkmark {
   animation: checkmark 0.5s ease-in-out;
+}
+
+@keyframes result-reveal {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-result-reveal {
+  animation: result-reveal 200ms ease-out;
+}
+
+@keyframes shimmer-sweep {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 60%
+  );
+  transform: translateX(-100%);
+}
+.shimmer-btn:hover:not(:disabled)::after {
+  animation: shimmer-sweep 600ms ease-in-out;
+}
+
+@keyframes ripple-burst {
+  0%   { transform: scale(0); opacity: 0.35; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+.ripple-burst {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: currentColor;
+  pointer-events: none;
+  animation: ripple-burst 500ms ease-out forwards;
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+
+/* Hide Radix arrow for custom-styled tooltips */
+.tooltip-no-arrow > span[style] {
+  display: none !important;
+}
+
+.animate-glow-dot {
+  animation: glow-dot 2.4s ease-in-out infinite;
 }
 
 .gradient-animated {

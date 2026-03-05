@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { CONVERTER_SLUGS, SEO_CONFIG } from "@/lib/seo-config"
 
-const MENU_ITEMS = [
+export const MENU_ITEMS = [
     {
         href: "/",
         title: "Title Case Converter",

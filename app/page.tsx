@@ -8,6 +8,7 @@ import { WebApplicationJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/j
 import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
 import { parseConverterInitialStateFromSearchParams } from "@/lib/converter-context"
+import { ScrollReveal } from "@/components/scroll-reveal"
 
 export const revalidate = 86400
 
@@ -62,15 +63,15 @@ export default async function Home({ searchParams }: HomePageProps) {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
               <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
-                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 animate-glow-dot" />
                 Free
               </span>
               <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
-                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 animate-glow-dot" />
                 Instant
               </span>
               <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
-                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 animate-glow-dot" />
                 No Signup
               </span>
             </div>
@@ -85,9 +86,10 @@ export default async function Home({ searchParams }: HomePageProps) {
             initialContextRef={converterContext.initialContextRef}
           />
 
-          <AudienceSection />
+          <ScrollReveal><AudienceSection /></ScrollReveal>
 
           {/* SEO Content Section */}
+          <ScrollReveal delay={100}>
           <article className="prose prose-zinc dark:prose-invert max-w-none w-full">
             <p className="lead text-lg text-muted-foreground mb-8">
               {config.content.intro}
@@ -150,8 +152,9 @@ export default async function Home({ searchParams }: HomePageProps) {
               </section>
             )}
           </article>
+          </ScrollReveal>
 
-          <ContentSection />
+          <ScrollReveal delay={50}><ContentSection /></ScrollReveal>
         </div>
       </main>
 

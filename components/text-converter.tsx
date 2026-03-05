@@ -17,6 +17,7 @@ import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } 
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
 import { getConverterContextStorageKey, parseConverterContextPayload } from "@/lib/converter-context"
 import { getHighIntentBlogHref, getHighIntentEntryFromInput } from "@/lib/high-intent-guidance"
+import { cn } from "@/lib/utils"
 
 const MAX_VISIBLE_EXPLANATIONS = 15
 const COPY_FEEDBACK_DISMISS_MS = 2500
@@ -172,11 +173,14 @@ export function TextConverter({
     )
     const [copied, setCopied] = React.useState(false)
     const [copyFeedbackState, setCopyFeedbackState] = React.useState<CopyFeedbackState>("idle")
+    const [ripple, setRipple] = React.useState(0)
     const [copyFeedbackTick, setCopyFeedbackTick] = React.useState(0)
     const [outputKey, setOutputKey] = React.useState(initialInput ? 1 : 0)
     const [showExplanations, setShowExplanations] = React.useState(false)
     const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>(initialTitleStyle)
     const preserveInitialOutputModeRef = React.useRef(Boolean(initialOutputMode))
+    const buttonRefs = React.useRef<Partial<Record<ConversionType, HTMLButtonElement>>>({})
+    const [pillStyles, setPillStyles] = React.useState<Record<string, React.CSSProperties>>({})
     const feedbackEmail = process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ?? "support@titlecaseconverter.online"
     const outputTitleStyle = conversionSnapshot?.titleStyle ?? titleStyle
     const outputType = conversionSnapshot?.type ?? activeType
@@ -203,6 +207,60 @@ export function TextConverter({
             return syncSnapshotMode(prev, defaultMode)
         })
     }, [defaultMode])
+
+    // Set initial pill position after mount
+    React.useLayoutEffect(() => {
+        const raf = requestAnimationFrame(() => {
+            const activeBtn = buttonRefs.current[activeType]
+            if (!activeBtn) return
+            const activeGroup = CONVERSION_GROUPS.find(g => g.ids.includes(activeType))
+            if (!activeGroup) return
+            const newStyles: Record<string, React.CSSProperties> = {}
+            CONVERSION_GROUPS.forEach(group => {
+                if (group.label === activeGroup.label) {
+                    newStyles[group.label] = {
+                        left: activeBtn.offsetLeft,
+                        top: activeBtn.offsetTop,
+                        width: activeBtn.offsetWidth,
+                        height: activeBtn.offsetHeight,
+                        opacity: 1,
+                    }
+                } else {
+                    newStyles[group.label] = { opacity: 0 }
+                }
+            })
+            setPillStyles(newStyles)
+        })
+        return () => cancelAnimationFrame(raf)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    // Update pill position when activeType changes
+    React.useEffect(() => {
+        const activeBtn = buttonRefs.current[activeType]
+        if (!activeBtn) return
+        const activeGroup = CONVERSION_GROUPS.find(g => g.ids.includes(activeType))
+        if (!activeGroup) return
+        const newStyles: Record<string, React.CSSProperties> = {}
+        CONVERSION_GROUPS.forEach(group => {
+            if (group.label === activeGroup.label) {
+                newStyles[group.label] = {
+                    left: activeBtn.offsetLeft,
+                    top: activeBtn.offsetTop,
+                    width: activeBtn.offsetWidth,
+                    height: activeBtn.offsetHeight,
+                    opacity: 1,
+                }
+            } else {
+                newStyles[group.label] = {
+                    ...(pillStyles[group.label] ?? {}),
+                    opacity: 0,
+                }
+            }
+        })
+        setPillStyles(newStyles)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeType])
 
     React.useEffect(() => {
         if (!initialContextRef) return
@@ -309,7 +367,6 @@ export function TextConverter({
             setCopied(true)
             setCopyFeedbackState("success")
             setCopyFeedbackTick((prev) => nextCopyFeedbackTick(prev))
-            toast.success("Copied to clipboard")
         } catch {
             setCopied(false)
             setCopyFeedbackState("error")
@@ -364,11 +421,11 @@ export function TextConverter({
             data-testid="converter-workspace"
         >
             <Card className="border-0 shadow-2xl bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm ring-1 ring-zinc-200 dark:ring-zinc-800">
-                <CardContent className="space-y-6 pt-6">
+                <CardContent className="flex flex-col gap-6 pt-6">
 
                     {/* Controls - Grouped by category */}
                     <div
-                        className="flex flex-wrap items-start justify-center gap-2 sm:gap-4 pb-3 sm:pb-4"
+                        className="order-2 md:order-1 flex flex-wrap items-start justify-center gap-2 sm:gap-4 pb-3 sm:pb-4"
                         aria-label="Mode Controls"
                         data-testid="mode-controls"
                     >
@@ -377,28 +434,42 @@ export function TextConverter({
                                 <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/60">
                                     {group.label}
                                 </span>
-                                <div className="flex flex-wrap justify-center gap-1 sm:gap-1.5">
+                                <div className="relative flex flex-wrap justify-center gap-1 sm:gap-1.5">
+                                    {/* Sliding pill */}
+                                    <span
+                                        aria-hidden="true"
+                                        className="absolute rounded-full bg-primary pointer-events-none z-0"
+                                        style={{
+                                            transition: 'left 220ms cubic-bezier(0.4,0,0.2,1), top 220ms cubic-bezier(0.4,0,0.2,1), width 220ms cubic-bezier(0.4,0,0.2,1), height 220ms cubic-bezier(0.4,0,0.2,1), opacity 150ms ease',
+                                            ...pillStyles[group.label],
+                                        }}
+                                    />
                                     {group.ids.map((id) => {
                                         const type = CONVERSION_TYPES.find((t) => t.id === id)!
                                         const tip = CONVERSION_TOOLTIPS[type.id]
+                                        const isActive = activeType === type.id
                                         return (
                                             <Tooltip key={type.id} delayDuration={300}>
                                                 <TooltipTrigger asChild>
-                                                    <Button
-                                                        size="sm"
-                                                        variant={activeType === type.id ? "default" : "outline"}
+                                                    <button
+                                                        ref={el => { if (el) buttonRefs.current[type.id] = el }}
                                                         onClick={() => setActiveType(type.id)}
-                                                        aria-pressed={activeType === type.id}
-                                                        data-active={activeType === type.id ? "true" : "false"}
-                                                        className="rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-md px-2 text-xs sm:px-3 sm:text-sm"
+                                                        aria-pressed={isActive}
+                                                        data-active={isActive ? "true" : "false"}
+                                                        className={cn(
+                                                            "relative z-10 rounded-full h-8 px-2 text-xs sm:px-3 sm:text-sm font-medium border transition-colors duration-150 cursor-pointer",
+                                                            isActive
+                                                                ? "text-primary-foreground border-transparent"
+                                                                : "text-foreground border-zinc-200 dark:border-zinc-700 bg-transparent hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                                                        )}
                                                     >
                                                         {type.label}
-                                                    </Button>
+                                                    </button>
                                                 </TooltipTrigger>
                                                 <TooltipContent
                                                     side="bottom"
                                                     sideOffset={6}
-                                                    className="p-0 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-xl max-w-[200px]"
+                                                    className="tooltip-no-arrow p-0 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-xl max-w-[200px]"
                                                 >
                                                     <div className="px-3 pt-2.5 pb-2 space-y-1.5">
                                                         <p className="text-[11px] leading-snug text-muted-foreground">{tip.desc}</p>
@@ -417,7 +488,7 @@ export function TextConverter({
                         ))}
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-6 relative">
+                    <div className="order-1 md:order-2 grid md:grid-cols-2 gap-6 relative">
                         {/* Input Area */}
                         <div className="space-y-2 group" data-testid="input-zone">
                             <div className="flex items-center justify-between px-1">
@@ -475,6 +546,25 @@ export function TextConverter({
                             {input && <TextStats text={input} />}
                         </div>
 
+                        {/* Mobile-only Convert button between fields */}
+                        <div className="md:hidden flex flex-col items-center gap-2">
+                            <Button
+                                type="button"
+                                onClick={handleConvert}
+                                disabled={!input.trim()}
+                                className="w-full min-h-11 shimmer-btn"
+                                aria-keyshortcuts="Control+Enter Meta+Enter"
+                                title="Convert text (Ctrl/Cmd + Enter)"
+                            >
+                                Convert
+                            </Button>
+                            {hasPendingChanges && output && (
+                                <p className="text-xs text-muted-foreground text-center">
+                                    Settings changed. Run convert to refresh output.
+                                </p>
+                            )}
+                        </div>
+
                         {/* Output Area */}
                         <div className="space-y-2 group" data-testid="output-zone">
                             <div className="flex items-center justify-between px-1">
@@ -497,13 +587,16 @@ export function TextConverter({
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-11 w-11 sm:h-8 sm:w-8 relative"
-                                        onClick={handleCopy}
+                                        className="h-11 w-11 sm:h-8 sm:w-8 relative overflow-hidden"
+                                        onClick={() => { setRipple(k => k + 1); handleCopy() }}
                                         disabled={!canCopy}
                                         title={copied ? "Copied!" : "Copy Result"}
                                         data-testid="copy-action"
                                         aria-label="Copy output"
                                     >
+                                        {ripple > 0 && (
+                                            <span key={ripple} className="ripple-burst" onAnimationEnd={() => setRipple(0)} />
+                                        )}
                                         {copied ? (
                                             <IconCheck className="h-4 w-4 text-green-500 animate-checkmark" />
                                         ) : (
@@ -526,7 +619,10 @@ export function TextConverter({
                                 key={outputKey}
                                 readOnly
                                 placeholder="Result Will Appear Here..."
-                                className="min-h-[140px] sm:min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 text-muted-foreground font-medium focus-visible:ring-0 animate-pulse-subtle"
+                                className={cn(
+                                  "min-h-[140px] sm:min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 text-muted-foreground font-medium focus-visible:ring-0",
+                                  outputKey > 0 && "animate-result-reveal"
+                                )}
                                 value={output}
                                 aria-describedby="copy-feedback"
                                 aria-label="Converted output"
@@ -547,20 +643,20 @@ export function TextConverter({
                             {output && <TextStats text={output} />}
                         </div>
                     </div>
-                    <div className="pt-2 flex flex-col items-center gap-2">
+                    <div className="order-3 pt-2 flex flex-col items-center gap-2">
                         <Button
                             type="button"
                             onClick={handleConvert}
                             disabled={!input.trim()}
                             data-testid="convert-action"
-                            className="w-full sm:w-auto min-w-32 min-h-11"
+                            className="hidden md:inline-flex w-full sm:w-auto min-w-32 min-h-11 shimmer-btn"
                             aria-keyshortcuts="Control+Enter Meta+Enter"
                             title="Convert text (Ctrl/Cmd + Enter)"
                         >
                             Convert
                         </Button>
                         {hasPendingChanges && output && (
-                            <p className="text-xs text-muted-foreground text-center">
+                            <p className="hidden md:block text-xs text-muted-foreground text-center">
                                 Settings changed. Run convert to refresh output.
                             </p>
                         )}
@@ -593,7 +689,7 @@ export function TextConverter({
                     </div>
 
                     {activeType === "title" && (
-                        <div className="space-y-2 pt-1" data-testid="style-controls">
+                        <div className="order-4 space-y-2 pt-1" data-testid="style-controls">
                             <p className="text-sm font-medium text-muted-foreground text-left">Title Style</p>
                             <Tabs
                                 value={titleStyle}
@@ -640,7 +736,7 @@ export function TextConverter({
 
                     {/* Show Explanations Toggle */}
                     {outputSupportsExplanations && output.length > 0 && (
-                        <div className="flex justify-center pt-4">
+                        <div className="order-5 flex justify-center pt-4">
                             <Button
                                 variant={showExplanations ? "default" : "outline"}
                                 size="sm"
@@ -656,10 +752,12 @@ export function TextConverter({
 
                     {/* Explanations Panel */}
                     {showExplanations && explanations.length > 0 && (
-                        <ExplanationsPanel explanations={explanations} activeType={outputType} titleStyle={outputTitleStyle} />
+                        <div className="order-5">
+                            <ExplanationsPanel explanations={explanations} activeType={outputType} titleStyle={outputTitleStyle} />
+                        </div>
                     )}
 
-                    <p className="text-center text-xs text-muted-foreground pt-2">
+                    <p className="order-6 text-center text-xs text-muted-foreground pt-2">
                         Checking multiple headlines?{" "}
                         <Link href="/batch-checker" className="underline underline-offset-4 hover:text-foreground">
                             Open Batch Headline Checker →
