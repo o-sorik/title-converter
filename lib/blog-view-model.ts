@@ -11,6 +11,7 @@ import {
 } from "@/components/blog/data"
 import { toIsoDateTime } from "@/lib/blog-date"
 import { getHighIntentGuidanceBySlug, getHighIntentRelatedEntries } from "./high-intent-guidance"
+import { getIsXArticleBySlug } from "./is-x-article-data"
 import { SITE_URL } from "@/lib/constants"
 
 export type TocItem = {
@@ -32,6 +33,15 @@ const HIGH_INTENT_TOC_ITEMS: TocItem[] = [
   { id: "article-faqs", label: "FAQ and related guides" },
 ]
 
+const IS_X_TOC_ITEMS: TocItem[] = [
+  { id: "quick-answer", label: "Quick answer" },
+  { id: "why-section", label: "Why it's capitalized" },
+  { id: "style-guide-table", label: "By style guide" },
+  { id: "examples", label: "Examples" },
+  { id: "edge-cases", label: "Edge cases" },
+  { id: "faq", label: "FAQ" },
+]
+
 export function getArticlePageViewModel(slug: string) {
   const article = getArticleBySlug(slug)
   if (!article) {
@@ -39,6 +49,7 @@ export function getArticlePageViewModel(slug: string) {
   }
 
   const category = getCategoryById(article.categoryId)
+  const isXArticle = getIsXArticleBySlug(article.slug)
   const highIntentEntry = getHighIntentGuidanceBySlug(article.slug)
   const isHighIntentArticle = Boolean(highIntentEntry)
 
@@ -95,7 +106,7 @@ export function getArticlePageViewModel(slug: string) {
     isHighIntentArticle,
     relatedTitle: isHighIntentArticle ? "Related Capitalization Questions" : "Related Guides",
     recommendedTitle: isHighIntentArticle ? "Next Grammar 101 topics" : "Recommended Reading",
-    tocItems: isHighIntentArticle ? HIGH_INTENT_TOC_ITEMS : DEFAULT_TOC_ITEMS,
+    tocItems: isXArticle ? IS_X_TOC_ITEMS : isHighIntentArticle ? HIGH_INTENT_TOC_ITEMS : DEFAULT_TOC_ITEMS,
     faqs: articleFaqs,
     comparisons: styleComparisons,
   }

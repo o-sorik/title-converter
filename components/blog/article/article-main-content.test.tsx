@@ -3,7 +3,7 @@ import { describe, expect, test } from "vitest"
 import { ArticleMainContent } from "./article-main-content"
 
 describe("ArticleMainContent", () => {
-  test("renders high-intent grammar 101 layout for mapped slug", () => {
+  test("renders IsX template for articles with IsX data", () => {
     const html = renderToStaticMarkup(
       <ArticleMainContent
         article={{
@@ -19,43 +19,28 @@ describe("ArticleMainContent", () => {
       />
     )
 
-    expect(html).toContain("Short Answer")
-    expect(html).toContain('data-testid="grammar-101-short-answer"')
-    expect(html).toContain('data-testid="grammar-101-pos-logic"')
-    expect(html).toContain('data-testid="grammar-101-why-confusing"')
-    expect(html).toContain('data-testid="grammar-101-special-cases"')
-    expect(html).toContain('data-testid="grammar-101-attested-usage"')
-    expect(html).toContain("Attested Usage (Practice Evidence)")
-    expect(html).toContain("observed editorial usage patterns, not absolute grammatical authority")
-    expect(html).toContain('data-testid="grammar-101-examples"')
-    expect(html).toContain('data-testid="grammar-101-style-verdicts"')
-    expect(html).toContain('data-testid="grammar-101-origin-meaning"')
-    expect(html).toContain('data-testid="grammar-101-related"')
-    expect(html).toContain("Related Grammar 101 Questions")
-    expect(html).toContain("According to <a")
-    expect(html).toContain(">AP style</a>")
-    expect(html).toContain("not capitalized")
-    expect(html).toContain('href="/capitalization-rules-guide?mode=title&amp;style=ap"')
-    expect(html).toContain('href="/blog/the-capitalized-in-title-case"')
-    expect(html).toContain('href="/?ctx_ref=latest')
-    expect(html).toContain("ctx_input=research+and+development+handbook")
+    expect(html).toContain("Quick Answer")
+    expect(html).toContain('data-testid="is-x-related"')
+    expect(html).toContain("FANBOYS")
+    expect(html).toContain("ctx_input=Of%20Mice%20and%20Men")
+    expect(html).not.toContain('data-testid="grammar-101-short-answer"')
   })
 
-  test("prefers converter context for return CTA when available", () => {
+  test("falls through to Grammar101 for non-IsX high-intent article", () => {
     const html = renderToStaticMarkup(
       <ArticleMainContent
         article={{
-          slug: "is-capitalized-in-title-case",
-          title: "Is \"Is\" Capitalized in Title Case? Verb Rule",
-          excerpt: "Why verbs like is are capitalized.",
+          slug: "of-capitalized-in-title-case",
+          title: "Is \"Of\" Capitalized in Title Case? Editorial Baseline",
+          excerpt: "See when \"of\" stays lowercase and when positional rules require capitalization.",
           categoryId: "grammar-101",
           author: "Oleh Kovalenko",
           updatedAt: "2026-02-18",
           readTime: "4 min read",
-          image: "/images/blog/generated/apa-notebook-cover.webp",
+          image: "/images/blog/generated/ap-typewriter-cover.webp",
         }}
         converterContext={{
-          input: "is this production-ready",
+          input: "history of modern marketing",
           mode: "title",
           titleStyle: "ap",
           outputMode: "title",
@@ -64,10 +49,10 @@ describe("ArticleMainContent", () => {
       />
     )
 
+    expect(html).toContain("Short Answer")
+    expect(html).toContain('data-testid="grammar-101-short-answer"')
     expect(html).toContain('href="/?ctx_ref=latest')
-    expect(html).toContain("ctx_mode=title")
-    expect(html).toContain("ctx_style=ap")
-    expect(html).toContain("ctx_input=is+this+production-ready")
-    expect(html).not.toContain("ctx_input=why+this+is+important")
+    expect(html).toContain("ctx_input=history+of+modern+marketing")
+    expect(html).not.toContain("Quick Answer")
   })
 })
