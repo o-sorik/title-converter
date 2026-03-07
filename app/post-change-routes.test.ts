@@ -3,6 +3,7 @@ import sitemap from "./sitemap"
 import { CONVERTER_SLUGS } from "@/lib/seo-config"
 import { blogArticles, blogCategories } from "@/components/blog/data"
 import { getBlogArticleMetadataBySlug } from "@/lib/blog-view-model"
+import { IS_X_ARTICLES } from "@/lib/is-x-article-data"
 import { SITE_URL } from "@/lib/constants"
 
 describe("post-change route validation", () => {
@@ -30,6 +31,16 @@ describe("post-change route validation", () => {
 
     for (const article of blogArticles) {
       expect(urls.has(`${SITE_URL}/blog/${article.slug}`)).toBe(true)
+    }
+  })
+
+  test("every IS_X_ARTICLES entry has a corresponding blogArticles entry (sitemap coverage)", () => {
+    const blogSlugs = new Set(blogArticles.map((a) => a.slug))
+    for (const isXArticle of IS_X_ARTICLES) {
+      expect(
+        blogSlugs.has(isXArticle.slug),
+        `IS_X_ARTICLES slug "${isXArticle.slug}" is missing from blogArticles — it won't appear in the sitemap or blog listing`
+      ).toBe(true)
     }
   })
 
