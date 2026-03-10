@@ -23,7 +23,7 @@ export function FAQAccordion({ items, heading = "Frequently Asked Questions" }: 
         <Accordion type="multiple">
           {items.map((item, index) => (
             <AccordionItem key={index} value={`faq-${index}`}>
-              <AccordionTrigger className="text-left text-sm font-semibold text-slate-900 dark:text-zinc-100">
+              <AccordionTrigger className="cursor-pointer text-left text-sm font-semibold text-slate-900 dark:text-zinc-100">
                 {item.question}
               </AccordionTrigger>
               <AccordionContent>

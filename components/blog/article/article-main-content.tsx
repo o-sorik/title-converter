@@ -108,10 +108,10 @@ export function ArticleMainContent({
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400">Helpful?</span>
-            <button type="button" className="rounded-lg border border-slate-200 px-2 py-1 text-xs hover:bg-emerald-50 dark:border-zinc-700 dark:hover:bg-emerald-500/15">
+            <button type="button" className="cursor-pointer rounded-lg border border-slate-200 px-2 py-1 text-xs hover:bg-emerald-50 dark:border-zinc-700 dark:hover:bg-emerald-500/15">
               👍
             </button>
-            <button type="button" className="rounded-lg border border-slate-200 px-2 py-1 text-xs hover:bg-rose-50 dark:border-zinc-700 dark:hover:bg-rose-500/15">
+            <button type="button" className="cursor-pointer rounded-lg border border-slate-200 px-2 py-1 text-xs hover:bg-rose-50 dark:border-zinc-700 dark:hover:bg-rose-500/15">
               👎
             </button>
           </div>

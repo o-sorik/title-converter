@@ -1,6 +1,15 @@
 import Link from "next/link"
 
-export function ContentSection() {
+interface FAQ {
+  question: string
+  answer: string
+}
+
+interface ContentSectionProps {
+  faqs?: FAQ[]
+}
+
+export function ContentSection({ faqs }: ContentSectionProps) {
     const lastUpdated = "February 8, 2026"
 
     return (
@@ -144,6 +153,20 @@ export function ContentSection() {
                     </div>
                 </div>
             </div>
+
+            {faqs && faqs.length > 0 && (
+                <div className="space-y-4">
+                    <h2 id="faq" className="scroll-mt-20 text-3xl font-bold tracking-tight">Frequently Asked Questions</h2>
+                    <div className="space-y-6">
+                        {faqs.map((faq, i) => (
+                            <div key={i} className="p-6 rounded-xl bg-zinc-50 dark:bg-zinc-900 border">
+                                <h3 className="text-lg font-semibold mb-2">{faq.question}</h3>
+                                <p className="text-zinc-600 dark:text-zinc-400">{faq.answer}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <div className="space-y-4">
                 <h2 className="text-3xl font-bold tracking-tight">Explore Related Tools</h2>

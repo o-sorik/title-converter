@@ -109,6 +109,7 @@ data/seo/ahrefs/                # Ahrefs keyword data imports
 - Tailwind CSS v4 utility classes. No custom CSS files except `app/globals.css`
 - Dark mode is required: always include `dark:` variants for background and text colors
 - Color system uses OKLch variables defined in `app/globals.css`
+- **Cursor:** Every clickable element (`<button>`, `<a>`, interactive `<div>`) must have `cursor-pointer`. shadcn/ui primitives (e.g. `AccordionTrigger`) often omit it — add via `className` prop at the call site, not by editing `components/ui/`
 
 ### Git
 - Conventional commits: `feat:`, `fix:`, `chore:`, `test:`, `docs:`

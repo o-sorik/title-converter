@@ -137,24 +137,10 @@ export default async function Home({ searchParams }: HomePageProps) {
               </div>
             </div>
 
-            {/* FAQ Section */}
-            {config.faqs && config.faqs.length > 0 && (
-              <section className="mt-12">
-                <h2 id="faq" className="scroll-mt-20 text-2xl font-bold tracking-tight mb-6">Frequently Asked Questions</h2>
-                <div className="space-y-6">
-                  {config.faqs.map((faq, i) => (
-                    <div key={i} className="p-6 rounded-xl bg-zinc-50 dark:bg-zinc-900 border">
-                      <h3 className="text-lg font-semibold mb-2">{faq.question}</h3>
-                      <p className="text-muted-foreground">{faq.answer}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
           </article>
           </ScrollReveal>
 
-          <ScrollReveal delay={50}><ContentSection /></ScrollReveal>
+          <ScrollReveal delay={50}><ContentSection faqs={config.faqs} /></ScrollReveal>
         </div>
       </main>
 
