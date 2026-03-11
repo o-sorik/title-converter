@@ -6,6 +6,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-navy: #0e2366;
+  --color-navy-dark: #08184a;
+  --color-navy-mid: #15388f;
+  --color-navy-surface: #eef4fb;
   --font-sans: var(--font-space-grotesk);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -80,6 +84,10 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --navy: oklch(0.22 0.09 267);
+  --navy-dark: oklch(0.17 0.07 267);
+  --navy-mid: oklch(0.25 0.10 267);
+  --navy-surface: oklch(0.94 0.02 240);
 }
 
 .dark {
@@ -119,6 +127,10 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+  }
+
+  [data-slot="accordion-trigger"] {
+    cursor: pointer;
   }
 
   * {

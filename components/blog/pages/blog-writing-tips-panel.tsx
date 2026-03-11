@@ -5,7 +5,7 @@ import type { Article } from "@/components/blog/data"
 
 export function BlogWritingTipsPanel({ items }: { items: Article[] }) {
   return (
-    <section className="rounded-3xl bg-[#0e2366] p-6 text-white md:p-8">
+    <section className="rounded-3xl bg-navy p-6 text-white md:p-8">
       <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <div>
           <h2 className="text-3xl font-black">Writing Tips & Best Practices</h2>
@@ -26,13 +26,13 @@ export function BlogWritingTipsPanel({ items }: { items: Article[] }) {
             ))}
           </div>
         </div>
-        <aside className="rounded-2xl bg-[#15348f] p-6">
-          <h3 className="text-3xl font-black leading-tight">Ready to format your headlines?</h3>
+        <aside className="rounded-2xl bg-navy-mid p-6">
+          <h3 className="text-3xl font-black leading-tight">Which style guide fits your project?</h3>
           <p className="mt-3 text-sm text-blue-100">
-            Stop second-guessing your capitalization. Use the converter to apply consistent style in seconds.
+            AP, APA, MLA, or Chicago — each has different rules. Browse comparisons to find the right one.
           </p>
           <Button asChild className="mt-6 w-full bg-white text-blue-800 hover:bg-blue-50">
-            <Link href="/">Start Converting</Link>
+            <Link href="/blog/categories">Browse Guides</Link>
           </Button>
         </aside>
       </div>

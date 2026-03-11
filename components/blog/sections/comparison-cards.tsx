@@ -4,7 +4,7 @@ import type { Comparison } from "@/components/blog/data"
 
 export function ComparisonCards({ items }: { items: Comparison[] }) {
   return (
-    <section className="rounded-3xl border border-slate-200 bg-[#eef4fb] p-6 dark:border-zinc-700 dark:bg-zinc-900/80">
+    <section className="rounded-3xl border border-slate-200 bg-navy-surface p-6 dark:border-zinc-700 dark:bg-zinc-900/80">
       <h2 className="text-3xl font-black text-slate-950 dark:text-zinc-100">Style Comparisons</h2>
       <p className="mt-2 text-sm text-slate-600 dark:text-zinc-400">Quick references for deciding between major style guides.</p>
       <div className="mt-6 grid gap-4 md:grid-cols-3">

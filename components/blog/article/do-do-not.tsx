@@ -10,27 +10,23 @@ export function DoDoNot({ doExamples, doNotExamples, alternativeExamples }: DoDo
   return (
     <section className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:bg-emerald-500/10">
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-400">
-            Do
-          </p>
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 dark:bg-emerald-500/10">
+          <p className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">✓ Do</p>
           <ul className="mt-3 space-y-2">
             {doExamples.map((example) => (
-              <li key={example} className="text-sm font-medium text-emerald-900 dark:text-emerald-200">
+              <li key={example} className="font-[family-name:var(--font-playfair)] text-lg font-semibold leading-snug text-emerald-900 dark:text-emerald-200">
                 {example}
               </li>
             ))}
           </ul>
         </div>
-        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 dark:bg-rose-500/10">
-          <p className="text-xs font-semibold uppercase tracking-wide text-rose-700 dark:text-rose-400">
-            Do not
-          </p>
+        <div className="rounded-xl border border-rose-200 bg-rose-50 p-5 dark:bg-rose-500/10">
+          <p className="text-xs font-bold uppercase tracking-widest text-rose-700 dark:text-rose-400">✗ Do not</p>
           <ul className="mt-3 space-y-3">
             {doNotExamples.map((example) => (
               <li key={example.text}>
-                <p className="text-sm font-medium text-rose-900 dark:text-rose-200">{example.text}</p>
-                <p className="mt-0.5 text-xs text-rose-600 dark:text-rose-400">{example.reason}</p>
+                <p className="font-[family-name:var(--font-playfair)] text-lg font-semibold leading-snug line-through decoration-rose-400 text-rose-900 dark:text-rose-200">{example.text}</p>
+                <p className="mt-1 text-sm text-rose-600 dark:text-rose-400">{example.reason}</p>
               </li>
             ))}
           </ul>

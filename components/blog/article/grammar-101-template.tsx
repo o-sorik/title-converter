@@ -25,7 +25,7 @@ export function Grammar101Template({ article, entry, converterHref, relatedSlugs
       <section id="short-answer" data-testid="grammar-101-short-answer" className="scroll-mt-24 space-y-4">
         <div className="rounded-xl border-l-4 border-blue-700 bg-blue-50 p-4 dark:bg-blue-500/10 md:p-5">
           <h2 className="text-xl font-black text-slate-950 dark:text-zinc-100 md:text-2xl">Short Answer</h2>
-          <p className="mt-2 text-sm text-slate-700 dark:text-zinc-300">{entry.quickAnswer}</p>
+          <p className="mt-2 text-base leading-7 text-slate-700 dark:text-zinc-300">{entry.quickAnswer}</p>
         </div>
       </section>
 
@@ -34,18 +34,18 @@ export function Grammar101Template({ article, entry, converterHref, relatedSlugs
         data-testid="grammar-101-pos-logic"
         className="scroll-mt-24 space-y-4 rounded-xl border bg-white p-4 dark:bg-zinc-900/40 md:p-5"
       >
-        <h2 className="text-[1.55rem] font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-[1.85rem]">
+        <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">
           Rule (Part-of-Speech Logic)
         </h2>
         <p className="text-lg leading-8 text-slate-900 dark:text-zinc-100">
           <strong>Part of speech:</strong> {entry.partOfSpeech}
         </p>
-        <p className="text-[1.05rem] leading-8 text-slate-800 dark:text-zinc-200">{entry.posLogic}</p>
-        <p className="text-[1.05rem] leading-8 text-slate-800 dark:text-zinc-200">{entry.ruleSummary}</p>
+        <p className="text-base leading-7 text-slate-800 dark:text-zinc-200">{entry.posLogic}</p>
+        <p className="text-base leading-7 text-slate-800 dark:text-zinc-200">{entry.ruleSummary}</p>
 
         <div className="space-y-2">
           <h3 className="text-base font-bold text-slate-900 dark:text-zinc-100">Style notes quick scan</h3>
-          <ul className="list-disc space-y-2 pl-5 text-[1.01rem] leading-7 text-slate-700 dark:text-zinc-300">
+          <ul className="list-disc space-y-2 pl-5 text-base leading-7 text-slate-700 dark:text-zinc-300">
             <li>{entry.styleNotes.standard}</li>
             <li>{entry.styleNotes.ap}</li>
             <li>{entry.styleNotes.apa}</li>
@@ -57,7 +57,7 @@ export function Grammar101Template({ article, entry, converterHref, relatedSlugs
 
       <section data-testid="grammar-101-style-verdicts" className="rounded-xl border bg-slate-50/70 p-4 dark:bg-zinc-900/50">
         <h3 className="text-lg font-bold text-slate-900 dark:text-zinc-100">According to Style Guides (Middle Position)</h3>
-        <ul className="mt-3 space-y-2 text-sm text-slate-700 dark:text-zinc-300">
+        <ul className="mt-3 space-y-2 text-base text-slate-700 dark:text-zinc-300">
           {styleGuideLinks.map((style) => (
             <li key={style.key}>
               According to{" "}
@@ -71,19 +71,19 @@ export function Grammar101Template({ article, entry, converterHref, relatedSlugs
       </section>
 
       <section id="do-and-do-not" data-testid="grammar-101-examples" className="scroll-mt-24 grid gap-4 md:grid-cols-2">
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Do</p>
-          <p className="mt-2 text-sm font-medium text-emerald-900">{entry.examples[0]?.output}</p>
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 dark:bg-emerald-500/10">
+          <p className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">✓ Do</p>
+          <p className="mt-3 font-[family-name:var(--font-playfair)] text-lg font-semibold leading-snug text-emerald-900 dark:text-emerald-200">{entry.examples[0]?.output}</p>
         </div>
-        <div className="rounded-xl border border-rose-200 bg-rose-50 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-rose-700">Do not</p>
-          <p className="mt-2 text-sm font-medium text-rose-900">{entry.examples[0]?.input}</p>
+        <div className="rounded-xl border border-rose-200 bg-rose-50 p-5 dark:bg-rose-500/10">
+          <p className="text-xs font-bold uppercase tracking-widest text-rose-700 dark:text-rose-400">✗ Do not</p>
+          <p className="mt-3 font-[family-name:var(--font-playfair)] text-lg font-semibold leading-snug line-through decoration-rose-400 text-rose-900 dark:text-rose-200">{entry.examples[0]?.input}</p>
         </div>
       </section>
 
       <section data-testid="grammar-101-special-cases" className="rounded-xl border bg-white p-4 dark:bg-zinc-900/40">
         <h3 className="text-lg font-bold text-slate-900 dark:text-zinc-100">Special Cases</h3>
-        <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-slate-700 dark:text-zinc-300">
+        <ul className="mt-3 list-disc space-y-2 pl-5 text-base leading-7 text-slate-700 dark:text-zinc-300">
           {entry.specialCases.map((specialCase) => (
             <li key={specialCase}>{specialCase}</li>
           ))}
@@ -92,19 +92,19 @@ export function Grammar101Template({ article, entry, converterHref, relatedSlugs
 
       <section data-testid="grammar-101-why-confusing" className="rounded-xl border bg-amber-50/80 p-4 dark:bg-amber-500/10">
         <h3 className="text-lg font-bold text-slate-900 dark:text-zinc-100">Why People Get This Wrong</h3>
-        <p className="mt-2 text-sm text-slate-700 dark:text-zinc-300">{entry.whyPeopleGetThisWrong}</p>
+        <p className="mt-2 text-base leading-7 text-slate-700 dark:text-zinc-300">{entry.whyPeopleGetThisWrong}</p>
       </section>
 
       <section data-testid="grammar-101-attested-usage" className="rounded-xl border bg-white p-4 dark:bg-zinc-900/40">
         <h3 className="text-lg font-bold text-slate-900 dark:text-zinc-100">Attested Usage (Practice Evidence)</h3>
-        <p className="mt-2 text-sm text-slate-600 dark:text-zinc-300">
+        <p className="mt-2 text-sm text-slate-500 dark:text-zinc-400 italic">
           These are observed editorial usage patterns, not absolute grammatical authority.
         </p>
         <ul className="mt-4 space-y-3">
           {entry.attestedUsage.map((usage) => (
             <li key={`${usage.publisher}-${usage.url}`} className="rounded-lg border border-slate-200 p-3 text-sm dark:border-zinc-700">
               <p className="font-semibold text-slate-900 dark:text-zinc-100">{usage.publisher}</p>
-              <p className="mt-1 text-slate-700 dark:text-zinc-300">{usage.fragment}</p>
+              <p className="mt-1 text-base leading-7 text-slate-700 dark:text-zinc-300">{usage.fragment}</p>
               <p className="mt-2 text-xs text-slate-500 dark:text-zinc-400">
                 Style context: <span className="font-medium">{usage.style_context.toUpperCase()}</span> · Checked:{" "}
                 <span className="font-medium">{usage.date_checked}</span>
@@ -124,7 +124,7 @@ export function Grammar101Template({ article, entry, converterHref, relatedSlugs
         </section>
       ) : null}
 
-      <section className="rounded-2xl bg-gradient-to-br from-[#08184a] to-[#15388f] p-5 text-white md:p-6">
+      <section className="rounded-2xl bg-gradient-to-br from-navy-dark to-navy-mid p-5 text-white md:p-6">
         <h2 className="text-xl font-black md:text-2xl">Need instant formatting help?</h2>
         <p className="mt-2 text-sm text-blue-100">
           Open the converter with a prefilled example and adapt it to your headline.

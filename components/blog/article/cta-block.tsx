@@ -10,7 +10,7 @@ export function CTABlock({ word, text = "Need to check your title formatting?" }
   const href = `/?ctx_input=${encodeURIComponent(word)}&ctx_mode=title`
 
   return (
-    <section className="rounded-2xl bg-gradient-to-br from-[#08184a] to-[#15388f] p-5 text-white md:p-6">
+    <section className="rounded-2xl bg-gradient-to-br from-navy-dark to-navy-mid p-5 text-white md:p-6">
       <h2 className="text-xl font-black md:text-2xl">{text}</h2>
       <p className="mt-2 text-sm text-blue-100">
         Open the converter with a prefilled example and adapt it to your headline.

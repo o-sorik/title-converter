@@ -42,7 +42,7 @@ const footerColumns = [
     ],
   },
   {
-    title: "Project",
+    title: "Popular Guides",
     links: [
       { href: "/blog/categories/writing-tips", label: "Writing Tips" },
       { href: "/blog/apa-7-title-case-guide", label: "APA Title Case" },
@@ -67,6 +67,9 @@ export function SiteHeader({ containerClassName }: SiteHeaderProps) {
       "sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70 transition-shadow duration-300",
       scrolled && "shadow-md"
     )}>
+      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary-foreground">
+        Skip to main content
+      </a>
       <div className={cn("container mx-auto flex h-14 items-center justify-between px-4", containerClassName)}>
         <Link href="/" onClick={() => setMobileOpen(false)} className="inline-flex items-center gap-2 text-sm font-semibold tracking-tight transition-opacity hover:opacity-80 sm:text-base">
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-foreground">
@@ -107,7 +110,7 @@ export function SiteHeader({ containerClassName }: SiteHeaderProps) {
 
       {/* Mobile menu panel */}
       {mobileOpen && (
-        <div className="border-t bg-background px-4 py-3 sm:hidden">
+        <div className="animate-in slide-in-from-top-2 fade-in duration-150 border-t bg-background px-4 py-3 sm:hidden">
           <nav className="flex flex-col gap-1">
             {primaryLinks.map((link) => (
               <Link
