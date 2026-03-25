@@ -56,6 +56,7 @@ export default async function ArticlePage({ params, searchParams }: Props) {
     articleUrl,
     articleImage,
     updatedIso,
+    authorData,
     relatedTitle,
     recommendedTitle,
     tocItems,
@@ -80,11 +81,13 @@ export default async function ArticlePage({ params, searchParams }: Props) {
         url={articleUrl}
         image={articleImage}
         author={article.author}
+        authorRole={authorData?.role}
+        authorBio={authorData?.bio}
         dateModified={updatedIso}
         section={category?.name}
       />
 
-      <ArticleHeader article={article} category={category} />
+      <ArticleHeader article={article} category={category} authorData={authorData ?? undefined} />
 
       <section className="grid gap-5 md:gap-6 lg:grid-cols-[2fr_1fr]">
         <ArticleMainContent article={article} converterContext={converterContext} />

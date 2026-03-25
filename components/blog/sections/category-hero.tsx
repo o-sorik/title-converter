@@ -35,7 +35,7 @@ export function CategoryHero({ category }: { category: Category }) {
             <div className="absolute -right-3 -top-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-blue-500 text-white shadow-md">
               <span className="text-lg">✦</span>
             </div>
-            <h4 className="text-lg font-bold text-slate-950 dark:text-zinc-100">Academic Excellence</h4>
+            <p className="text-lg font-bold text-slate-950 dark:text-zinc-100">Academic Excellence</p>
             <p className="mt-2 text-sm text-slate-600 dark:text-zinc-300">Updated for the 7th Edition (2024)</p>
           </div>
         </div>

@@ -27,7 +27,7 @@ export function ArticleMainContent({
   if (isXData) {
     return (
       <article id="article-content" className="space-y-8 rounded-3xl border border-slate-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900/80 sm:p-5 md:space-y-10 md:p-8">
-        <Image src={article.image} alt={article.title} width={1120} height={640} className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
+        <Image src={article.image} alt={article.title} width={1120} height={640} priority className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
         <IsXTemplate data={isXData} article={article} />
       </article>
     )
@@ -37,7 +37,7 @@ export function ArticleMainContent({
   if (genCapData) {
     return (
       <article id="article-content" className="space-y-8 rounded-3xl border border-slate-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900/80 sm:p-5 md:space-y-10 md:p-8">
-        <Image src={article.image} alt={article.title} width={1120} height={640} className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
+        <Image src={article.image} alt={article.title} width={1120} height={640} priority className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
         <GenCapTemplate data={genCapData} article={article} />
       </article>
     )
@@ -50,7 +50,7 @@ export function ArticleMainContent({
   if (highIntentEntry) {
     return (
       <article id="article-content" className="space-y-8 rounded-3xl border border-slate-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900/80 sm:p-5 md:space-y-10 md:p-8">
-        <Image src={article.image} alt={article.title} width={1120} height={640} className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
+        <Image src={article.image} alt={article.title} width={1120} height={640} priority className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
         <Grammar101Template
           article={article}
           entry={highIntentEntry}

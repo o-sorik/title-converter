@@ -49,6 +49,15 @@ const footerColumns = [
       { href: "/blog/ap-title-capitalization-basics", label: "AP Title Case" },
     ],
   },
+  {
+    title: "Company",
+    links: [
+      { href: "/about", label: "About" },
+      { href: "/contact", label: "Contact" },
+      { href: "/privacy-policy", label: "Privacy Policy" },
+      { href: "/editorial-policy", label: "Editorial Policy" },
+    ],
+  },
 ]
 
 export function SiteHeader({ containerClassName }: SiteHeaderProps) {

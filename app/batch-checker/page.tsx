@@ -12,7 +12,7 @@ const pageUrl = `${SITE_URL}/batch-checker`
 
 const title = "Batch Headline Checker — Editorial QA Tool"
 const description =
-    "Check multiple headlines at once against AP, APA, MLA, or Chicago capitalization rules. Paste one headline per line and instantly spot inconsistencies."
+    "Check multiple headlines against AP, APA, MLA, or Chicago rules. Paste one per line and spot capitalization errors instantly."
 
 export const metadata: Metadata = {
     title: {

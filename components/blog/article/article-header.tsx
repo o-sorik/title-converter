@@ -1,9 +1,10 @@
 import { IconCircleCheck } from "@tabler/icons-react"
 import type { Category, Article } from "@/components/blog/data"
+import type { Author } from "@/lib/authors"
 import { formatBlogDate } from "@/lib/blog-date"
 import { BlogBreadcrumbs } from "@/components/blog/breadcrumbs"
 
-export function ArticleHeader({ article, category }: { article: Article; category?: Category }) {
+export function ArticleHeader({ article, category, authorData }: { article: Article; category?: Category; authorData?: Author }) {
   const breadcrumbItems = [
     { label: "Home", href: "/" },
     { label: "Blog", href: "/blog" },
@@ -33,7 +34,7 @@ export function ArticleHeader({ article, category }: { article: Article; categor
         <hr className="border-t border-slate-200 dark:border-zinc-700" />
 
         <div className="flex flex-wrap items-center gap-x-1 text-xs font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-zinc-500">
-          <span>By {article.author}</span>
+          <span>By {article.author}{authorData?.role && `, ${authorData.role}`}</span>
           <span className="mx-2">|</span>
           <span>{date}</span>
           <span className="mx-2">|</span>

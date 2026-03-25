@@ -45,6 +45,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: {
       canonical: `/blog/categories/${currentCategory.id}`,
     },
+    openGraph: {
+      title: `${currentCategory.name} Guides`,
+      description: currentCategory.description,
+      type: "website",
+      url: `${SITE_URL}/blog/categories/${currentCategory.id}`,
+      siteName: "Title Case Converter Online",
+      locale: "en_US",
+    },
   }
 }
 

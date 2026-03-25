@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     default: "Title Case Converter Online - Free Text Capitalization Tool",
     template: "%s | Title Case Converter Online",
   },
-  description: "Free online tool to convert text to Title Case, Sentence Case, camelCase, PascalCase, snake_case, kebab-case, and more. Instant conversion with smart capitalization rules.",
+  description: "Free online tool to convert text to Title Case, Sentence Case, camelCase, and more. Instant conversion with smart rules.",
   authors: [{ name: "Antigravity" }],
   creator: "Antigravity",
   publisher: "Antigravity",

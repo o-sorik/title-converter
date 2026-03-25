@@ -11,7 +11,7 @@ export const revalidate = 604800
 
 export const metadata: Metadata = {
     title: "Capitalization Rules by Style — AP, APA, MLA, Chicago",
-    description: "Compare title capitalization rules across AP, APA, MLA, and Chicago style guides. Side-by-side table, edge cases, and links to official sources.",
+    description: "Compare title capitalization rules across AP, APA, MLA, and Chicago style guides. Side-by-side tables, common edge cases, and quick-reference links.",
     robots: {
         index: true,
         follow: true,

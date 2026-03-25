@@ -3,10 +3,12 @@ import Link from "next/link"
 import { IconArrowRight } from "@tabler/icons-react"
 import type { Article } from "@/components/blog/data"
 import { getCategoryById } from "@/components/blog/data"
+import { getAuthorByName } from "@/lib/authors"
 import { formatBlogDate } from "@/lib/blog-date"
 
 export function FeaturedArticle({ article }: { article: Article }) {
   const category = getCategoryById(article.categoryId)
+  const authorData = getAuthorByName(article.author)
 
   return (
     <article className="group space-y-0">
@@ -16,6 +18,7 @@ export function FeaturedArticle({ article }: { article: Article }) {
           alt={article.title}
           width={1120}
           height={630}
+          priority
           className="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
         />
       </Link>
@@ -38,7 +41,7 @@ export function FeaturedArticle({ article }: { article: Article }) {
         <p className="text-sm text-slate-600 dark:text-zinc-400 max-w-2xl">{article.excerpt}</p>
         <div className="flex items-center justify-between text-xs text-slate-500 dark:text-zinc-500">
           <span>
-            {article.author} • Last updated {formatBlogDate(article.updatedAt)} • {article.readTime}
+            {article.author}{authorData?.role && `, ${authorData.role}`} • Last updated {formatBlogDate(article.updatedAt)} • {article.readTime}
           </span>
           <Link
             href={`/blog/${article.slug}`}

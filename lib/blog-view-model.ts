@@ -14,6 +14,7 @@ import { getHighIntentGuidanceBySlug, getHighIntentRelatedEntries } from "./high
 import { getIsXArticleBySlug } from "./is-x-article-data"
 import { getGenCapArticleBySlug } from "./gen-cap-article-data"
 import { SITE_URL } from "@/lib/constants"
+import { getAuthorByName } from "@/lib/authors"
 
 export type TocItem = {
   id: string
@@ -104,6 +105,7 @@ export function getArticlePageViewModel(slug: string) {
   const articleUrl = `${SITE_URL}/blog/${article.slug}`
   const articleImage = `${SITE_URL}${article.image}`
   const updatedIso = toIsoDateTime(article.updatedAt)
+  const authorData = getAuthorByName(article.author)
 
   return {
     article,
@@ -115,6 +117,7 @@ export function getArticlePageViewModel(slug: string) {
     articleUrl,
     articleImage,
     updatedIso,
+    authorData,
     isHighIntentArticle,
     relatedTitle: isHighIntentArticle ? "Related Capitalization Questions" : "Related Guides",
     recommendedTitle: isHighIntentArticle ? "Next Grammar 101 topics" : "Recommended Reading",
@@ -165,11 +168,21 @@ export function getBlogArticleMetadataBySlug(slug: string) {
     return null
   }
 
+  const pageUrl = `${SITE_URL}/blog/${article.slug}`
+
   return {
     title: article.title,
     description: article.excerpt,
     alternates: {
       canonical: `/blog/${article.slug}`,
+    },
+    openGraph: {
+      title: article.title,
+      description: article.excerpt,
+      type: "article" as const,
+      url: pageUrl,
+      siteName: "Title Case Converter Online",
+      locale: "en_US",
     },
   }
 }

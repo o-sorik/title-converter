@@ -19,7 +19,7 @@ export const HOME_PAGE_CONFIG: SeoPageConfig = {
     slug: "",
     mode: "title",
     title: "Title Case Converter Online - Free Text Capitalization Tool",
-    description: "Convert text to Title Case instantly online. Automatically capitalizes major words and lowercases minor words following standard capitalization rules.",
+    description: "Convert text to Title Case online. Capitalizes major words and lowercases minor words following AP, APA, MLA, and Chicago rules.",
     h1: "Title Case Converter Online",
     content: {
         intro: "Use this free title capitalization tool to convert headlines and titles in seconds. It applies standard title case rules used across AP, APA, MLA, and Chicago style workflows, with practical handling for small words, punctuation, and common edge cases.",

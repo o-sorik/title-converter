@@ -21,6 +21,8 @@ interface BlogPostingProps {
     url: string
     image: string
     author: string
+    authorRole?: string
+    authorBio?: string
     dateModified: string
     section?: string
 }
@@ -126,6 +128,8 @@ export function BlogPostingJsonLd({
     url,
     image,
     author,
+    authorRole,
+    authorBio,
     dateModified,
     section,
 }: BlogPostingProps) {
@@ -139,6 +143,8 @@ export function BlogPostingJsonLd({
         "author": {
             "@type": "Person",
             "name": author,
+            ...(authorRole && { "jobTitle": authorRole }),
+            ...(authorBio && { "description": authorBio }),
         },
         "publisher": {
             "@type": "Organization",

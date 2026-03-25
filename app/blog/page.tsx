@@ -14,6 +14,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/blog",
   },
+  openGraph: {
+    title: "Blog",
+    description: "Capitalization guides, comparisons, and practical writing tips.",
+    type: "website",
+    url: `${SITE_URL}/blog`,
+    siteName: "Title Case Converter Online",
+    locale: "en_US",
+  },
 }
 
 export default function BlogIndexPage() {
