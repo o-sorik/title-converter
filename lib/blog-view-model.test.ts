@@ -6,9 +6,9 @@ describe("getBlogIndexPageViewModel", () => {
     const model = getBlogIndexPageViewModel()
     const slugs = model.latest.map((article) => article.slug)
 
-    expect(slugs).toContain("is-president-capitalized")
-    expect(slugs).toContain("do-you-capitalize-seasons")
-    expect(slugs).toContain("is-earth-capitalized")
+    expect(slugs).toContain("is-professor-capitalized")
+    expect(slugs).toContain("do-you-capitalize-majors")
+    expect(slugs).toContain("is-bachelors-degree-capitalized")
   })
 })
 
