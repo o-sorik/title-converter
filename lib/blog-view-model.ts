@@ -13,6 +13,7 @@ import { toIsoDateTime } from "@/lib/blog-date"
 import { getHighIntentGuidanceBySlug, getHighIntentRelatedEntries } from "./high-intent-guidance"
 import { getIsXArticleBySlug } from "./is-x-article-data"
 import { getGenCapArticleBySlug } from "./gen-cap-article-data"
+import { getWritingTipsArticleBySlug } from "./writing-tips-article-data"
 import { SITE_URL } from "@/lib/constants"
 import { getAuthorByName } from "@/lib/authors"
 
@@ -63,6 +64,7 @@ export function getArticlePageViewModel(slug: string) {
   const category = getCategoryById(article.categoryId)
   const isXArticle = getIsXArticleBySlug(article.slug)
   const genCapArticle = getGenCapArticleBySlug(article.slug)
+  const writingTipsArticle = getWritingTipsArticleBySlug(article.slug)
   const highIntentEntry = getHighIntentGuidanceBySlug(article.slug)
   const isHighIntentArticle = Boolean(highIntentEntry)
 
@@ -125,9 +127,11 @@ export function getArticlePageViewModel(slug: string) {
       ? IS_X_TOC_ITEMS
       : genCapArticle
         ? GEN_CAP_TOC_ITEMS
-        : isHighIntentArticle
-          ? HIGH_INTENT_TOC_ITEMS
-          : DEFAULT_TOC_ITEMS,
+        : writingTipsArticle
+          ? writingTipsArticle.tocItems
+          : isHighIntentArticle
+            ? HIGH_INTENT_TOC_ITEMS
+            : DEFAULT_TOC_ITEMS,
     faqs: articleFaqs,
     comparisons: styleComparisons,
   }

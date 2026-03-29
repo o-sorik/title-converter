@@ -477,7 +477,7 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
     ctaWord: `Modern Writing: a Complete Guide`,
     ctaText: `Writing titles with colons? Our free Title Case Converter handles post-colon capitalization across AP, APA, Chicago, and MLA styles automatically.`,
 
-    relatedSlugs: ["do-you-capitalize-seasons", "is-president-capitalized"],
+    relatedSlugs: ["do-you-capitalize-seasons", "is-president-capitalized", "what-words-are-not-capitalized-in-a-title"],
   },
 
   {

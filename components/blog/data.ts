@@ -375,6 +375,17 @@ export const blogArticles: Article[] = [
     verifiedFor: "AP, APA, MLA, Chicago",
   },
   {
+    slug: "what-words-are-not-capitalized-in-a-title",
+    title: "What Words Are Not Capitalized in a Title?",
+    excerpt: "What words are not capitalized in a title? Short articles, prepositions, and conjunctions stay lowercase in title case. See the full list by style guide with examples.",
+    categoryId: "grammar-101",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-03-29",
+    readTime: "8 min",
+    image: "/images/blog/generated/checklist-desk-cover.webp",
+    verifiedFor: "AP, APA, MLA, Chicago",
+  },
+  {
     slug: "sentence-vs-title-case",
     title: "Title Case vs Sentence Case: Choosing Your Voice",
     excerpt:

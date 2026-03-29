@@ -106,6 +106,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       "in-capitalized-in-title-case",
       "and-capitalized-in-title-case",
       "to-capitalized-in-title-case",
+      "what-words-are-not-capitalized-in-a-title",
     ],
   },
   {
@@ -166,6 +167,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       "am-capitalized-in-title-case",
       "with-capitalized-in-title-case",
       "that-capitalized-in-title-case",
+      "what-words-are-not-capitalized-in-a-title",
     ],
   },
   {
@@ -227,6 +229,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       "and-capitalized-in-title-case",
       "in-capitalized-in-title-case",
       "to-capitalized-in-title-case",
+      "what-words-are-not-capitalized-in-a-title",
     ],
   },
   {
@@ -288,6 +291,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       "the-capitalized-in-title-case",
       "with-capitalized-in-title-case",
       "to-capitalized-in-title-case",
+      "what-words-are-not-capitalized-in-a-title",
     ],
   },
   {
@@ -348,6 +352,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       "in-capitalized-in-title-case",
       "and-capitalized-in-title-case",
       "with-capitalized-in-title-case",
+      "what-words-are-not-capitalized-in-a-title",
     ],
   },
   {
@@ -425,6 +430,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       "the-capitalized-in-title-case",
       "and-capitalized-in-title-case",
       "to-capitalized-in-title-case",
+      "what-words-are-not-capitalized-in-a-title",
     ],
   },
   {
@@ -494,6 +500,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       "with-capitalized-in-title-case",
       "in-capitalized-in-title-case",
       "between-capitalized-in-title-case",
+      "what-words-are-not-capitalized-in-a-title",
     ],
   },
   {
