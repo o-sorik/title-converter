@@ -182,8 +182,6 @@ export function TextConverter({
             input: deferredInput,
             mode: activeType,
             titleStyle,
-            outputMode: activeType,
-            outputTitleStyle: titleStyle,
         }),
         [deferredInput, activeType, titleStyle]
     )
@@ -318,8 +316,6 @@ export function TextConverter({
                     input: deferredInput,
                     mode: activeType,
                     titleStyle,
-                    outputMode: activeType,
-                    outputTitleStyle: titleStyle,
                 })
             )
         } catch {

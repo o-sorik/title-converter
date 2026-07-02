@@ -89,8 +89,6 @@ export function getHighIntentConverterHref(
     input: converterInput,
     mode: "title",
     titleStyle: "standard" as const,
-    outputMode: "title" as const,
-    outputTitleStyle: "standard" as const,
   }
 
   const hrefWithContext = appendConverterContextToHref("/", effectiveContext)

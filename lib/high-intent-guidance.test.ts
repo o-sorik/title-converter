@@ -47,7 +47,6 @@ describe("high-intent guidance catalog", () => {
     expect(href).toContain("ctx_ref=latest")
     expect(href).toContain("ctx_mode=title")
     expect(href).toContain("ctx_style=standard")
-    expect(href).toContain("ctx_output_mode=title")
     expect(href).toContain("ctx_input=how+to+scale+editorial+workflows")
   })
 
@@ -67,8 +66,6 @@ describe("high-intent guidance catalog", () => {
       input: "is this production-ready",
       mode: "title",
       titleStyle: "ap",
-      outputMode: "title",
-      outputTitleStyle: "ap",
     })
 
     expect(href).toContain(`/blog/${entry.slug}?`)

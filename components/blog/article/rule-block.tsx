@@ -1,5 +1,6 @@
 import { IconCheck, IconX, IconBulb } from "@tabler/icons-react"
 import type { GenCapRuleBlock } from "@/lib/gen-cap-article-data"
+import { GEN_CAP_SECTION_IDS } from "@/lib/article-content"
 
 interface RuleBlockProps extends GenCapRuleBlock {
   heading?: string
@@ -12,7 +13,7 @@ export function RuleBlock({
   heading = "Quick Rules",
 }: RuleBlockProps) {
   return (
-    <section id="quick-rules" className="scroll-mt-24 space-y-4">
+    <section id={GEN_CAP_SECTION_IDS.quickRules} className="scroll-mt-24 space-y-4">
       <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">
         {heading}
       </h2>

@@ -15,8 +15,6 @@ describe("converter context helpers", () => {
       input: "walking during the light",
       mode: "title",
       titleStyle: "ap",
-      outputMode: "title",
-      outputTitleStyle: "ap",
     })
 
     expect(href).toContain("mode=title")
@@ -24,8 +22,7 @@ describe("converter context helpers", () => {
     expect(href).toContain(`ctx_ref=${DEFAULT_CONVERTER_CONTEXT_REF}`)
     expect(href).toContain("ctx_mode=title")
     expect(href).toContain("ctx_style=ap")
-    expect(href).toContain("ctx_output_mode=title")
-    expect(href).toContain("ctx_output_style=ap")
+    expect(href).not.toContain("ctx_output_mode")
   })
 
   test("preserves hash fragments when appending context", () => {
@@ -33,8 +30,6 @@ describe("converter context helpers", () => {
       input: "walking during the light",
       mode: "title",
       titleStyle: "ap",
-      outputMode: "title",
-      outputTitleStyle: "ap",
     })
 
     expect(href).toContain("ctx_ref=latest")
@@ -46,15 +41,11 @@ describe("converter context helpers", () => {
       ctx_input: "hello world",
       ctx_mode: "sentence",
       ctx_style: "mla",
-      ctx_output_mode: "title",
-      ctx_output_style: "ap",
     })
 
     expect(result.initialInput).toBe("hello world")
     expect(result.initialMode).toBe("sentence")
     expect(result.initialTitleStyle).toBe("mla")
-    expect(result.initialOutputMode).toBe("title")
-    expect(result.initialOutputTitleStyle).toBe("ap")
     expect(result.initialContextRef).toBeUndefined()
   })
 
@@ -70,23 +61,17 @@ describe("converter context helpers", () => {
     const result = parseConverterInitialStateFromSearchParams({
       ctx_mode: "unsupported-mode",
       ctx_style: "unsupported-style",
-      ctx_output_mode: "also-bad",
-      ctx_output_style: "nope",
     })
 
     expect(result.initialMode).toBeUndefined()
     expect(result.initialTitleStyle).toBeUndefined()
-    expect(result.initialOutputMode).toBeUndefined()
-    expect(result.initialOutputTitleStyle).toBeUndefined()
   })
 
   test("converts parsed state to converter context only when complete", () => {
     const incomplete = toConverterContext({
       initialInput: "hello",
-      initialMode: "title",
+      initialMode: undefined,
       initialTitleStyle: "ap",
-      initialOutputMode: undefined,
-      initialOutputTitleStyle: "ap",
     })
     expect(incomplete).toBeNull()
 
@@ -94,8 +79,6 @@ describe("converter context helpers", () => {
       initialInput: "hello",
       initialMode: "title",
       initialTitleStyle: "ap",
-      initialOutputMode: "title",
-      initialOutputTitleStyle: "ap",
     })
     expect(complete).not.toBeNull()
     expect(complete?.mode).toBe("title")
@@ -107,11 +90,22 @@ describe("converter context helpers", () => {
         input: "hello world",
         mode: "title",
         titleStyle: "ap",
+      })
+    )
+    expect(parsed?.input).toBe("hello world")
+    expect(parsed?.mode).toBe("title")
+  })
+
+  test("still parses payloads written before the realtime refactor (extra output fields)", () => {
+    const parsed = parseConverterContextPayload(
+      JSON.stringify({
+        input: "hello world",
+        mode: "title",
+        titleStyle: "ap",
         outputMode: "title",
         outputTitleStyle: "ap",
       })
     )
-    expect(parsed?.input).toBe("hello world")
     expect(parsed?.mode).toBe("title")
   })
 

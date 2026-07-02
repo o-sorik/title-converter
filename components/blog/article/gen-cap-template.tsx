@@ -4,6 +4,7 @@ import type { Article } from "@/components/blog/data"
 import type { GenCapArticle } from "@/lib/gen-cap-article-data"
 import { AnswerBox } from "./answer-box"
 import { RuleBlock } from "./rule-block"
+import { GEN_CAP_SECTION_IDS } from "@/lib/article-content"
 import { DoDoNot } from "./do-do-not"
 import { FAQAccordion } from "./faq-accordion"
 import { CTABlock } from "./cta-block"
@@ -16,11 +17,11 @@ interface GenCapTemplateProps {
 export function GenCapTemplate({ data, article }: GenCapTemplateProps) {
   return (
     <>
-      <section id="quick-answer" className="scroll-mt-24">
+      <section id={GEN_CAP_SECTION_IDS.quickAnswer} className="scroll-mt-24">
         <AnswerBox variant={data.answerVariant ?? "quick-answer"}>{data.answerBox}</AnswerBox>
       </section>
 
-      <section id="when-section" className="scroll-mt-24 space-y-3">
+      <section id={GEN_CAP_SECTION_IDS.whenSection} className="scroll-mt-24 space-y-3">
         <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">
           {data.whenHeading}
         </h2>
@@ -39,7 +40,7 @@ export function GenCapTemplate({ data, article }: GenCapTemplateProps) {
       />
 
       {data.styleComparisonHeading && data.styleComparisonBody && (
-        <section id="style-comparison" className="scroll-mt-24 space-y-3">
+        <section id={GEN_CAP_SECTION_IDS.styleComparison} className="scroll-mt-24 space-y-3">
           <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">
             {data.styleComparisonHeading}
           </h2>
@@ -51,14 +52,14 @@ export function GenCapTemplate({ data, article }: GenCapTemplateProps) {
         </section>
       )}
 
-      <section id="examples" className="scroll-mt-24 space-y-3">
+      <section id={GEN_CAP_SECTION_IDS.examples} className="scroll-mt-24 space-y-3">
         <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">
           Examples
         </h2>
         <DoDoNot doExamples={data.doExamples} doNotExamples={data.doNotExamples} />
       </section>
 
-      <section id="edge-cases" className="scroll-mt-24 space-y-3 rounded-xl border bg-white p-4 dark:bg-zinc-900/40 md:p-5">
+      <section id={GEN_CAP_SECTION_IDS.edgeCases} className="scroll-mt-24 space-y-3 rounded-xl border bg-white p-4 dark:bg-zinc-900/40 md:p-5">
         <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">
           {data.edgeCasesHeading}
         </h2>

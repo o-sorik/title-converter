@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
 import type { Article } from "@/components/blog/data"
 import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
+import { ArticleSectionRenderer } from "./article-blocks"
 import { FAQAccordion } from "./faq-accordion"
 import { CTABlock } from "./cta-block"
 import { getAuthorByName } from "@/lib/authors"
@@ -17,14 +18,7 @@ export function WritingTipsTemplate({ data, article }: WritingTipsTemplateProps)
   return (
     <>
       {data.sections.map((section) => (
-        <section key={section.id} id={section.id} className="scroll-mt-24 space-y-3">
-          {section.heading && (
-            <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">
-              {section.heading}
-            </h2>
-          )}
-          {section.content}
-        </section>
+        <ArticleSectionRenderer key={section.id} section={section} />
       ))}
 
       <FAQAccordion items={data.faqItems} />

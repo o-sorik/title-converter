@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { TITLE_CASE_MISTAKES } from "@/lib/home-content-data"
 
 interface FAQ {
   question: string
@@ -8,19 +9,6 @@ interface FAQ {
 interface ContentSectionProps {
   faqs?: FAQ[]
 }
-
-const MISTAKES = [
-    { wrong: "A Guide To Better Writing", correct: "A Guide to Better Writing", why: "Short prepositions are usually lowercase." },
-    { wrong: "How to Build a brand Voice", correct: "How to Build a Brand Voice", why: "Nouns are major words." },
-    { wrong: "The Science of growth", correct: "The Science of Growth", why: "Last word is always capitalized." },
-    { wrong: "Working with Api Data", correct: "Working with API Data", why: "Acronyms should keep intended casing." },
-    { wrong: "Turn on Notifications Fast", correct: "Turn On Notifications Fast", why: "In phrasal verbs, second word may be a major word." },
-    { wrong: "State-of-the-art Design System", correct: "State-of-the-Art Design System", why: "Hyphenated compounds often capitalize major elements." },
-    { wrong: "Content Rules: how to Scale", correct: "Content Rules: How to Scale", why: "Subtitles after colons often start with a capitalized word." },
-    { wrong: "Why is This Important", correct: "Why Is This Important", why: "Verbs such as \"is\" are capitalized." },
-    { wrong: "Learning From The Best", correct: "Learning from the Best", why: "Articles and short prepositions are usually lowercase in the middle." },
-    { wrong: "An Introduction to ui Design", correct: "An Introduction to UI Design", why: "Initialisms should keep their standard uppercase format." },
-] as const
 
 export function ContentSection({ faqs }: ContentSectionProps) {
     const lastUpdated = "February 8, 2026"
@@ -98,7 +86,7 @@ export function ContentSection({ faqs }: ContentSectionProps) {
             <div className="space-y-4">
                 <h2 id="common-title-case-mistakes" className="scroll-mt-20 text-3xl font-bold tracking-tight">Common Title Case Mistakes (With Fixes)</h2>
                 <div className="grid gap-4 md:grid-cols-2">
-                    {MISTAKES.map((mistake) => (
+                    {TITLE_CASE_MISTAKES.map((mistake) => (
                         <div key={mistake.correct} className="p-4 rounded-lg border bg-card text-sm space-y-1.5">
                             <p className="text-zinc-500 dark:text-zinc-400 line-through decoration-red-400/60">{mistake.wrong}</p>
                             <p className="font-medium">{mistake.correct}</p>

@@ -43,8 +43,6 @@ describe("ArticleMainContent", () => {
           input: "history of modern marketing",
           mode: "title",
           titleStyle: "ap",
-          outputMode: "title",
-          outputTitleStyle: "ap",
         }}
       />
     )

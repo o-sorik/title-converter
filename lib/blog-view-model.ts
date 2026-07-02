@@ -11,47 +11,11 @@ import {
 } from "@/components/blog/data"
 import { toIsoDateTime } from "@/lib/blog-date"
 import { getHighIntentGuidanceBySlug, getHighIntentRelatedEntries } from "./high-intent-guidance"
-import { getIsXArticleBySlug } from "./is-x-article-data"
-import { getGenCapArticleBySlug } from "./gen-cap-article-data"
-import { getWritingTipsArticleBySlug } from "./writing-tips-article-data"
+import { getArticleContentBySlug, getArticleTocItems } from "./article-content"
 import { SITE_URL } from "@/lib/constants"
 import { getAuthorByName } from "@/lib/authors"
 
-export type TocItem = {
-  id: string
-  label: string
-}
-
-const DEFAULT_TOC_ITEMS: TocItem[] = [
-  { id: "key-takeaway", label: "Key takeaway" },
-  { id: "rules-you-should-apply", label: "Capitalization rules" },
-  { id: "do-and-do-not", label: "Do and do not examples" },
-]
-
-const HIGH_INTENT_TOC_ITEMS: TocItem[] = [
-  { id: "short-answer", label: "Short answer" },
-  { id: "part-of-speech-logic", label: "POS rule logic" },
-  { id: "do-and-do-not", label: "Examples" },
-]
-
-const IS_X_TOC_ITEMS: TocItem[] = [
-  { id: "quick-answer", label: "Quick answer" },
-  { id: "why-section", label: "Why it's capitalized" },
-  { id: "style-guide-table", label: "By style guide" },
-  { id: "examples", label: "Examples" },
-  { id: "edge-cases", label: "Edge cases" },
-  { id: "faq", label: "FAQ" },
-]
-
-const GEN_CAP_TOC_ITEMS: TocItem[] = [
-  { id: "quick-answer", label: "Quick answer" },
-  { id: "when-section", label: "When to capitalize" },
-  { id: "quick-rules", label: "Quick rules" },
-  { id: "style-comparison", label: "AP vs. Chicago" },
-  { id: "examples", label: "Examples" },
-  { id: "edge-cases", label: "Edge cases" },
-  { id: "faq", label: "FAQ" },
-]
+export type { TocItem } from "./article-content"
 
 export function getArticlePageViewModel(slug: string) {
   const article = getArticleBySlug(slug)
@@ -60,9 +24,10 @@ export function getArticlePageViewModel(slug: string) {
   }
 
   const category = getCategoryById(article.categoryId)
-  const isXArticle = getIsXArticleBySlug(article.slug)
-  const genCapArticle = getGenCapArticleBySlug(article.slug)
-  const writingTipsArticle = getWritingTipsArticleBySlug(article.slug)
+  const content = getArticleContentBySlug(article.slug)
+  // Navigation (related/prev/next) follows the high-intent graph even when a
+  // richer template owns the body (e.g. IsX articles that also have a
+  // high-intent entry) – independent of the content template dispatch.
   const highIntentEntry = getHighIntentGuidanceBySlug(article.slug)
   const isHighIntentArticle = Boolean(highIntentEntry)
 
@@ -121,15 +86,7 @@ export function getArticlePageViewModel(slug: string) {
     isHighIntentArticle,
     relatedTitle: isHighIntentArticle ? "Related Capitalization Questions" : "Related Guides",
     recommendedTitle: isHighIntentArticle ? "Next Grammar 101 topics" : "Recommended Reading",
-    tocItems: isXArticle
-      ? IS_X_TOC_ITEMS
-      : genCapArticle
-        ? GEN_CAP_TOC_ITEMS
-        : writingTipsArticle
-          ? writingTipsArticle.tocItems
-          : isHighIntentArticle
-            ? HIGH_INTENT_TOC_ITEMS
-            : DEFAULT_TOC_ITEMS,
+    tocItems: getArticleTocItems(content),
   }
 }
 
