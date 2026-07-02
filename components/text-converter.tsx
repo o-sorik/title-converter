@@ -7,6 +7,7 @@ import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
@@ -489,6 +490,46 @@ export function TextConverter({
                     </div>
 
                     <div className="order-1 md:order-2 grid md:grid-cols-2 gap-6 relative">
+                        {/* Mobile-only compact mode + style pickers: the full chip
+                            selector sits below the output on small screens, so give
+                            mobile users a way to switch mode before typing */}
+                        <div className="md:hidden flex gap-2" data-testid="mobile-mode-controls">
+                            <Select value={activeType} onValueChange={(value) => setActiveType(value as ConversionType)}>
+                                <SelectTrigger className="flex-1 min-h-11" aria-label="Conversion mode">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {CONVERSION_GROUPS.map((group) => (
+                                        <SelectGroup key={group.label}>
+                                            <SelectLabel>{group.label}</SelectLabel>
+                                            {group.ids.map((id) => {
+                                                const type = CONVERSION_TYPES.find((t) => t.id === id)!
+                                                return (
+                                                    <SelectItem key={type.id} value={type.id}>
+                                                        {type.label}
+                                                    </SelectItem>
+                                                )
+                                            })}
+                                        </SelectGroup>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {activeType === "title" && (
+                                <Select value={titleStyle} onValueChange={(value) => setTitleStyle(value as TitleCaseStyle)}>
+                                    <SelectTrigger className="w-32 min-h-11" aria-label="Title style">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {TITLE_STYLES.map((style) => (
+                                            <SelectItem key={style.id} value={style.id}>
+                                                {style.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        </div>
+
                         {/* Input Area */}
                         <div className="space-y-2 group" data-testid="input-zone">
                             <div className="flex items-center justify-between px-1">
@@ -538,7 +579,7 @@ export function TextConverter({
                                 />
                                 <div
                                     id="converter-input-helper"
-                                    className={`absolute bottom-4 left-6 text-xs text-zinc-500 dark:text-zinc-400 pointer-events-none ${input ? "sr-only" : "animate-fadeIn"}`}
+                                    className={`absolute bottom-4 left-6 text-xs text-zinc-500 dark:text-zinc-400 pointer-events-none pointer-coarse:hidden ${input ? "sr-only" : "animate-fadeIn"}`}
                                 >
                                     Press <kbd className="px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 font-mono">⌘/Ctrl + V</kbd> to paste
                                 </div>
@@ -689,7 +730,8 @@ export function TextConverter({
                     </div>
 
                     {activeType === "title" && (
-                        <div className="order-4 space-y-2 pt-1" data-testid="style-controls">
+                        // Desktop style tabs; mobile uses the compact select above the input
+                        <div className="order-4 hidden md:block space-y-2 pt-1" data-testid="style-controls">
                             <p className="text-sm font-medium text-muted-foreground text-left">Title Style</p>
                             <Tabs
                                 value={titleStyle}
