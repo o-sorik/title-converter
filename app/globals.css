@@ -173,15 +173,6 @@
   }
 }
 
-@keyframes gradientShift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
 @keyframes glow-dot {
   0%, 100% {
     opacity: 1;
@@ -292,16 +283,6 @@
 
 .animate-glow-dot {
   animation: glow-dot 2.4s ease-in-out infinite;
-}
-
-.gradient-animated {
-  background-size: 200% 200%;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .gradient-animated {
-    animation: gradientShift 24s ease infinite;
-  }
 }
 
 /* Blog dark-theme contrast normalization */

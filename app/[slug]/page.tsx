@@ -72,7 +72,7 @@ export default async function ConverterPage({ params, searchParams }: Props) {
     const defaultMode = converterContext.initialMode ?? config.mode
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-blue-50/30 to-purple-50/20 dark:from-zinc-950 dark:via-blue-950/20 dark:to-purple-950/10 gradient-animated">
+        <div className="relative min-h-screen bg-zinc-50 dark:bg-zinc-950">
             {/* JSON-LD Structured Data */}
             <WebApplicationJsonLd
                 name={config.h1}
@@ -83,10 +83,15 @@ export default async function ConverterPage({ params, searchParams }: Props) {
 
             <SiteHeader containerClassName="max-w-5xl" />
 
-            <main className="container mx-auto py-10 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-3.5rem)] flex flex-col items-center">
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(60%_60%_at_50%_0%,oklch(0.511_0.194_267/0.08),transparent)] dark:bg-[radial-gradient(60%_60%_at_50%_0%,oklch(0.707_0.165_267/0.1),transparent)]"
+            />
+
+            <main className="relative container mx-auto py-10 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-3.5rem)] flex flex-col items-center">
                 <div className="w-full max-w-5xl space-y-16">
                     <div className="text-center space-y-4 mb-8">
-                        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-br from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-500 bg-clip-text text-transparent">
+                        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
                             {config.h1}
                         </h1>
                         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
