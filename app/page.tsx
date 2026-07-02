@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
 import { parseConverterInitialStateFromSearchParams } from "@/lib/converter-context"
 import { ScrollReveal } from "@/components/scroll-reveal"
+import { IconCheck } from "@tabler/icons-react"
 
 export const revalidate = 86400
 
@@ -32,7 +33,7 @@ export default async function Home({ searchParams }: HomePageProps) {
   const defaultMode = converterContext.initialMode ?? config.mode
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-blue-50/30 to-purple-50/20 dark:from-zinc-950 dark:via-blue-950/20 dark:to-purple-950/10 gradient-animated">
+    <div className="relative min-h-screen bg-zinc-50 dark:bg-zinc-950">
       {/* JSON-LD Structured Data */}
       <WebApplicationJsonLd
         name={config.h1}
@@ -52,29 +53,20 @@ export default async function Home({ searchParams }: HomePageProps) {
 
       <SiteHeader containerClassName="max-w-5xl" />
 
-      <main className="container mx-auto pt-6 pb-10 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-3.5rem)] flex flex-col items-center">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(60%_60%_at_50%_0%,oklch(0.511_0.194_267/0.08),transparent)] dark:bg-[radial-gradient(60%_60%_at_50%_0%,oklch(0.707_0.165_267/0.1),transparent)]"
+      />
+
+      <main className="relative container mx-auto pt-6 pb-10 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-3.5rem)] flex flex-col items-center">
         <div className="w-full max-w-5xl space-y-12">
           <div className="text-center space-y-3 mb-4">
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-br from-zinc-900 to-zinc-500 dark:from-white dark:to-zinc-500 bg-clip-text text-transparent">
+            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
               {config.h1}
             </h1>
             <p className="text-base text-muted-foreground max-w-2xl mx-auto">
-              Capitalize titles with practical AP, APA, MLA, and Chicago-friendly rules in one click.
+              Capitalize titles with practical AP, APA, MLA, and Chicago-friendly rules in one click. Free, no signup.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
-              <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
-                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 animate-glow-dot" />
-                Free
-              </span>
-              <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
-                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 animate-glow-dot" />
-                Instant
-              </span>
-              <span className="rounded-full border px-3 py-1 inline-flex items-center gap-2">
-                <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 animate-glow-dot" />
-                No Signup
-              </span>
-            </div>
           </div>
 
           <TextConverter
@@ -96,15 +88,11 @@ export default async function Home({ searchParams }: HomePageProps) {
             </p>
             <nav aria-label="On this page" className="mb-8 p-4 rounded-xl border bg-zinc-50 dark:bg-zinc-900">
               <p className="text-sm font-medium text-foreground mb-2">On this page:</p>
-              <div className="flex flex-wrap gap-x-2 gap-y-1 text-sm">
+              <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
                 <a href="#what-is-title-case" className="text-primary hover:underline underline-offset-4">What Is Title Case?</a>
-                <span className="text-muted-foreground">•</span>
                 <a href="#which-title-case-style" className="text-primary hover:underline underline-offset-4">Title Capitalization Styles</a>
-                <span className="text-muted-foreground">•</span>
                 <a href="#common-title-case-mistakes" className="text-primary hover:underline underline-offset-4">Common Mistakes</a>
-                <span className="text-muted-foreground">•</span>
                 <a href="#title-case-cheat-sheet" className="text-primary hover:underline underline-offset-4">Rules Cheat Sheet</a>
-                <span className="text-muted-foreground">•</span>
                 <a href="#faq" className="text-primary hover:underline underline-offset-4">FAQ</a>
               </div>
             </nav>
@@ -115,7 +103,7 @@ export default async function Home({ searchParams }: HomePageProps) {
                 <ul className="space-y-2">
                   {config.content.features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <span className="text-green-500 mt-1">✓</span>
+                      <IconCheck className="h-4 w-4 mt-1 shrink-0 text-primary" aria-hidden="true" />
                       <span>{feature}</span>
                     </li>
                   ))}

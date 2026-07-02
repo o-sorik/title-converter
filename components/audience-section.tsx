@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { IconBook, IconChartBar, IconFileText, IconTerminal, IconPencil } from "@tabler/icons-react"
+import { cn } from "@/lib/utils"
 
 const AUDIENCES = [
     {
@@ -60,17 +61,20 @@ export function AudienceSection() {
                     Who Uses This Tool
                 </h2>
                 <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-                    From academic papers to developer codebases — consistent capitalization matters everywhere.
+                    From academic papers to developer codebases, consistent capitalization matters everywhere.
                 </p>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {AUDIENCES.map((audience) => {
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+                {AUDIENCES.map((audience, index) => {
                     const Icon = audience.icon
                     return (
                         <Link
                             key={audience.title}
                             href={audience.href}
-                            className="group rounded-xl border bg-white/60 dark:bg-zinc-900/60 p-5 space-y-3 transition-colors hover:border-primary/40 hover:bg-white/80 dark:hover:bg-zinc-900/80 backdrop-blur-sm"
+                            className={cn(
+                                "group rounded-xl border bg-white/60 dark:bg-zinc-900/60 p-5 space-y-3 transition-colors hover:border-primary/40 hover:bg-white/80 dark:hover:bg-zinc-900/80 backdrop-blur-sm",
+                                index < 2 ? "lg:col-span-3" : "lg:col-span-2"
+                            )}
                         >
                             <div className="flex items-start gap-3">
                                 <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
