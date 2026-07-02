@@ -19,6 +19,7 @@ export function FeaturedArticle({ article }: { article: Article }) {
           width={1120}
           height={630}
           priority
+          sizes="(max-width: 768px) 100vw, (max-width: 1440px) 90vw, 1120px"
           className="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
         />
       </Link>

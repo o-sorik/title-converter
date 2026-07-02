@@ -9,7 +9,7 @@ export function PopularGuidesStrip({ items }: { items: Article[] }) {
       <div className="mt-3 grid gap-3 md:grid-cols-3">
         {items.map((article) => (
           <Link key={`popular-${article.slug}`} href={`/blog/${article.slug}`} className="flex items-center gap-3 rounded-xl p-2 transition-colors hover:bg-slate-50 dark:hover:bg-zinc-800">
-            <Image src={article.image} alt={article.title} width={68} height={50} className="h-12 w-16 rounded object-cover" />
+            <Image src={article.image} alt={article.title} width={68} height={50} sizes="64px" className="h-12 w-16 rounded object-cover" />
             <div>
               <p className="text-sm font-semibold text-slate-900 dark:text-zinc-100">{article.title}</p>
               <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-zinc-500">{article.readTime}</p>

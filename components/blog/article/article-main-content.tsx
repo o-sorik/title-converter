@@ -29,7 +29,7 @@ export function ArticleMainContent({
   if (isXData) {
     return (
       <article id="article-content" className="space-y-8 rounded-3xl border border-slate-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900/80 sm:p-5 md:space-y-10 md:p-8">
-        <Image src={article.image} alt={article.title} width={1120} height={640} priority className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
+        <Image src={article.image} alt={article.title} width={1120} height={640} priority sizes="(max-width: 768px) 100vw, (max-width: 1280px) 66vw, 760px" className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
         <IsXTemplate data={isXData} article={article} />
       </article>
     )
@@ -39,7 +39,7 @@ export function ArticleMainContent({
   if (genCapData) {
     return (
       <article id="article-content" className="space-y-8 rounded-3xl border border-slate-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900/80 sm:p-5 md:space-y-10 md:p-8">
-        <Image src={article.image} alt={article.title} width={1120} height={640} priority className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
+        <Image src={article.image} alt={article.title} width={1120} height={640} priority sizes="(max-width: 768px) 100vw, (max-width: 1280px) 66vw, 760px" className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
         <GenCapTemplate data={genCapData} article={article} />
       </article>
     )
@@ -49,7 +49,7 @@ export function ArticleMainContent({
   if (writingTipsData) {
     return (
       <article id="article-content" className="space-y-8 rounded-3xl border border-slate-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900/80 sm:p-5 md:space-y-10 md:p-8">
-        <Image src={article.image} alt={article.title} width={1120} height={640} priority className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
+        <Image src={article.image} alt={article.title} width={1120} height={640} priority sizes="(max-width: 768px) 100vw, (max-width: 1280px) 66vw, 760px" className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
         <WritingTipsTemplate data={writingTipsData} article={article} />
       </article>
     )
@@ -62,7 +62,7 @@ export function ArticleMainContent({
   if (highIntentEntry) {
     return (
       <article id="article-content" className="space-y-8 rounded-3xl border border-slate-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900/80 sm:p-5 md:space-y-10 md:p-8">
-        <Image src={article.image} alt={article.title} width={1120} height={640} priority className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
+        <Image src={article.image} alt={article.title} width={1120} height={640} priority sizes="(max-width: 768px) 100vw, (max-width: 1280px) 66vw, 760px" className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
         <Grammar101Template
           article={article}
           entry={highIntentEntry}
@@ -75,7 +75,7 @@ export function ArticleMainContent({
 
   return (
     <article id="article-content" className="space-y-8 rounded-3xl border border-slate-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900/80 sm:p-5 md:space-y-10 md:p-8">
-      <Image src={article.image} alt={article.title} width={1120} height={640} className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
+      <Image src={article.image} alt={article.title} width={1120} height={640} sizes="(max-width: 768px) 100vw, (max-width: 1280px) 66vw, 760px" className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
 
       <section id="key-takeaway" className="scroll-mt-24 space-y-4">
         <div className="rounded-xl border-l-4 border-blue-700 bg-blue-50 p-4 dark:bg-blue-500/10 md:p-5">

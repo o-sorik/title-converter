@@ -16,7 +16,7 @@ export function BlogWritingTipsPanel({ items }: { items: Article[] }) {
                 href={`/blog/${article.slug}`}
                 className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10"
               >
-                <Image src={article.image} alt={article.title} width={72} height={72} className="h-16 w-16 rounded-lg object-cover" />
+                <Image src={article.image} alt={article.title} width={72} height={72} sizes="64px" className="h-16 w-16 rounded-lg object-cover" />
                 <div className="space-y-1">
                   <h3 className="text-sm font-bold leading-snug">{article.title}</h3>
                   <p className="text-xs text-blue-100">{article.excerpt}</p>
