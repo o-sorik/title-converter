@@ -3,27 +3,25 @@ interface AnswerBoxProps {
   variant?: "quick-answer" | "it-depends"
 }
 
+// Editorial lede: the answer opens the article as a boxless magazine-style
+// lead. Being the only non-boxed block on the page is what makes it stand out.
 export function AnswerBox({ children, variant = "quick-answer" }: AnswerBoxProps) {
   const isItDepends = variant === "it-depends"
 
   return (
-    <div
-      className={
-        isItDepends
-          ? "rounded-xl border-l-4 border-amber-500 bg-amber-50 p-4 dark:bg-amber-500/10 md:p-5"
-          : "rounded-xl border-l-4 border-blue-700 bg-blue-50 p-4 dark:bg-blue-500/10 md:p-5"
-      }
-    >
+    <div className="border-t-2 border-slate-900 pt-4 dark:border-zinc-100">
       <p
         className={
           isItDepends
-            ? "mb-2 text-xs font-bold uppercase tracking-widest text-amber-700 dark:text-amber-400"
-            : "mb-2 text-xs font-bold uppercase tracking-widest text-blue-700 dark:text-blue-400"
+            ? "text-[11px] font-bold uppercase tracking-[0.2em] text-amber-700 dark:text-amber-400"
+            : "text-[11px] font-bold uppercase tracking-[0.2em] text-blue-700 dark:text-blue-400"
         }
       >
         {isItDepends ? "It Depends" : "Quick Answer"}
       </p>
-      <div className="text-base leading-7 text-slate-700 dark:text-zinc-300">{children}</div>
+      <div className="mt-3 text-lg leading-8 text-slate-900 dark:text-zinc-100 md:text-xl md:leading-relaxed">
+        {children}
+      </div>
     </div>
   )
 }
