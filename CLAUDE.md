@@ -47,9 +47,14 @@ Quick deploy:
 ssh deploy@78.47.113.198
 cd /var/www/titlecaseconverter
 git pull origin main
-docker compose build --no-cache
-docker compose up -d
+bash scripts/deploy.sh   # build (cached), 120s health wait, auto-rollback on failure
 ```
+Never use `docker compose build --no-cache` on the VPS (2 vCPU) unless debugging a corrupted layer cache.
+
+Ops safety nets:
+- CI runs post-deploy smoke tests (/, /blog, converter page, sitemap)
+- Daily config backup on VPS: `~/bin/backup-titlecase.sh` (cron 03:15, keeps 14 days in `~/backups/`)
+- Deploy log on server: `/var/www/titlecaseconverter/deploy.log`
 
 Full runbook: `docs/ops/DEPLOY_RUNBOOK_HETZNER.md`
 

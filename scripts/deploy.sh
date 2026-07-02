@@ -31,17 +31,21 @@ cd "$APP_DIR"
 
 log "==> Deploying titlecaseconverter.online..."
 
+# Last commit that passed the healthcheck (survives CI pulling before this script runs)
+LAST_GOOD_FILE="$APP_DIR/.last-good-commit"
+PREV_COMMIT=""
+[ -f "$LAST_GOOD_FILE" ] && PREV_COMMIT=$(cat "$LAST_GOOD_FILE")
+
 # Pull latest code
 if [ -d ".git" ]; then
-    PREV_COMMIT=$(git rev-parse HEAD)
-    log "==> Current commit: $PREV_COMMIT"
+    [ -z "$PREV_COMMIT" ] && PREV_COMMIT=$(git rev-parse HEAD)
+    log "==> Rollback target: ${PREV_COMMIT:-none}"
     log "==> Pulling latest changes..."
     if ! git pull origin main; then
         log "ERROR: git pull failed – aborting (nothing changed)."
         exit 1
     fi
 else
-    PREV_COMMIT=""
     log "==> Cloning repository..."
     git clone "$REPO_URL" .
 fi
@@ -63,6 +67,7 @@ docker compose up -d
 
 log "==> Waiting for health check (max 120s)..."
 if wait_healthy; then
+    echo "$NEW_COMMIT" > "$LAST_GOOD_FILE"
     log "==> Deploy successful! Site is healthy at $NEW_COMMIT."
     exit 0
 fi
