@@ -14,7 +14,7 @@ export function ArticleSidebar({
   return (
     <aside className="space-y-4 lg:sticky lg:top-20 lg:h-fit">
       <section className="rounded-3xl bg-gradient-to-br from-navy-mid to-navy-dark p-5 text-white shadow-lg md:p-6">
-        <h2 className="text-xl font-black leading-tight md:text-2xl">Fast Headline Formatting</h2>
+        <p className="text-xl font-black leading-tight md:text-2xl">Fast Headline Formatting</p>
         <p className="mt-2 text-sm text-blue-100">
           Stop guessing title-case rules. Convert headlines instantly and keep your publishing workflow consistent.
         </p>

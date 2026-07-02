@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 
 export default function BlogIndexPage() {
   const viewModel = getBlogIndexPageViewModel()
-  const { featured, latest, categories, comparisons, faqs } = viewModel
+  const { featured, latest, writingTips, categories, comparisons, faqs } = viewModel
 
   return (
     <>
@@ -63,7 +63,7 @@ export default function BlogIndexPage() {
 
       <ComparisonCards items={comparisons} />
 
-      <BlogWritingTipsPanel items={latest} />
+      <BlogWritingTipsPanel items={writingTips} />
 
       <FaqBlock title="Frequently Asked Questions" items={faqs} />
 

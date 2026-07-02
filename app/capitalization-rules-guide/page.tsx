@@ -48,7 +48,7 @@ export default async function CapitalizationRulesGuidePage({ searchParams }: Rul
     const model = getRulesGuideHubViewModel(styleParam, modeParam, toConverterContext(converterInitialState))
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-zinc-50 via-blue-50/30 to-purple-50/20 dark:from-zinc-950 dark:via-blue-950/20 dark:to-purple-950/10">
+        <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
             <SiteHeader containerClassName="max-w-5xl" />
 
             <BreadcrumbListJsonLd items={[

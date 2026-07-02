@@ -9,6 +9,19 @@ interface ContentSectionProps {
   faqs?: FAQ[]
 }
 
+const MISTAKES = [
+    { wrong: "A Guide To Better Writing", correct: "A Guide to Better Writing", why: "Short prepositions are usually lowercase." },
+    { wrong: "How to Build a brand Voice", correct: "How to Build a Brand Voice", why: "Nouns are major words." },
+    { wrong: "The Science of growth", correct: "The Science of Growth", why: "Last word is always capitalized." },
+    { wrong: "Working with Api Data", correct: "Working with API Data", why: "Acronyms should keep intended casing." },
+    { wrong: "Turn on Notifications Fast", correct: "Turn On Notifications Fast", why: "In phrasal verbs, second word may be a major word." },
+    { wrong: "State-of-the-art Design System", correct: "State-of-the-Art Design System", why: "Hyphenated compounds often capitalize major elements." },
+    { wrong: "Content Rules: how to Scale", correct: "Content Rules: How to Scale", why: "Subtitles after colons often start with a capitalized word." },
+    { wrong: "Why is This Important", correct: "Why Is This Important", why: "Verbs such as \"is\" are capitalized." },
+    { wrong: "Learning From The Best", correct: "Learning from the Best", why: "Articles and short prepositions are usually lowercase in the middle." },
+    { wrong: "An Introduction to ui Design", correct: "An Introduction to UI Design", why: "Initialisms should keep their standard uppercase format." },
+] as const
+
 export function ContentSection({ faqs }: ContentSectionProps) {
     const lastUpdated = "February 8, 2026"
 
@@ -77,31 +90,28 @@ export function ContentSection({ faqs }: ContentSectionProps) {
                         href="/capitalization-rules-guide"
                         className="inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        Coming soon: Full Capitalization Rules Guide
+                        Read the Full Capitalization Rules Guide
                     </Link>
                 </div>
             </div>
 
             <div className="space-y-4">
                 <h2 id="common-title-case-mistakes" className="scroll-mt-20 text-3xl font-bold tracking-tight">Common Title Case Mistakes (With Fixes)</h2>
-                <div className="grid gap-4">
-                    <div className="p-4 rounded-lg border bg-card text-sm"><strong>Wrong:</strong> A Guide To Better Writing | <strong>Correct:</strong> A Guide to Better Writing | <strong>Why:</strong> Short prepositions are usually lowercase.</div>
-                    <div className="p-4 rounded-lg border bg-card text-sm"><strong>Wrong:</strong> How to Build a brand Voice | <strong>Correct:</strong> How to Build a Brand Voice | <strong>Why:</strong> Nouns are major words.</div>
-                    <div className="p-4 rounded-lg border bg-card text-sm"><strong>Wrong:</strong> The Science of growth | <strong>Correct:</strong> The Science of Growth | <strong>Why:</strong> Last word is always capitalized.</div>
-                    <div className="p-4 rounded-lg border bg-card text-sm"><strong>Wrong:</strong> Working with Api Data | <strong>Correct:</strong> Working with API Data | <strong>Why:</strong> Acronyms should keep intended casing.</div>
-                    <div className="p-4 rounded-lg border bg-card text-sm"><strong>Wrong:</strong> Turn on Notifications Fast | <strong>Correct:</strong> Turn On Notifications Fast | <strong>Why:</strong> In phrasal verbs, second word may be a major word.</div>
-                    <div className="p-4 rounded-lg border bg-card text-sm"><strong>Wrong:</strong> State-of-the-art Design System | <strong>Correct:</strong> State-of-the-Art Design System | <strong>Why:</strong> Hyphenated compounds often capitalize major elements.</div>
-                    <div className="p-4 rounded-lg border bg-card text-sm"><strong>Wrong:</strong> Content Rules: how to Scale | <strong>Correct:</strong> Content Rules: How to Scale | <strong>Why:</strong> Subtitles after colons often start with a capitalized word.</div>
-                    <div className="p-4 rounded-lg border bg-card text-sm"><strong>Wrong:</strong> Why is This Important | <strong>Correct:</strong> Why Is This Important | <strong>Why:</strong> Verbs such as &quot;is&quot; are capitalized.</div>
-                    <div className="p-4 rounded-lg border bg-card text-sm"><strong>Wrong:</strong> Learning From The Best | <strong>Correct:</strong> Learning from the Best | <strong>Why:</strong> Articles and short prepositions are usually lowercase in the middle.</div>
-                    <div className="p-4 rounded-lg border bg-card text-sm"><strong>Wrong:</strong> An Introduction to ui Design | <strong>Correct:</strong> An Introduction to UI Design | <strong>Why:</strong> Initialisms should keep their standard uppercase format.</div>
+                <div className="grid gap-4 md:grid-cols-2">
+                    {MISTAKES.map((mistake) => (
+                        <div key={mistake.correct} className="p-4 rounded-lg border bg-card text-sm space-y-1.5">
+                            <p className="text-zinc-500 dark:text-zinc-400 line-through decoration-red-400/60">{mistake.wrong}</p>
+                            <p className="font-medium">{mistake.correct}</p>
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400">{mistake.why}</p>
+                        </div>
+                    ))}
                 </div>
                 <div>
                     <Link
-                        href="/capitalization-rules-guide"
+                        href="/blog"
                         className="inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
                     >
-                        Coming soon: Capitalization Rules Blog
+                        Browse the Capitalization Blog
                     </Link>
                 </div>
             </div>
@@ -134,24 +144,6 @@ export function ContentSection({ faqs }: ContentSectionProps) {
                     For final publishing, do a quick manual check against your target style guide.
                 </p>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">Last updated: {lastUpdated}</p>
-            </div>
-
-            <div className="space-y-4">
-                <h2 className="text-3xl font-bold tracking-tight">What Users Say</h2>
-                <div className="grid gap-4 md:grid-cols-3">
-                    <div className="p-5 rounded-xl border bg-card">
-                        <p className="text-sm">&quot;Fast and predictable. We use it before publishing blog headlines.&quot;</p>
-                        <p className="text-xs text-zinc-500 mt-3">Content Marketer</p>
-                    </div>
-                    <div className="p-5 rounded-xl border bg-card">
-                        <p className="text-sm">&quot;Useful baseline for AP-style edits. Saves time on draft cleanup.&quot;</p>
-                        <p className="text-xs text-zinc-500 mt-3">Editorial Assistant</p>
-                    </div>
-                    <div className="p-5 rounded-xl border bg-card">
-                        <p className="text-sm">&quot;Great for quick title checks before uploading videos and newsletters.&quot;</p>
-                        <p className="text-xs text-zinc-500 mt-3">Creator and Publisher</p>
-                    </div>
-                </div>
             </div>
 
             {faqs && faqs.length > 0 && (

@@ -125,7 +125,7 @@ export function Grammar101Template({ article, entry, converterHref, relatedSlugs
       ) : null}
 
       <section className="rounded-2xl bg-gradient-to-br from-navy-dark to-navy-mid p-5 text-white md:p-6">
-        <h2 className="text-xl font-black md:text-2xl">Need instant formatting help?</h2>
+        <p className="text-xl font-black md:text-2xl">Need instant formatting help?</p>
         <p className="mt-2 text-sm text-blue-100">
           Open the converter with a prefilled example and adapt it to your headline.
         </p>
