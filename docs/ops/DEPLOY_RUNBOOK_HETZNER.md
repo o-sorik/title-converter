@@ -39,24 +39,30 @@
 ssh deploy@78.47.113.198
 cd /var/www/titlecaseconverter
 git pull origin main
-docker compose build --no-cache
-docker compose up -d
+bash scripts/deploy.sh
 ```
 
-Wait ~15 seconds, then verify:
+The script builds with layer cache, waits up to 120s for the healthcheck, and
+**auto-rolls back to the previous commit** if the new container never becomes
+healthy. Log: `/var/www/titlecaseconverter/deploy.log`.
+
+Verify:
 
 ```bash
 docker compose ps          # should show "healthy"
 curl -sI https://titlecaseconverter.online | head -5
 ```
 
-### Using the deploy script
+### Using the deploy script remotely
 
 ```bash
 ssh deploy@78.47.113.198 'bash -s' < scripts/deploy.sh
 ```
 
-### Full rebuild (if something is off)
+### Full rebuild (last resort — corrupted layer cache only)
+
+`--no-cache` on the 2 vCPU VPS takes several minutes and starves the running
+container. Use only when a cached layer is provably broken.
 
 ```bash
 ssh deploy@78.47.113.198
@@ -67,6 +73,13 @@ git pull origin main
 docker compose build --no-cache
 docker compose up -d
 ```
+
+### Backups
+
+Daily config backup (cron, 03:15 server time) via `~/bin/backup-titlecase.sh`:
+`.env.local`, nginx vhost, crontab, deployed commit hash → `~/backups/`
+(14-day rotation, log: `~/backups/backup.log`). Certs are not backed up —
+`deploy` has no root; certbot reissues them in minutes if lost.
 
 ## Verification Checklist
 

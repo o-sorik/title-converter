@@ -15,7 +15,7 @@ describe("release gate", () => {
     tempDirs.length = 0
   })
 
-  test("passes when lint, test, and seo qa all pass", () => {
+  test("passes when all required checks pass", () => {
     const runCheck = vi.fn(() => ({ exitCode: 0 }))
     const result = evaluateReleaseGate({
       outputPath: path.join(os.tmpdir(), "release-gate-pass.json"),
@@ -26,10 +26,12 @@ describe("release gate", () => {
 
     expect(result.releaseRecord.passed).toBe(true)
     expect(result.releaseRecord.failed_checks).toEqual([])
-    expect(runCheck).toHaveBeenCalledTimes(3)
+    expect(runCheck).toHaveBeenCalledTimes(5)
     expect(runCheck).toHaveBeenNthCalledWith(1, "npm run lint")
     expect(runCheck).toHaveBeenNthCalledWith(2, "npm test")
     expect(runCheck).toHaveBeenNthCalledWith(3, "npm run seo:qa")
+    expect(runCheck).toHaveBeenNthCalledWith(4, "npm run template:qa")
+    expect(runCheck).toHaveBeenNthCalledWith(5, "npm run intent:qa")
     expect(result.releaseRecord.bypasses).toBe(0)
   })
 
@@ -38,6 +40,8 @@ describe("release gate", () => {
       .fn()
       .mockReturnValueOnce({ exitCode: 0 })
       .mockReturnValueOnce({ exitCode: 1 })
+      .mockReturnValueOnce({ exitCode: 0 })
+      .mockReturnValueOnce({ exitCode: 0 })
       .mockReturnValueOnce({ exitCode: 0 })
 
     const result = evaluateReleaseGate({
@@ -52,7 +56,9 @@ describe("release gate", () => {
     expect(result.releaseRecord.checks.lint.status).toBe("pass")
     expect(result.releaseRecord.checks.test.status).toBe("fail")
     expect(result.releaseRecord.checks.seo_qa.status).toBe("pass")
-    expect(runCheck).toHaveBeenCalledTimes(3)
+    expect(result.releaseRecord.checks.template_qa.status).toBe("pass")
+    expect(result.releaseRecord.checks.intent_qa.status).toBe("pass")
+    expect(runCheck).toHaveBeenCalledTimes(5)
   })
 
   test("writes machine-readable release record json", () => {
@@ -70,7 +76,7 @@ describe("release gate", () => {
     const record = JSON.parse(fs.readFileSync(outputPath, "utf8"))
     expect(record.generated_at).toBe("2026-02-19T00:00:00.000Z")
     expect(record.passed).toBe(true)
-    expect(record.required_checks).toEqual(["lint", "test", "seo_qa"])
+    expect(record.required_checks).toEqual(["lint", "test", "seo_qa", "template_qa", "intent_qa"])
     expect(record.checks.lint.command).toBe("npm run lint")
     expect(record.checks.test.command).toBe("npm test")
     expect(record.checks.seo_qa.command).toBe("npm run seo:qa")

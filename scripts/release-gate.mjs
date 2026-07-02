@@ -9,6 +9,8 @@ const REQUIRED_CHECKS = [
   { id: "lint", command: "npm run lint" },
   { id: "test", command: "npm test" },
   { id: "seo_qa", command: "npm run seo:qa" },
+  { id: "template_qa", command: "npm run template:qa" },
+  { id: "intent_qa", command: "npm run intent:qa" },
 ];
 
 function parseArgs(argv) {

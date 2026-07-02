@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { BatchChecker } from "@/components/batch-checker"
-import { WebApplicationJsonLd } from "@/components/json-ld"
+import { BreadcrumbListJsonLd, WebApplicationJsonLd } from "@/components/json-ld"
 import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
 import { SITE_URL } from "@/lib/constants"
@@ -44,6 +44,12 @@ export default function BatchCheckerPage() {
                 name="Batch Headline Checker"
                 description={description}
                 url={pageUrl}
+            />
+            <BreadcrumbListJsonLd
+                items={[
+                    { name: "Home", item: SITE_URL },
+                    { name: "Batch Headline Checker", item: pageUrl },
+                ]}
             />
 
             <SiteHeader containerClassName="max-w-5xl" />
