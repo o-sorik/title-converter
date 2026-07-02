@@ -116,7 +116,6 @@ test("shows style-contextual guidance entry point in title mode without duplicat
   expect(outputRulesEntry).toContain('href="/capitalization-rules-guide?mode=title&amp;style=ap&amp;ctx_ref=latest')
   expect(outputRulesEntry).toContain("ctx_mode=title")
   expect(outputRulesEntry).toContain("ctx_style=ap")
-  expect(outputRulesEntry).toContain("ctx_output_mode=title")
 })
 
 test("keeps non-title guidance visible without style-specific claims", () => {
@@ -239,9 +238,7 @@ test("continuity context and output always follow the current selected mode", ()
   expect(html).toContain('href="/blog/and-capitalized-in-title-case?')
   expect(html).toContain("ctx_mode=sentence")
   expect(html).toContain("ctx_style=chicago")
-  expect(html).toContain("ctx_output_mode=sentence")
-  expect(html).toContain("ctx_output_style=chicago")
-  expect(html).not.toContain("ctx_output_mode=title")
+  expect(html).not.toContain("ctx_output_mode")
   // Realtime: output renders immediately in the selected mode, no stale state
   expect(html).toContain("Sentence case output")
   expect(html).toContain("Is and capitalized")

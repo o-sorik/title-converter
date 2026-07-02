@@ -7,6 +7,7 @@ import { StyleGuideTable } from "./style-guide-table"
 import { DoDoNot } from "./do-do-not"
 import { FAQAccordion } from "./faq-accordion"
 import { CTABlock } from "./cta-block"
+import { IS_X_SECTION_IDS } from "@/lib/article-content"
 
 interface IsXTemplateProps {
   data: IsXArticle
@@ -16,11 +17,11 @@ interface IsXTemplateProps {
 export function IsXTemplate({ data, article }: IsXTemplateProps) {
   return (
     <>
-      <section id="quick-answer" className="scroll-mt-24">
+      <section id={IS_X_SECTION_IDS.quickAnswer} className="scroll-mt-24">
         <AnswerBox>{data.answerBox}</AnswerBox>
       </section>
 
-      <section id="why-section" className="scroll-mt-24 space-y-3">
+      <section id={IS_X_SECTION_IDS.whySection} className="scroll-mt-24 space-y-3">
         <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">
           {data.whySectionHeading}
         </h2>
@@ -31,7 +32,7 @@ export function IsXTemplate({ data, article }: IsXTemplateProps) {
         ))}
       </section>
 
-      <section id="style-guide-table" className="scroll-mt-24 space-y-3">
+      <section id={IS_X_SECTION_IDS.styleGuideTable} className="scroll-mt-24 space-y-3">
         <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">
           By Style Guide
         </h2>
@@ -41,7 +42,7 @@ export function IsXTemplate({ data, article }: IsXTemplateProps) {
         </p>
       </section>
 
-      <section id="examples" className="scroll-mt-24 space-y-3">
+      <section id={IS_X_SECTION_IDS.examples} className="scroll-mt-24 space-y-3">
         <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">
           Examples
         </h2>
@@ -52,7 +53,7 @@ export function IsXTemplate({ data, article }: IsXTemplateProps) {
         />
       </section>
 
-      <section id="edge-cases" className="scroll-mt-24 space-y-3 rounded-xl border bg-white p-4 dark:bg-zinc-900/40 md:p-5">
+      <section id={IS_X_SECTION_IDS.edgeCases} className="scroll-mt-24 space-y-3 rounded-xl border bg-white p-4 dark:bg-zinc-900/40 md:p-5">
         <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">
           {data.edgeCasesHeading}
         </h2>

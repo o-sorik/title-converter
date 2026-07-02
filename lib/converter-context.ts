@@ -5,16 +5,12 @@ export interface ConverterContext {
   input: string
   mode: ConversionType
   titleStyle: TitleCaseStyle
-  outputMode: ConversionType
-  outputTitleStyle: TitleCaseStyle
 }
 
 export interface ConverterInitialState {
   initialInput: string
   initialMode?: ConversionType
   initialTitleStyle?: TitleCaseStyle
-  initialOutputMode?: ConversionType
-  initialOutputTitleStyle?: TitleCaseStyle
   initialContextRef?: string
 }
 
@@ -62,8 +58,6 @@ export function appendConverterContextToHref(href: string, context: ConverterCon
   url.searchParams.set("ctx_ref", DEFAULT_CONVERTER_CONTEXT_REF)
   url.searchParams.set("ctx_mode", context.mode)
   url.searchParams.set("ctx_style", context.titleStyle)
-  url.searchParams.set("ctx_output_mode", context.outputMode)
-  url.searchParams.set("ctx_output_style", context.outputTitleStyle)
   const query = url.searchParams.toString()
   return `${url.pathname}${query ? `?${query}` : ""}${url.hash}`
 }
@@ -74,22 +68,18 @@ export function parseConverterInitialStateFromSearchParams(
   const input = firstValue(searchParams?.ctx_input) ?? ""
   const mode = asMode(firstValue(searchParams?.ctx_mode))
   const style = asStyle(firstValue(searchParams?.ctx_style))
-  const outputMode = asMode(firstValue(searchParams?.ctx_output_mode))
-  const outputStyle = asStyle(firstValue(searchParams?.ctx_output_style))
   const contextRef = normalizeContextRef(firstValue(searchParams?.ctx_ref))
 
   return {
     initialInput: input,
     initialMode: mode,
     initialTitleStyle: style,
-    initialOutputMode: outputMode,
-    initialOutputTitleStyle: outputStyle,
     initialContextRef: contextRef,
   }
 }
 
 export function toConverterContext(state: ConverterInitialState): ConverterContext | null {
-  if (!state.initialMode || !state.initialTitleStyle || !state.initialOutputMode || !state.initialOutputTitleStyle) {
+  if (!state.initialMode || !state.initialTitleStyle) {
     return null
   }
 
@@ -97,8 +87,6 @@ export function toConverterContext(state: ConverterInitialState): ConverterConte
     input: state.initialInput,
     mode: state.initialMode,
     titleStyle: state.initialTitleStyle,
-    outputMode: state.initialOutputMode,
-    outputTitleStyle: state.initialOutputTitleStyle,
   }
 }
 
@@ -114,16 +102,14 @@ export function parseConverterContextPayload(raw: string): ConverterContext | nu
     if (typeof value.input !== "string") return null
     const mode = asMode(value.mode)
     const titleStyle = asStyle(value.titleStyle)
-    const outputMode = asMode(value.outputMode)
-    const outputTitleStyle = asStyle(value.outputTitleStyle)
-    if (!mode || !titleStyle || !outputMode || !outputTitleStyle) return null
+    if (!mode || !titleStyle) return null
 
+    // Payloads written before the realtime-converter refactor carry extra
+    // output* fields; they are intentionally ignored here.
     return {
       input: value.input,
       mode,
       titleStyle,
-      outputMode,
-      outputTitleStyle,
     }
   } catch {
     return null

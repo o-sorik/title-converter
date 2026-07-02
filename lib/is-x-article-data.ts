@@ -1,22 +1,18 @@
+import type { DoNotExample, FAQItem } from "@/lib/article-content"
+
+// Cross-template primitives live in lib/article-content.ts; re-exported here
+// for existing importers.
+export type { DoNotExample, FAQItem } from "@/lib/article-content"
+
 export interface StyleGuideRow {
   guide: "AP" | "APA" | "MLA" | "Chicago"
   capitalize: boolean
   rule: string
 }
 
-export interface DoNotExample {
-  text: string
-  reason: string
-}
-
 export interface AlternativeExample {
   label: string
   examples: string[]
-}
-
-export interface FAQItem {
-  question: string
-  answer: string
 }
 
 export interface IsXArticle {

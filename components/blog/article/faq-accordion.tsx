@@ -5,7 +5,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import type { FAQItem } from "@/lib/is-x-article-data"
+import type { FAQItem } from "@/lib/article-content"
+import { FAQ_SECTION_ID } from "@/lib/article-content"
 
 interface FAQAccordionProps {
   items: FAQItem[]
@@ -13,8 +14,14 @@ interface FAQAccordionProps {
 }
 
 export function FAQAccordion({ items, heading = "Frequently Asked Questions" }: FAQAccordionProps) {
+  // No FAQ content -> no section and no FAQPage JSON-LD (an empty FAQPage
+  // schema violates the "only when FAQ content actually exists" SEO rule).
+  if (items.length === 0) {
+    return null
+  }
+
   return (
-    <section id="faq" className="scroll-mt-24 space-y-4">
+    <section id={FAQ_SECTION_ID} className="scroll-mt-24 space-y-4">
       <FAQPageJsonLd faqs={items} />
       <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">
         {heading}

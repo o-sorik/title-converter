@@ -53,8 +53,6 @@ test("keeps converter context in return link for round-trip continuity", async (
       ctx_input: "walking during the light",
       ctx_mode: "title",
       ctx_style: "ap",
-      ctx_output_mode: "title",
-      ctx_output_style: "ap",
     }),
   })
   const html = renderToStaticMarkup(page)
@@ -62,5 +60,4 @@ test("keeps converter context in return link for round-trip continuity", async (
   expect(html).toContain('href="/?ctx_ref=latest')
   expect(html).toContain("ctx_mode=title")
   expect(html).toContain("ctx_style=ap")
-  expect(html).toContain("ctx_output_mode=title")
 })

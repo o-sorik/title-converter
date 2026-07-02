@@ -58,14 +58,11 @@ describe("getRulesGuideViewModel", () => {
         input: "hello world",
         mode: "title",
         titleStyle: "ap",
-        outputMode: "title",
-        outputTitleStyle: "ap",
       }
     )
 
     expect(model.returnHref).toContain("ctx_ref=latest")
     expect(model.returnHref).toContain("ctx_mode=title")
-    expect(model.returnHref).toContain("ctx_output_mode=title")
   })
 })
 
@@ -144,8 +141,6 @@ describe("getRulesGuideHubViewModel", () => {
       input: "test",
       mode: "title",
       titleStyle: "ap",
-      outputMode: "title",
-      outputTitleStyle: "ap",
     })
 
     expect(model.returnHref).toContain("ctx_ref=latest")

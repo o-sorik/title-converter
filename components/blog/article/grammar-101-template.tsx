@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import type { Article } from "@/components/blog/data"
 import type { HighIntentGuidanceEntry } from "@/lib/high-intent-guidance"
+import { GRAMMAR_101_SECTION_IDS } from "@/lib/article-content"
 
 type Grammar101TemplateProps = {
   article: Article
@@ -22,7 +23,7 @@ export function Grammar101Template({ article, entry, converterHref, relatedSlugs
 
   return (
     <>
-      <section id="short-answer" data-testid="grammar-101-short-answer" className="scroll-mt-24 space-y-4">
+      <section id={GRAMMAR_101_SECTION_IDS.shortAnswer} data-testid="grammar-101-short-answer" className="scroll-mt-24 space-y-4">
         <div className="rounded-xl border-l-4 border-blue-700 bg-blue-50 p-4 dark:bg-blue-500/10 md:p-5">
           <h2 className="text-xl font-black text-slate-950 dark:text-zinc-100 md:text-2xl">Short Answer</h2>
           <p className="mt-2 text-base leading-7 text-slate-700 dark:text-zinc-300">{entry.quickAnswer}</p>
@@ -30,7 +31,7 @@ export function Grammar101Template({ article, entry, converterHref, relatedSlugs
       </section>
 
       <section
-        id="part-of-speech-logic"
+        id={GRAMMAR_101_SECTION_IDS.posLogic}
         data-testid="grammar-101-pos-logic"
         className="scroll-mt-24 space-y-4 rounded-xl border bg-white p-4 dark:bg-zinc-900/40 md:p-5"
       >
@@ -70,7 +71,7 @@ export function Grammar101Template({ article, entry, converterHref, relatedSlugs
         </ul>
       </section>
 
-      <section id="do-and-do-not" data-testid="grammar-101-examples" className="scroll-mt-24 grid gap-4 md:grid-cols-2">
+      <section id={GRAMMAR_101_SECTION_IDS.doAndDoNot} data-testid="grammar-101-examples" className="scroll-mt-24 grid gap-4 md:grid-cols-2">
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 dark:bg-emerald-500/10">
           <p className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">✓ Do</p>
           <p className="mt-3 font-[family-name:var(--font-playfair)] text-lg font-semibold leading-snug text-emerald-900 dark:text-emerald-200">{entry.examples[0]?.output}</p>
