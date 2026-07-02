@@ -1,3 +1,4 @@
+import type { TitleCaseStyle } from "@/lib/converters"
 import type { IsXArticle } from "@/lib/is-x-article-data"
 import type { GenCapArticle } from "@/lib/gen-cap-article-data"
 import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
@@ -23,6 +24,26 @@ export type TocItem = {
 }
 
 // ---------------------------------------------------------------------------
+// Shared cross-template primitives
+// ---------------------------------------------------------------------------
+
+/**
+ * Plain text only — question and answer render verbatim in the UI accordion
+ * AND go verbatim into FAQPage JSON-LD. No inline markdown here: a
+ * `[link](/blog/x)` would ship literal brackets to users and raw markdown
+ * into schema.org output.
+ */
+export interface FAQItem {
+  question: string
+  answer: string
+}
+
+export interface DoNotExample {
+  text: string
+  reason: string
+}
+
+// ---------------------------------------------------------------------------
 // Structured rich content (block model)
 //
 // Long-form articles (writing-tips) store their body as serializable blocks
@@ -31,9 +52,15 @@ export type TocItem = {
 //   **bold**   *italic*   [label](/internal/path)   [label](https://external)
 // Link labels may contain *italic*. Nothing else is supported on purpose –
 // the subset must stay trivially convertible to CMS rich text later.
+//
+// Known limits: italic markers cannot SPAN a link (`*text [label](href) text*`
+// renders the asterisks literally – put the italics inside the label or split
+// the phrase), and an unpaired `*` renders literally (used for footnote
+// markers). Fields outside blocks (FAQItem, whySectionBody etc.) are plain
+// text and never pass through this parser.
 // ---------------------------------------------------------------------------
 
-export type StyleGuideName = "ap" | "apa" | "chicago" | "mla"
+export type StyleGuideName = Exclude<TitleCaseStyle, "standard">
 
 export type ArticleBlock =
   | {
@@ -169,7 +196,7 @@ const DEFAULT_TOC_ITEMS: TocItem[] = [
 export function deriveTocFromSections(sections: ArticleSection[], hasFaq: boolean): TocItem[] {
   const items = sections
     .filter((section) => !section.hideFromToc && (section.tocLabel || section.heading))
-    .map((section) => ({ id: section.id, label: section.tocLabel ?? section.heading! }))
+    .map((section) => ({ id: section.id, label: section.tocLabel || section.heading! }))
   return hasFaq ? [...items, { id: FAQ_SECTION_ID, label: "FAQ" }] : items
 }
 

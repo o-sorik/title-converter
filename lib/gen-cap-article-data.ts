@@ -1,4 +1,4 @@
-import type { DoNotExample, FAQItem } from "@/lib/is-x-article-data"
+import type { DoNotExample, FAQItem } from "@/lib/article-content"
 
 export interface GenCapRuleBlock {
   capitalizeRules: string[]

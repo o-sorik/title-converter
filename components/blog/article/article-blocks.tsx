@@ -1,6 +1,8 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
 import type { ArticleBlock, ArticleSection, StyleGuideName } from "@/lib/article-content"
+import { cn } from "@/lib/utils"
+import { CapitalizationBadge } from "./capitalization-badge"
 
 // Renders the serializable block model from lib/article-content.ts.
 // Supported inline markup: **bold**, *italic*, [label](href); link labels
@@ -16,8 +18,6 @@ const thClass = "px-4 py-3 text-left font-semibold text-slate-700 dark:text-zinc
 const tdClass = "px-4 py-3 text-slate-700 dark:text-zinc-300"
 const trBorder = "border-t border-slate-100 dark:border-zinc-700/50"
 const theadBg = "bg-slate-50 dark:bg-zinc-800/60"
-const capBadge = "rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400"
-const lcBadge = "rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-600 dark:bg-zinc-800 dark:text-zinc-400"
 
 const GUIDE_COLUMNS: { key: StyleGuideName; label: string }[] = [
   { key: "ap", label: "AP" },
@@ -63,7 +63,8 @@ export function renderInline(text: string): ReactNode[] {
     }
     const [, label, href] = match
     const labelNodes = renderEmphasis(label, `l${linkIndex}`)
-    if (href.startsWith("/")) {
+    // Protocol-relative URLs (//host) are external, not internal routes.
+    if (href.startsWith("/") && !href.startsWith("//")) {
       nodes.push(
         <Link key={`link-${linkIndex}`} href={href} className={linkClass}>
           {labelNodes}
@@ -90,7 +91,7 @@ export function renderInline(text: string): ReactNode[] {
 function CapitalizeBadgeCell({ capitalize }: { capitalize: boolean }) {
   return (
     <td className={tdClass}>
-      <span className={capitalize ? capBadge : lcBadge}>{capitalize ? "Capitalize" : "Lowercase"}</span>
+      <CapitalizationBadge capitalize={capitalize} />
     </td>
   )
 }
@@ -102,7 +103,7 @@ export function ArticleBlockRenderer({ block }: { block: ArticleBlock }) {
         return <p className="text-sm text-slate-500 dark:text-zinc-400 mt-2">{renderInline(block.text)}</p>
       }
       if (block.variant === "subheading") {
-        return <p className={`${p} font-semibold mt-4`}>{renderInline(block.text)}</p>
+        return <p className={cn(p, "font-semibold mt-4")}>{renderInline(block.text)}</p>
       }
       return <p className={p}>{renderInline(block.text)}</p>
     }
@@ -133,7 +134,7 @@ export function ArticleBlockRenderer({ block }: { block: ArticleBlock }) {
               {block.rows.map((row, rowIndex) => (
                 <tr key={rowIndex} className={trBorder}>
                   {row.map((cell, cellIndex) => (
-                    <td key={cellIndex} className={cellIndex === 0 ? `${tdClass} font-semibold` : tdClass}>
+                    <td key={cellIndex} className={cn(tdClass, cellIndex === 0 && "font-semibold")}>
                       {renderInline(cell)}
                     </td>
                   ))}
@@ -160,7 +161,7 @@ export function ArticleBlockRenderer({ block }: { block: ArticleBlock }) {
             <tbody>
               {block.rows.map((row) => (
                 <tr key={row.label} className={trBorder}>
-                  <td className={`${tdClass} font-semibold`}>{renderInline(row.label)}</td>
+                  <td className={cn(tdClass, "font-semibold")}>{renderInline(row.label)}</td>
                   {GUIDE_COLUMNS.map((guide) => (
                     <CapitalizeBadgeCell key={guide.key} capitalize={row.guides[guide.key]} />
                   ))}

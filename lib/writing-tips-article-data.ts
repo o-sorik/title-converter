@@ -1,5 +1,4 @@
-import type { FAQItem } from "@/lib/is-x-article-data"
-import type { ArticleSection } from "@/lib/article-content"
+import type { ArticleSection, FAQItem } from "@/lib/article-content"
 
 export interface WritingTipsArticle {
   slug: string

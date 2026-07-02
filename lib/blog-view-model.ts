@@ -15,8 +15,6 @@ import { getArticleContentBySlug, getArticleTocItems } from "./article-content"
 import { SITE_URL } from "@/lib/constants"
 import { getAuthorByName } from "@/lib/authors"
 
-export type { TocItem } from "./article-content"
-
 export function getArticlePageViewModel(slug: string) {
   const article = getArticleBySlug(slug)
   if (!article) {
@@ -28,7 +26,8 @@ export function getArticlePageViewModel(slug: string) {
   // Navigation (related/prev/next) follows the high-intent graph even when a
   // richer template owns the body (e.g. IsX articles that also have a
   // high-intent entry) – independent of the content template dispatch.
-  const highIntentEntry = getHighIntentGuidanceBySlug(article.slug)
+  const highIntentEntry =
+    content.template === "grammar-101" ? content.data : getHighIntentGuidanceBySlug(article.slug)
   const isHighIntentArticle = Boolean(highIntentEntry)
 
   const relatedFromHighIntent = highIntentEntry

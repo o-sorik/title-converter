@@ -12,7 +12,7 @@ import {
   getHighIntentConverterHref,
   getHighIntentRelatedEntries,
 } from "@/lib/high-intent-guidance"
-import { getArticleContentBySlug } from "@/lib/article-content"
+import { getArticleContentBySlug, LEGACY_SECTION_IDS } from "@/lib/article-content"
 import { WritingTipsTemplate } from "./writing-tips-template"
 
 function ArticleShell({ article, children }: { article: Article; children: React.ReactNode }) {
@@ -74,10 +74,8 @@ export function ArticleMainContent({
   }
 
   return (
-    <article id="article-content" className="space-y-8 rounded-3xl border border-slate-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900/80 sm:p-5 md:space-y-10 md:p-8">
-      <Image src={article.image} alt={article.title} width={1120} height={640} priority sizes="(max-width: 768px) 100vw, (max-width: 1280px) 66vw, 760px" className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
-
-      <section id="key-takeaway" className="scroll-mt-24 space-y-4">
+    <ArticleShell article={article}>
+      <section id={LEGACY_SECTION_IDS.keyTakeaway} className="scroll-mt-24 space-y-4">
         <div className="rounded-xl border-l-4 border-blue-700 bg-blue-50 p-4 dark:bg-blue-500/10 md:p-5">
           <h2 className="text-xl font-black text-slate-950 dark:text-zinc-100 md:text-2xl">Key Takeaway</h2>
           <p className="mt-2 text-base leading-7 text-slate-700 dark:text-zinc-300">
@@ -86,7 +84,7 @@ export function ArticleMainContent({
         </div>
       </section>
 
-      <section id="rules-you-should-apply" className="scroll-mt-24 prose prose-slate max-w-none prose-p:text-base prose-p:leading-7 prose-li:leading-7 prose-li:marker:text-blue-600 prose-ul:my-4 prose-ul:space-y-1 prose-headings:font-black prose-headings:text-slate-950 prose-h2:mt-6 prose-h2:text-2xl prose-h2:leading-tight prose-h3:mt-5 prose-h3:text-xl prose-h3:leading-snug md:prose-p:leading-8 md:prose-h2:mt-8 md:prose-h2:text-3xl md:prose-h3:mt-6 md:prose-h3:text-2xl">
+      <section id={LEGACY_SECTION_IDS.rules} className="scroll-mt-24 prose prose-slate max-w-none prose-p:text-base prose-p:leading-7 prose-li:leading-7 prose-li:marker:text-blue-600 prose-ul:my-4 prose-ul:space-y-1 prose-headings:font-black prose-headings:text-slate-950 prose-h2:mt-6 prose-h2:text-2xl prose-h2:leading-tight prose-h3:mt-5 prose-h3:text-xl prose-h3:leading-snug md:prose-p:leading-8 md:prose-h2:mt-8 md:prose-h2:text-3xl md:prose-h3:mt-6 md:prose-h3:text-2xl">
         <h2>Rules You Should Apply</h2>
         <p>
           Use title case consistently in headings and display text, then run a final editorial pass for proper nouns, acronyms, and brand-specific casing exceptions.
@@ -99,7 +97,7 @@ export function ArticleMainContent({
         </ul>
       </section>
 
-      <section id="do-and-do-not" className="scroll-mt-24 grid gap-4 md:grid-cols-2">
+      <section id={LEGACY_SECTION_IDS.doAndDoNot} className="scroll-mt-24 grid gap-4 md:grid-cols-2">
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 dark:bg-emerald-500/10">
           <p className="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">✓ Do</p>
           <p className="mt-3 font-[family-name:var(--font-playfair)] text-lg font-semibold leading-snug text-emerald-900 dark:text-emerald-200">Peer-to-Peer Learning in APA Headings</p>
@@ -150,6 +148,6 @@ export function ArticleMainContent({
           {article.author} is part of the TitleCase editorial team, focused on practical style-guide implementation for academic and professional writing.
         </p>
       </section>
-    </article>
+    </ArticleShell>
   )
 }
