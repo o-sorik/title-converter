@@ -14,6 +14,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/blog/categories",
   },
+  openGraph: {
+    title: "Blog Categories",
+    description: "Explore writing and capitalization categories.",
+    type: "website",
+    url: `${SITE_URL}/blog/categories`,
+    siteName: "Title Case Converter Online",
+    locale: "en_US",
+  },
 }
 
 export default function BlogCategoriesPage() {
