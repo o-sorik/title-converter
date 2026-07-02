@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { BlogPostingJsonLd, BreadcrumbListJsonLd } from "@/components/json-ld"
 import { ReadingProgressBar } from "@/components/blog/reading-progress"
-import { BottomCta, ComparisonCards, FaqBlock } from "@/components/blog/sections"
+import { BottomCta } from "@/components/blog/sections"
 import { ArticleCardsGrid } from "@/components/blog/article/article-cards-grid"
 import { ArticleHeader } from "@/components/blog/article/article-header"
 import { ArticleMainContent } from "@/components/blog/article/article-main-content"
@@ -60,8 +60,6 @@ export default async function ArticlePage({ params, searchParams }: Props) {
     relatedTitle,
     recommendedTitle,
     tocItems,
-    faqs,
-    comparisons,
   } = viewModel
 
   return (
@@ -94,19 +92,12 @@ export default async function ArticlePage({ params, searchParams }: Props) {
         <ArticleSidebar related={related} tocItems={tocItems} relatedTitle={relatedTitle} />
       </section>
 
-      <div id="article-faqs" className="scroll-mt-24">
-        <FaqBlock title="Article FAQs" items={faqs} />
-      </div>
-
-      <ArticleCardsGrid title={recommendedTitle} items={recommended} label="Recommended" />
-      <ArticleCardsGrid title={relatedTitle} items={related} label="Related" />
+      <ArticleCardsGrid title={recommendedTitle} items={recommended} />
 
       <ArticlePrevNext prevArticle={prevArticle} nextArticle={nextArticle} />
 
-      <ComparisonCards items={comparisons} />
-
       <BottomCta
-        title="Ready to format your APA headlines?"
+        title="Ready to format your headlines?"
         description="Convert faster with clear capitalization logic and reduce manual rewrites across your editorial workflow."
       />
     </>

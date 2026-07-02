@@ -26,14 +26,12 @@ const DEFAULT_TOC_ITEMS: TocItem[] = [
   { id: "key-takeaway", label: "Key takeaway" },
   { id: "rules-you-should-apply", label: "Capitalization rules" },
   { id: "do-and-do-not", label: "Do and do not examples" },
-  { id: "article-faqs", label: "FAQ and related guides" },
 ]
 
 const HIGH_INTENT_TOC_ITEMS: TocItem[] = [
   { id: "short-answer", label: "Short answer" },
   { id: "part-of-speech-logic", label: "POS rule logic" },
   { id: "do-and-do-not", label: "Examples" },
-  { id: "article-faqs", label: "FAQ and related guides" },
 ]
 
 const IS_X_TOC_ITEMS: TocItem[] = [
@@ -132,8 +130,6 @@ export function getArticlePageViewModel(slug: string) {
           : isHighIntentArticle
             ? HIGH_INTENT_TOC_ITEMS
             : DEFAULT_TOC_ITEMS,
-    faqs: articleFaqs,
-    comparisons: styleComparisons,
   }
 }
 
@@ -144,9 +140,19 @@ export function getBlogIndexPageViewModel() {
     .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     .slice(0, 3)
 
+  // The writing-tips panel should feature writing-tips content, not repeat
+  // the latest strip; top up with latest articles when the category is small.
+  const writingTipsPool = getArticlesByCategory("writing-tips")
+    .filter((article) => article.slug !== featured.slug)
+  const writingTips = [
+    ...writingTipsPool,
+    ...latest.filter((article) => !writingTipsPool.some((tip) => tip.slug === article.slug)),
+  ].slice(0, 3)
+
   return {
     featured,
     latest,
+    writingTips,
     categories: blogCategories,
     comparisons: styleComparisons,
     faqs: articleFaqs,
