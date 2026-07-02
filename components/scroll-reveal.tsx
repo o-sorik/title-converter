@@ -24,7 +24,10 @@ export function ScrollReveal({
           observer.disconnect()
         }
       },
-      { threshold: 0.1 }
+      // threshold 0: tall sections (rules, FAQ) span multiple viewports on
+      // mobile — a fractional threshold leaves the user scrolling through
+      // invisible content before the reveal fires
+      { threshold: 0, rootMargin: "0px 0px -40px 0px" }
     )
     observer.observe(el)
     return () => observer.disconnect()
