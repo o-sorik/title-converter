@@ -48,22 +48,28 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script_stop: true
-          command_timeout: 5m
+          # build + 120s health wait + potential rollback rebuild needs headroom
+          command_timeout: 15m
           script: |
             cd /var/www/titlecaseconverter
             git pull origin main
-            docker compose build --no-cache
-            docker compose up -d
-            echo "Waiting for container to become healthy..."
-            for i in $(seq 1 12); do
-              if docker compose ps | grep -q "healthy"; then
-                echo "Deploy successful – container is healthy"
-                exit 0
-              fi
-              echo "Attempt $i/12 – not healthy yet, waiting 10s..."
-              sleep 10
-            done
-            echo "Container did not become healthy in 120s"
-            docker compose ps
-            docker compose logs --tail 20
-            exit 1
+            bash scripts/deploy.sh
+
+      - name: Post-deploy smoke tests
+        run: |
+          sleep 5
+          check() {
+            code=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 15 "$1")
+            if [ "$code" != "200" ]; then
+              echo "FAIL: $1 returned $code"
+              exit 1
+            fi
+            echo "OK: $1 ($code)"
+          }
+          check https://titlecaseconverter.online/
+          check https://titlecaseconverter.online/blog
+          check https://titlecaseconverter.online/sentence-case-converter
+          check https://titlecaseconverter.online/sitemap.xml
+          curl -s --max-time 15 https://titlecaseconverter.online/ | grep -qi "converter" \
+            || { echo "FAIL: homepage content check"; exit 1; }
+          echo "All smoke tests passed"

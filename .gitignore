@@ -65,3 +65,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 lighthouse-report.json
+
+# deploy artifacts (created by scripts/deploy.sh on the server)
+deploy.log
