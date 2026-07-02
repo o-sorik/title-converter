@@ -141,13 +141,15 @@ export function getBlogIndexPageViewModel() {
     .slice(0, 3)
 
   // The writing-tips panel should feature writing-tips content, not repeat
-  // the latest strip; top up with latest articles when the category is small.
+  // the latest strip; top up with recent articles NOT already shown on the page.
   const writingTipsPool = getArticlesByCategory("writing-tips")
     .filter((article) => article.slug !== featured.slug)
-  const writingTips = [
-    ...writingTipsPool,
-    ...latest.filter((article) => !writingTipsPool.some((tip) => tip.slug === article.slug)),
-  ].slice(0, 3)
+  const shownSlugs = new Set([featured.slug, ...latest.map((article) => article.slug)])
+  const fallbackPool = [...blogArticles]
+    .filter((article) => !shownSlugs.has(article.slug))
+    .filter((article) => !writingTipsPool.some((tip) => tip.slug === article.slug))
+    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+  const writingTips = [...writingTipsPool, ...fallbackPool].slice(0, 3)
 
   return {
     featured,

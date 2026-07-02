@@ -175,15 +175,17 @@ export function TextConverter({
     // even for very large pasted texts: the conversion happens in an
     // interruptible deferred render while keystrokes commit immediately.
     const deferredInput = React.useDeferredValue(input)
+    // Built from deferredInput so URL/href rebuilding stays off the urgent
+    // keystroke path; the deferred value converges within a render.
     const navigationContext = React.useMemo(
         () => ({
-            input,
+            input: deferredInput,
             mode: activeType,
             titleStyle,
             outputMode: activeType,
             outputTitleStyle: titleStyle,
         }),
-        [input, activeType, titleStyle]
+        [deferredInput, activeType, titleStyle]
     )
 
     // Update active type if defaultMode changes (e.g. navigation)
@@ -266,8 +268,8 @@ export function TextConverter({
         [activeType, titleStyle, navigationContext]
     )
     const matchedHighIntentEntry = React.useMemo(
-        () => getHighIntentEntryFromInput(input),
-        [input]
+        () => getHighIntentEntryFromInput(deferredInput),
+        [deferredInput]
     )
     const highIntentContentHref = React.useMemo(
         () => (matchedHighIntentEntry ? getHighIntentBlogHref(matchedHighIntentEntry, navigationContext) : null),
@@ -295,13 +297,17 @@ export function TextConverter({
     const copyFeedbackBadgeText =
         copyFeedbackState === "success" ? "Copied" : copyFeedbackState === "error" ? "Copy failed" : ""
 
-    // Reveal animation only on the empty -> non-empty transition, not per keystroke
+    // Reveal animation only on the empty -> non-empty transition, not per keystroke.
+    // Also drop stale copy feedback: once the output changes, "Copied" no longer
+    // describes what is in the clipboard.
     React.useEffect(() => {
         const hasOutput = output.length > 0
         if (hasOutput && !hadOutputRef.current) {
             setReveal(true)
         }
         hadOutputRef.current = hasOutput
+        setCopied((prev) => (prev ? false : prev))
+        setCopyFeedbackState((prev) => (prev === "idle" ? prev : "idle"))
     }, [output])
 
     React.useEffect(() => {

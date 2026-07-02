@@ -142,17 +142,6 @@
 }
 
 /* UI/UX Enhancement Animations */
-@keyframes pulse-subtle {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.95;
-    transform: scale(1.005);
-  }
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -173,17 +162,6 @@
   }
 }
 
-@keyframes glow-dot {
-  0%, 100% {
-    opacity: 1;
-    box-shadow: 0 0 0px 0px oklch(0.7 0.17 160 / 0);
-  }
-  50% {
-    opacity: 0.5;
-    box-shadow: 0 0 6px 2px oklch(0.7 0.17 160 / 0.5);
-  }
-}
-
 @keyframes checkmark {
   0% {
     transform: scale(0) rotate(0deg);
@@ -197,10 +175,6 @@
 }
 
 /* Utility classes */
-.animate-pulse-subtle {
-  animation: pulse-subtle 0.6s ease-in-out;
-}
-
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -219,30 +193,6 @@
 }
 .animate-result-reveal {
   animation: result-reveal 200ms ease-out;
-}
-
-@keyframes shimmer-sweep {
-  from { transform: translateX(-100%); }
-  to   { transform: translateX(100%); }
-}
-.shimmer-btn {
-  position: relative;
-  overflow: hidden;
-}
-.shimmer-btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 40%,
-    rgba(255, 255, 255, 0.25) 50%,
-    transparent 60%
-  );
-  transform: translateX(-100%);
-}
-.shimmer-btn:hover:not(:disabled)::after {
-  animation: shimmer-sweep 600ms ease-in-out;
 }
 
 @keyframes ripple-burst {
@@ -279,10 +229,6 @@
 /* Hide Radix arrow for custom-styled tooltips */
 .tooltip-no-arrow > span[style] {
   display: none !important;
-}
-
-.animate-glow-dot {
-  animation: glow-dot 2.4s ease-in-out infinite;
 }
 
 /* Blog dark-theme contrast normalization */
