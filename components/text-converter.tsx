@@ -13,7 +13,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 
 import { convert, convertWithExplanations, type ConversionType, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
-import { createConversionSnapshot, hasPendingConversionChanges, syncSnapshotMode, type ConversionSnapshot } from "@/lib/conversion-session"
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
 import { getConverterContextStorageKey, parseConverterContextPayload } from "@/lib/converter-context"
@@ -78,8 +77,6 @@ interface TextConverterProps {
     defaultMode?: ConversionType
     initialInput?: string
     initialTitleStyle?: TitleCaseStyle
-    initialOutputMode?: ConversionType
-    initialOutputTitleStyle?: TitleCaseStyle
     initialContextRef?: string
 }
 
@@ -159,38 +156,30 @@ export function TextConverter({
     defaultMode = "title",
     initialInput = "",
     initialTitleStyle = "standard",
-    initialOutputMode,
-    initialOutputTitleStyle,
     initialContextRef,
 }: TextConverterProps) {
     const [input, setInput] = React.useState(initialInput)
     const [activeType, setActiveType] = React.useState<ConversionType>(defaultMode)
-    const [conversionSnapshot, setConversionSnapshot] = React.useState<ConversionSnapshot | null>(
-        createConversionSnapshot(
-            initialInput,
-            initialOutputMode ?? defaultMode,
-            initialOutputTitleStyle ?? initialTitleStyle
-        )
-    )
     const [copied, setCopied] = React.useState(false)
     const [copyFeedbackState, setCopyFeedbackState] = React.useState<CopyFeedbackState>("idle")
     const [ripple, setRipple] = React.useState(0)
     const [copyFeedbackTick, setCopyFeedbackTick] = React.useState(0)
-    const [outputKey, setOutputKey] = React.useState(initialInput ? 1 : 0)
     const [showExplanations, setShowExplanations] = React.useState(false)
     const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>(initialTitleStyle)
-    const preserveInitialOutputModeRef = React.useRef(Boolean(initialOutputMode))
+    const [reveal, setReveal] = React.useState(false)
+    const hadOutputRef = React.useRef(false)
     const buttonRefs = React.useRef<Partial<Record<ConversionType, HTMLButtonElement>>>({})
     const [pillStyles, setPillStyles] = React.useState<Record<string, React.CSSProperties>>({})
     const feedbackEmail = process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ?? "support@titlecaseconverter.online"
-    const outputTitleStyle = conversionSnapshot?.titleStyle ?? titleStyle
-    const outputType = conversionSnapshot?.type ?? activeType
+    // Deferring the derived output (not the input value) keeps typing responsive
+    // even for very large pasted texts: the conversion happens in an
+    // interruptible deferred render while keystrokes commit immediately.
+    const deferredInput = React.useDeferredValue(input)
     const navigationContext = React.useMemo(
         () => ({
             input,
             mode: activeType,
             titleStyle,
-            // Navigation should preserve current user intent, not stale converted snapshot.
             outputMode: activeType,
             outputTitleStyle: titleStyle,
         }),
@@ -200,13 +189,6 @@ export function TextConverter({
     // Update active type if defaultMode changes (e.g. navigation)
     React.useEffect(() => {
         setActiveType(defaultMode)
-        setConversionSnapshot((prev) => {
-            if (preserveInitialOutputModeRef.current) {
-                preserveInitialOutputModeRef.current = false
-                return prev
-            }
-            return syncSnapshotMode(prev, defaultMode)
-        })
     }, [defaultMode])
 
     // Set initial pill position after mount
@@ -274,10 +256,6 @@ export function TextConverter({
             setInput(restored.input)
             setActiveType(restored.mode)
             setTitleStyle(restored.titleStyle)
-            setConversionSnapshot(
-                createConversionSnapshot(restored.input, restored.outputMode, restored.outputTitleStyle)
-            )
-            setOutputKey(restored.input ? 1 : 0)
         } catch {
             // no-op: context restoration is best-effort
         }
@@ -295,47 +273,53 @@ export function TextConverter({
         () => (matchedHighIntentEntry ? getHighIntentBlogHref(matchedHighIntentEntry, navigationContext) : null),
         [matchedHighIntentEntry, navigationContext]
     )
-    const hasPendingChanges = hasPendingConversionChanges(conversionSnapshot, input, activeType, titleStyle)
-    const outputSupportsExplanations = conversionSnapshot
-        ? EXPLANATION_MODES.includes(conversionSnapshot.type)
-        : false
+    const outputSupportsExplanations = EXPLANATION_MODES.includes(activeType)
     const conversionOptions = React.useMemo(
-        () => outputType === "title" ? { titleStyle: outputTitleStyle } : {},
-        [outputType, outputTitleStyle]
+        () => activeType === "title" ? { titleStyle } : {},
+        [activeType, titleStyle]
     )
 
-    // Derived state for output and explanations
+    // Derived state for output and explanations - converts live as the user types
     const { output, explanations } = React.useMemo(() => {
-        if (!conversionSnapshot) {
-            return { output: "", explanations: [] }
+        if (!deferredInput.trim()) {
+            return { output: "", explanations: [] as WordExplanation[] }
         }
         if (showExplanations && outputSupportsExplanations) {
-            return convertWithExplanations(conversionSnapshot.input, outputType, conversionOptions)
+            return convertWithExplanations(deferredInput, activeType, conversionOptions)
         }
-        return { output: convert(conversionSnapshot.input, outputType, conversionOptions), explanations: [] }
-    }, [conversionSnapshot, outputType, showExplanations, outputSupportsExplanations, conversionOptions])
+        return { output: convert(deferredInput, activeType, conversionOptions), explanations: [] as WordExplanation[] }
+    }, [deferredInput, activeType, showExplanations, outputSupportsExplanations, conversionOptions])
     const canCopy = Boolean(output)
     const copyFeedbackMessage = getCopyFeedbackMessage(copyFeedbackState, canCopy)
     const showVisibleCopyFeedback = copyFeedbackState === "success" || copyFeedbackState === "error"
     const copyFeedbackBadgeText =
         copyFeedbackState === "success" ? "Copied" : copyFeedbackState === "error" ? "Copy failed" : ""
 
+    // Reveal animation only on the empty -> non-empty transition, not per keystroke
+    React.useEffect(() => {
+        const hasOutput = output.length > 0
+        if (hasOutput && !hadOutputRef.current) {
+            setReveal(true)
+        }
+        hadOutputRef.current = hasOutput
+    }, [output])
+
     React.useEffect(() => {
         try {
             window.sessionStorage.setItem(
                 getConverterContextStorageKey(),
                 JSON.stringify({
-                    input,
+                    input: deferredInput,
                     mode: activeType,
                     titleStyle,
-                    outputMode: outputType,
-                    outputTitleStyle,
+                    outputMode: activeType,
+                    outputTitleStyle: titleStyle,
                 })
             )
         } catch {
             // no-op: persistence is best-effort
         }
-    }, [input, activeType, titleStyle, outputType, outputTitleStyle])
+    }, [deferredInput, activeType, titleStyle])
 
     React.useEffect(() => {
         if (!outputSupportsExplanations && showExplanations) {
@@ -351,15 +335,6 @@ export function TextConverter({
         }, COPY_FEEDBACK_DISMISS_MS)
         return () => window.clearTimeout(timeoutId)
     }, [copyFeedbackState, copyFeedbackTick])
-
-    const handleConvert = () => {
-        const nextSnapshot = createConversionSnapshot(input, activeType, titleStyle)
-        if (!nextSnapshot) return
-        setConversionSnapshot(nextSnapshot)
-        setCopied(false)
-        setCopyFeedbackState("idle")
-        setOutputKey((prev) => prev + 1)
-    }
 
     const handleCopy = async () => {
         if (!output) return
@@ -388,10 +363,8 @@ export function TextConverter({
 
     const handleClear = () => {
         setInput("")
-        setConversionSnapshot(null)
         setCopied(false)
         setCopyFeedbackState("idle")
-        setOutputKey((prev) => prev + 1)
         toast.message("Cleared text")
     }
 
@@ -487,6 +460,37 @@ export function TextConverter({
                                 </div>
                             </div>
                         ))}
+
+                        {activeType === "title" && (
+                            // Desktop style tabs live next to the mode groups; mobile
+                            // uses the compact select above the input
+                            <div className="hidden md:flex flex-col items-center gap-1 sm:gap-1.5" data-testid="style-controls">
+                                <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/60">
+                                    Title Style
+                                </span>
+                                <Tabs
+                                    value={titleStyle}
+                                    onValueChange={(value) => setTitleStyle(value as TitleCaseStyle)}
+                                    className="w-fit"
+                                >
+                                    <TabsList className="w-fit h-auto flex-wrap justify-start gap-1 p-1 bg-zinc-100 dark:bg-zinc-900">
+                                        {TITLE_STYLES.map((style) => (
+                                            <TabsTrigger
+                                                key={style.id}
+                                                value={style.id}
+                                                data-active={titleStyle === style.id ? "true" : "false"}
+                                                className="h-8 px-3 flex-none"
+                                            >
+                                                {style.label}
+                                            </TabsTrigger>
+                                        ))}
+                                    </TabsList>
+                                </Tabs>
+                                <p className="text-xs text-muted-foreground">
+                                    {TITLE_STYLES.find((style) => style.id === titleStyle)?.hint}
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     <div className="order-1 md:order-2 grid md:grid-cols-2 gap-6 relative">
@@ -570,12 +574,6 @@ export function TextConverter({
                                     onChange={(e) => setInput(e.target.value)}
                                     aria-describedby="converter-input-helper"
                                     aria-label="Input text"
-                                    onKeyDown={(e) => {
-                                        if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-                                            e.preventDefault()
-                                            handleConvert()
-                                        }
-                                    }}
                                 />
                                 <div
                                     id="converter-input-helper"
@@ -587,30 +585,11 @@ export function TextConverter({
                             {input && <TextStats text={input} />}
                         </div>
 
-                        {/* Mobile-only Convert button between fields */}
-                        <div className="md:hidden flex flex-col items-center gap-2">
-                            <Button
-                                type="button"
-                                onClick={handleConvert}
-                                disabled={!input.trim()}
-                                className="w-full min-h-11 shimmer-btn"
-                                aria-keyshortcuts="Control+Enter Meta+Enter"
-                                title="Convert text (Ctrl/Cmd + Enter)"
-                            >
-                                Convert
-                            </Button>
-                            {hasPendingChanges && output && (
-                                <p className="text-xs text-muted-foreground text-center">
-                                    Settings changed. Run convert to refresh output.
-                                </p>
-                            )}
-                        </div>
-
                         {/* Output Area */}
                         <div className="space-y-2 group" data-testid="output-zone">
                             <div className="flex items-center justify-between px-1">
                                 <label htmlFor="converter-output" className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
-                                    {CONVERSION_TYPES.find(t => t.id === outputType)?.label} output
+                                    {CONVERSION_TYPES.find(t => t.id === activeType)?.label} output
                                 </label>
                                 <div className="flex items-center gap-2">
                                     <span
@@ -625,10 +604,24 @@ export function TextConverter({
                                     >
                                         {copyFeedbackBadgeText}
                                     </span>
+                                    {outputSupportsExplanations && canCopy && (
+                                        <Button
+                                            variant={showExplanations ? "secondary" : "ghost"}
+                                            size="sm"
+                                            className="h-11 sm:h-8 px-2 gap-1.5 text-muted-foreground"
+                                            onClick={() => setShowExplanations((prev) => !prev)}
+                                            aria-pressed={showExplanations}
+                                            title="See why each word was capitalized"
+                                            data-testid="explanations-toggle"
+                                        >
+                                            <IconInfoCircle className="h-4 w-4" />
+                                            <span className="hidden sm:inline">Explain</span>
+                                        </Button>
+                                    )}
                                     <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-11 w-11 sm:h-8 sm:w-8 relative overflow-hidden"
+                                        variant="outline"
+                                        size="sm"
+                                        className="h-11 sm:h-8 px-3 gap-1.5 relative overflow-hidden"
                                         onClick={() => { setRipple(k => k + 1); handleCopy() }}
                                         disabled={!canCopy}
                                         title={copied ? "Copied!" : "Copy Result"}
@@ -643,7 +636,7 @@ export function TextConverter({
                                         ) : (
                                             <IconCopy className="h-4 w-4" />
                                         )}
-                                        <span className="sr-only">Copy</span>
+                                        <span className="hidden sm:inline">{copied ? "Copied" : "Copy"}</span>
                                     </Button>
                                 </div>
                             </div>
@@ -657,14 +650,14 @@ export function TextConverter({
                             </p>
                             <Textarea
                                 id="converter-output"
-                                key={outputKey}
                                 readOnly
                                 placeholder="Result Will Appear Here..."
                                 className={cn(
-                                  "min-h-[140px] sm:min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 text-muted-foreground font-medium focus-visible:ring-0",
-                                  outputKey > 0 && "animate-result-reveal"
+                                  "min-h-[140px] sm:min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 text-foreground font-medium focus-visible:ring-0 placeholder:text-zinc-500 dark:placeholder:text-zinc-400",
+                                  reveal && "animate-result-reveal"
                                 )}
                                 value={output}
+                                onAnimationEnd={() => setReveal(false)}
                                 aria-describedby="copy-feedback"
                                 aria-label="Converted output"
                             />
@@ -682,129 +675,55 @@ export function TextConverter({
                                 </Link>
                             </div>
                             {output && <TextStats text={output} />}
-                        </div>
-                    </div>
-                    <div className="order-3 pt-2 flex flex-col items-center gap-2">
-                        <Button
-                            type="button"
-                            onClick={handleConvert}
-                            disabled={!input.trim()}
-                            data-testid="convert-action"
-                            className="hidden md:inline-flex w-full sm:w-auto min-w-32 min-h-11 shimmer-btn"
-                            aria-keyshortcuts="Control+Enter Meta+Enter"
-                            title="Convert text (Ctrl/Cmd + Enter)"
-                        >
-                            Convert
-                        </Button>
-                        {hasPendingChanges && output && (
-                            <p className="hidden md:block text-xs text-muted-foreground text-center">
-                                Settings changed. Run convert to refresh output.
-                            </p>
-                        )}
-                        <div
-                            className="flex flex-wrap items-center justify-center gap-3 pt-1 text-xs"
-                            data-testid="converter-content-continuity"
-                        >
-                            <Link
-                                href="/blog/categories/grammar-101"
-                                className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-                                aria-label="Browse Grammar 101 capitalization questions"
-                            >
-                                <span>Grammar 101</span>
-                                <IconExternalLink className="h-3 w-3" />
-                            </Link>
-                            {highIntentContentHref && (
-                                <>
-                                    <span className="text-muted-foreground/40">·</span>
-                                    <Link
-                                        href={highIntentContentHref}
-                                        className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-                                        aria-label="Open matched Grammar 101 guidance for this capitalization query"
-                                    >
-                                        <span>See matched answer</span>
-                                        <IconExternalLink className="h-3 w-3" />
-                                    </Link>
-                                </>
+                            {/* Explanations Panel - lives right under the output it explains */}
+                            {showExplanations && explanations.length > 0 && (
+                                <ExplanationsPanel explanations={explanations} activeType={activeType} titleStyle={titleStyle} />
                             )}
                         </div>
                     </div>
 
-                    {activeType === "title" && (
-                        // Desktop style tabs; mobile uses the compact select above the input
-                        <div className="order-4 hidden md:block space-y-2 pt-1" data-testid="style-controls">
-                            <p className="text-sm font-medium text-muted-foreground text-left">Title Style</p>
-                            <Tabs
-                                value={titleStyle}
-                                onValueChange={(value) => setTitleStyle(value as TitleCaseStyle)}
-                                className="w-fit"
-                            >
-                                <TabsList className="w-fit h-auto flex-wrap justify-start gap-1 p-1 bg-zinc-100 dark:bg-zinc-900">
-                                    {TITLE_STYLES.map((style) => (
-                                        <TabsTrigger
-                                            key={style.id}
-                                            value={style.id}
-                                            data-active={titleStyle === style.id ? "true" : "false"}
-                                            className="h-8 px-3 flex-none"
-                                        >
-                                            {style.label}
-                                        </TabsTrigger>
-                                    ))}
-                                </TabsList>
-                            </Tabs>
-                            <p className="text-xs text-muted-foreground text-left">
-                                {TITLE_STYLES.find((style) => style.id === titleStyle)?.hint}
-                            </p>
-                            <div className="flex items-center justify-between" data-testid="style-rules-entry">
-                                <Link
-                                    href={ruleGuidance.href}
-                                    className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
-                                    aria-label={ruleGuidance.description}
-                                >
-                                    <span>{ruleGuidance.shortLabel}</span>
-                                    <IconExternalLink className="h-3 w-3" />
-                                </Link>
-                                <button
-                                    type="button"
-                                    onClick={handleReportTitleStyleError}
-                                    aria-label="Report title style issue"
-                                    className="inline-flex cursor-pointer items-center gap-1 text-xs text-muted-foreground/60 hover:text-muted-foreground underline-offset-4 hover:underline"
-                                >
-                                    <IconBug className="h-3 w-3" />
-                                    <span>Report error</span>
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Show Explanations Toggle */}
-                    {outputSupportsExplanations && output.length > 0 && (
-                        <div className="order-5 flex justify-center pt-4">
-                            <Button
-                                variant={showExplanations ? "default" : "outline"}
-                                size="sm"
-                                onClick={() => setShowExplanations(!showExplanations)}
-                                className={`rounded-full gap-2 transition-all ${showExplanations ? 'bg-blue-500 hover:bg-blue-600 text-white' : ''}`}
-                                title="See why each word was capitalized"
-                            >
-                                <IconInfoCircle className="h-4 w-4" />
-                                {showExplanations ? "Hide Explanations" : "Show Explanations"}
-                            </Button>
-                        </div>
-                    )}
-
-                    {/* Explanations Panel */}
-                    {showExplanations && explanations.length > 0 && (
-                        <div className="order-5">
-                            <ExplanationsPanel explanations={explanations} activeType={outputType} titleStyle={outputTitleStyle} />
-                        </div>
-                    )}
-
-                    <p className="order-6 text-center text-xs text-muted-foreground pt-2">
-                        Checking multiple headlines?{" "}
-                        <Link href="/batch-checker" className="underline underline-offset-4 hover:text-foreground">
-                            Open Batch Headline Checker →
+                    <div
+                        className="order-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 pt-2 text-xs"
+                        data-testid="converter-content-continuity"
+                    >
+                        <Link
+                            href="/blog/categories/grammar-101"
+                            className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                            aria-label="Browse Grammar 101 capitalization questions"
+                        >
+                            <span>Grammar 101</span>
+                            <IconExternalLink className="h-3 w-3" />
                         </Link>
-                    </p>
+                        {highIntentContentHref && (
+                            <Link
+                                href={highIntentContentHref}
+                                className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                                aria-label="Open matched Grammar 101 guidance for this capitalization query"
+                            >
+                                <span>See matched answer</span>
+                                <IconExternalLink className="h-3 w-3" />
+                            </Link>
+                        )}
+                        <Link
+                            href="/batch-checker"
+                            className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground underline-offset-4 hover:underline"
+                            aria-label="Open the batch headline checker for multiple headlines"
+                        >
+                            <span>Batch Headline Checker</span>
+                            <IconExternalLink className="h-3 w-3" />
+                        </Link>
+                        {activeType === "title" && (
+                            <button
+                                type="button"
+                                onClick={handleReportTitleStyleError}
+                                aria-label="Report title style issue"
+                                className="inline-flex cursor-pointer items-center gap-1 text-muted-foreground/60 hover:text-muted-foreground underline-offset-4 hover:underline"
+                            >
+                                <IconBug className="h-3 w-3" />
+                                <span>Report error</span>
+                            </button>
+                        )}
+                    </div>
                 </CardContent>
             </Card>
         </section>

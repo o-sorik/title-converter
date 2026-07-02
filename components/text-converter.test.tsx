@@ -17,11 +17,6 @@ function extractCopyActionMarkup(html: string): string {
   return match?.[0] ?? ""
 }
 
-function extractStyleRulesEntryMarkup(html: string): string {
-  const match = html.match(/data-testid="style-rules-entry"[\s\S]*?<\/div>/)
-  return match?.[0] ?? ""
-}
-
 function extractOutputRulesEntryMarkup(html: string): string {
   const match = html.match(/data-testid="output-rules-entry"[\s\S]*?<\/div>/)
   return match?.[0] ?? ""
@@ -72,13 +67,13 @@ test.each([
 
 test("mode controls expose keyboard-friendly toggle semantics", () => {
   const html = renderToStaticMarkup(<TextConverter defaultMode="title" />)
-
   expect(html).toContain('aria-label="Mode Controls"')
   // 8 mode buttons in default (title) mode — Fun group is hidden unless activeType is alternating/inverse
   expect((html.match(/aria-pressed="/g) ?? []).length).toBe(8)
-  expect(html).toContain('data-testid="convert-action"')
-  expect(html).toContain(">Convert<")
-  expect(html).toContain('aria-keyshortcuts="Control+Enter Meta+Enter"')
+  // Conversion is realtime — there is no Convert action or shortcut anymore
+  expect(html).not.toContain('data-testid="convert-action"')
+  expect(html).not.toContain(">Convert<")
+  expect(html).not.toContain("aria-keyshortcuts")
 })
 
 test("style controls expose active style state and show expected options in title mode", () => {
@@ -108,22 +103,20 @@ test("style selection updates title output for the same input", () => {
   expect(apHtml).toContain("Walking During the Light")
 })
 
-test("shows style-contextual guidance entry points in title mode", () => {
+test("shows style-contextual guidance entry point in title mode without duplicates", () => {
   const html = renderToStaticMarkup(
     <TextConverter defaultMode="title" initialInput="walking during the light" initialTitleStyle="ap" />
   )
-  const styleRulesEntry = extractStyleRulesEntryMarkup(html)
   const outputRulesEntry = extractOutputRulesEntryMarkup(html)
 
-  expect(html).toContain('data-testid="style-rules-entry"')
+  // Single guidance entry point: the old style-rules-entry duplicated the same link
+  expect(html).not.toContain('data-testid="style-rules-entry"')
   expect(html).toContain('data-testid="output-rules-entry"')
-  expect(styleRulesEntry).toContain("AP rules")
   expect(outputRulesEntry).toContain("AP rules")
-  expect(styleRulesEntry).toContain('href="/capitalization-rules-guide?mode=title&amp;style=ap&amp;ctx_ref=latest')
   expect(outputRulesEntry).toContain('href="/capitalization-rules-guide?mode=title&amp;style=ap&amp;ctx_ref=latest')
-  expect(styleRulesEntry).toContain("ctx_mode=title")
-  expect(styleRulesEntry).toContain("ctx_style=ap")
-  expect(styleRulesEntry).toContain("ctx_output_mode=title")
+  expect(outputRulesEntry).toContain("ctx_mode=title")
+  expect(outputRulesEntry).toContain("ctx_style=ap")
+  expect(outputRulesEntry).toContain("ctx_output_mode=title")
 })
 
 test("keeps non-title guidance visible without style-specific claims", () => {
@@ -167,7 +160,7 @@ test("shows explicit accessible copy feedback text when output is unavailable", 
   expect(html).toContain('data-testid="copy-feedback"')
   expect(html).toContain('role="status"')
   expect(html).toContain('aria-live="polite"')
-  expect(html).toContain("Convert text to enable copy.")
+  expect(html).toContain("Type or paste text to enable copy.")
   expect(copyAction).toContain('disabled=""')
 })
 
@@ -224,13 +217,21 @@ test("shows Grammar 101 browse link when converter input does not match high-int
   expect(html).not.toContain("See matched answer")
 })
 
-test("uses current selected mode in continuity context even when snapshot output is stale", () => {
+test("surfaces the explanations toggle next to the output only when supported output exists", () => {
+  const withOutput = renderToStaticMarkup(<TextConverter defaultMode="title" initialInput="hello world" />)
+  const emptyInput = renderToStaticMarkup(<TextConverter defaultMode="title" />)
+  const unsupportedMode = renderToStaticMarkup(<TextConverter defaultMode="camel" initialInput="hello world" />)
+
+  expect(withOutput).toContain('data-testid="explanations-toggle"')
+  expect(emptyInput).not.toContain('data-testid="explanations-toggle"')
+  expect(unsupportedMode).not.toContain('data-testid="explanations-toggle"')
+})
+
+test("continuity context and output always follow the current selected mode", () => {
   const html = renderToStaticMarkup(
     <TextConverter
       defaultMode="sentence"
       initialInput="is and capitalized"
-      initialOutputMode="title"
-      initialOutputTitleStyle="ap"
       initialTitleStyle="chicago"
     />
   )
@@ -241,4 +242,8 @@ test("uses current selected mode in continuity context even when snapshot output
   expect(html).toContain("ctx_output_mode=sentence")
   expect(html).toContain("ctx_output_style=chicago")
   expect(html).not.toContain("ctx_output_mode=title")
+  // Realtime: output renders immediately in the selected mode, no stale state
+  expect(html).toContain("Sentence case output")
+  expect(html).toContain("Is and capitalized")
+  expect(html).not.toContain("Settings changed")
 })

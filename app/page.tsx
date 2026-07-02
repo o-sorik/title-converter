@@ -73,8 +73,6 @@ export default async function Home({ searchParams }: HomePageProps) {
             defaultMode={defaultMode}
             initialInput={converterContext.initialInput}
             initialTitleStyle={converterContext.initialTitleStyle}
-            initialOutputMode={converterContext.initialOutputMode}
-            initialOutputTitleStyle={converterContext.initialOutputTitleStyle}
             initialContextRef={converterContext.initialContextRef}
           />
 
