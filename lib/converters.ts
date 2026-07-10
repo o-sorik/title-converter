@@ -258,11 +258,14 @@ function getTitleCaseDecision(word: string, style: TitleCaseStyle): { convertToL
     }
 
     if (PREPOSITIONS.has(word)) {
-        if (style === "ap" && word.length >= 5) {
-            return { convertToLower: false, reason: "AP style: preposition with 5+ letters" };
+        if (style === "ap" && word.length >= 4) {
+            return { convertToLower: false, reason: "AP style: preposition with 4+ letters" };
         }
         if (style === "apa" && word.length >= 4) {
             return { convertToLower: false, reason: "APA style: preposition with 4+ letters" };
+        }
+        if (style === "chicago" && word.length >= 5) {
+            return { convertToLower: false, reason: "Chicago style (18th ed.): preposition with 5+ letters" };
         }
         return { convertToLower: true, reason: "Preposition" };
     }

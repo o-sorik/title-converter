@@ -13,9 +13,10 @@ test('supports AP-style title case differences', () => {
     expect(convert('walking during the light', 'title', { titleStyle: 'ap' })).toBe('Walking During the Light')
 })
 
-test('supports APA-style differences for 4+ letter prepositions', () => {
-    expect(convert('walking into the light', 'title', { titleStyle: 'ap' })).toBe('Walking into the Light')
+test('capitalizes 4-letter prepositions in ap and apa styles', () => {
+    expect(convert('walking into the light', 'title', { titleStyle: 'ap' })).toBe('Walking Into the Light')
     expect(convert('walking into the light', 'title', { titleStyle: 'apa' })).toBe('Walking Into the Light')
+    expect(convert('dancing with wolves', 'title', { titleStyle: 'ap' })).toBe('Dancing With Wolves')
 })
 
 test('updates title output when switching style contexts for the same input', () => {
@@ -29,14 +30,20 @@ test('updates title output when switching style contexts for the same input', ()
 
     expect(standard).toBe('Walking during the Light')
     expect(ap).toBe('Walking During the Light')
-    expect(chicago).toBe('Walking during the Light')
+    expect(chicago).toBe('Walking During the Light')
     expect(mla).toBe('Walking during the Light')
     expect(apa).toBe('Walking During the Light')
 })
 
-test('keeps long prepositions lowercase in chicago and mla styles', () => {
-    expect(convert('walking during the light', 'title', { titleStyle: 'chicago' })).toBe('Walking during the Light')
+test('chicago capitalizes 5+ letter prepositions but keeps 4-letter ones lowercase (18th ed.)', () => {
+    expect(convert('all about eve', 'title', { titleStyle: 'chicago' })).toBe('All About Eve')
+    expect(convert('a room with a view', 'title', { titleStyle: 'chicago' })).toBe('A Room with a View')
+    expect(convert('walking into the light', 'title', { titleStyle: 'chicago' })).toBe('Walking into the Light')
+})
+
+test('mla keeps prepositions lowercase regardless of length', () => {
     expect(convert('walking during the light', 'title', { titleStyle: 'mla' })).toBe('Walking during the Light')
+    expect(convert('dancing with wolves', 'title', { titleStyle: 'mla' })).toBe('Dancing with Wolves')
 })
 
 test('capitalizes first word after colon', () => {
@@ -61,9 +68,10 @@ test('capitalizes first element in hyphenated compounds', () => {
     expect(convert('an up-to-date guide', 'title')).toBe('An Up-to-Date Guide')
 })
 
-test('ap vs chicago differences inside hyphenated compounds', () => {
+test('style thresholds apply inside hyphenated compounds', () => {
     expect(convert('a walk-through guide', 'title', { titleStyle: 'ap' })).toBe('A Walk-Through Guide')
-    expect(convert('a walk-through guide', 'title', { titleStyle: 'chicago' })).toBe('A Walk-through Guide')
+    expect(convert('a walk-through guide', 'title', { titleStyle: 'chicago' })).toBe('A Walk-Through Guide')
+    expect(convert('a walk-through guide', 'title', { titleStyle: 'mla' })).toBe('A Walk-through Guide')
 })
 
 test('preserves acronym and custom casing', () => {
@@ -298,5 +306,5 @@ test('all five styles handle hyphenated compounds with prepositions', () => {
     expect(convert(input, 'title', { titleStyle: 'ap' })).toBe('A Run-Through of the Plan')
     expect(convert(input, 'title', { titleStyle: 'apa' })).toBe('A Run-Through of the Plan')
     expect(convert(input, 'title', { titleStyle: 'mla' })).toBe('A Run-through of the Plan')
-    expect(convert(input, 'title', { titleStyle: 'chicago' })).toBe('A Run-through of the Plan')
+    expect(convert(input, 'title', { titleStyle: 'chicago' })).toBe('A Run-Through of the Plan')
 })

@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { TITLE_CASE_MISTAKES } from "@/lib/home-content-data"
+import { POPULAR_CAPITALIZATION_QUESTIONS, TITLE_CASE_MISTAKES } from "@/lib/home-content-data"
 
 interface FAQ {
   question: string
@@ -105,6 +105,23 @@ export function ContentSection({ faqs }: ContentSectionProps) {
             </div>
 
             <div className="space-y-4">
+                <h2 id="popular-capitalization-questions" className="scroll-mt-20 text-3xl font-bold tracking-tight">Popular Capitalization Questions</h2>
+                <p className="text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
+                    Capitalization is not only about titles. These are the questions writers look up most often, answered with AP, APA, MLA, and Chicago guidance.
+                </p>
+                <ul className="grid gap-x-8 gap-y-3 md:grid-cols-2">
+                    {POPULAR_CAPITALIZATION_QUESTIONS.map((item) => (
+                        <li key={item.href} className="text-sm">
+                            <Link href={item.href} className="font-medium underline underline-offset-4 hover:text-zinc-950 dark:hover:text-zinc-50">
+                                {item.question}
+                            </Link>
+                            <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">{item.hint}</p>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <div className="space-y-4">
                 <h2 id="title-case-cheat-sheet" className="scroll-mt-20 text-3xl font-bold tracking-tight">Title Case Rules Cheat Sheet</h2>
                 <ol className="space-y-3 list-decimal list-inside text-zinc-700 dark:text-zinc-300">
                     <li>Capitalize the first and last word. Example: &quot;In the End&quot;.</li>
@@ -161,7 +178,15 @@ export function ContentSection({ faqs }: ContentSectionProps) {
                     {" "}
                     <Link href="/slug-generator" className="underline underline-offset-4">URL Slug Generator</Link>,
                     {" "}
-                    <Link href="/camel-case-converter" className="underline underline-offset-4">Camel Case Converter</Link>.
+                    <Link href="/camel-case-converter" className="underline underline-offset-4">Camel Case Converter</Link>,
+                    {" "}
+                    <Link href="/pascal-case-converter" className="underline underline-offset-4">Pascal Case Converter</Link>,
+                    {" "}
+                    <Link href="/snake-case-converter" className="underline underline-offset-4">Snake Case Converter</Link>,
+                    {" "}
+                    <Link href="/kebab-case-converter" className="underline underline-offset-4">Kebab Case Converter</Link>,
+                    {" "}
+                    <Link href="/alternating-case-converter" className="underline underline-offset-4">Alternating Case Converter</Link>.
                 </p>
             </div>
         </section>

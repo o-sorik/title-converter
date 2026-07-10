@@ -40,7 +40,7 @@ const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
 const EXPLANATION_MODES: ConversionType[] = ["title", "sentence"]
 const TITLE_STYLES: { id: TitleCaseStyle; label: string; hint: string }[] = [
     { id: "standard", label: "Standard", hint: "Balanced default title casing" },
-    { id: "ap", label: "AP", hint: "AP-like: capitalize prepositions with 5+ letters" },
+    { id: "ap", label: "AP", hint: "AP-like: capitalize prepositions with 4+ letters" },
     { id: "chicago", label: "Chicago", hint: "Classic editorial style defaults" },
     { id: "mla", label: "MLA", hint: "Common humanities title style" },
     { id: "apa", label: "APA", hint: "Academic-friendly title style" },

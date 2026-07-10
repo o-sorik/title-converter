@@ -6,6 +6,7 @@ import {
   FAQ_SECTION_ID,
 } from "./article-content"
 import { WRITING_TIPS_ARTICLES } from "./writing-tips-article-data"
+import { convert } from "./converters"
 
 describe("getArticleContentBySlug", () => {
   test("dispatches by template priority: is-x wins over high-intent", () => {
@@ -59,5 +60,38 @@ describe("getArticleTocItems", () => {
     }
     // Sources section stays out of the TOC.
     expect(toc.some((item) => item.id === "sources")).toBe(false)
+  })
+})
+
+describe("styleGuideMatrix alignment with converter engine", () => {
+  test("word-level matrix rows match actual converter output per style", () => {
+    const styleMap = { ap: "ap", apa: "apa", chicago: "chicago", mla: "mla" } as const
+    let checkedRows = 0
+
+    for (const article of WRITING_TIPS_ARTICLES) {
+      for (const section of article.sections) {
+        for (const block of section.blocks) {
+          if (block.type !== "styleGuideMatrix") continue
+          for (const row of block.rows) {
+            // Only rows naming a concrete word, e.g. `with (4 letters)` –
+            // category rows like `Prepositions (5+ letters)` are not testable.
+            const match = row.label.match(/^([a-z]+) \(\d+ letters\)$/)
+            if (!match) continue
+            checkedRows++
+            const word = match[1]
+            for (const [guide, style] of Object.entries(styleMap)) {
+              const output = convert(`books ${word} words`, "title", { titleStyle: style })
+              const capitalized = output.split(" ")[1][0] === word[0].toUpperCase()
+              expect(
+                capitalized,
+                `"${row.label}" / ${guide}: matrix says ${row.guides[guide as keyof typeof row.guides]}, engine output "${output}"`,
+              ).toBe(row.guides[guide as keyof typeof row.guides])
+            }
+          }
+        }
+      }
+    }
+
+    expect(checkedRows).toBeGreaterThanOrEqual(6)
   })
 })

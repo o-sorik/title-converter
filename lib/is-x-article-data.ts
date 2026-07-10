@@ -38,16 +38,16 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   {
     slug: "with-capitalized-in-title-case",
     word: "with",
-    answerBox: `Yes – in most style guides, "with" is capitalized in a title. AP, APA, and MLA capitalize "with" because it has four letters. Chicago is the exception – it lowercases all prepositions of four or fewer letters regardless of the word.`,
+    answerBox: `It depends on the style guide – AP and APA capitalize "with" in a title because it has four letters. Chicago lowercases prepositions of four or fewer letters, and MLA lowercases all prepositions regardless of length, so both keep "with" lowercase.`,
     whySectionHeading: `Why "With" Gets Capitalized`,
-    whySectionBody: `"With" is a preposition – a word that shows the relationship between a noun and another element in the sentence ("coffee with milk," "a book with a blue cover"). Prepositions are one of those word categories that title case rules single out for special treatment.\n\nMost style guides don't lowercase all prepositions equally. Instead, they use word length as the deciding factor. AP, APA, and MLA all draw the line at four letters: anything shorter stays lowercase, anything four letters or longer gets capitalized. "With" has exactly four letters, so it lands on the capitalize side.\n\nChicago takes a different approach. The 17th edition of the Chicago Manual of Style lowercased all prepositions in titles regardless of length. The 18th edition (2024) updated the rule: now only prepositions of four letters or fewer are lowercase, while prepositions of five or more letters get capitalized. Either way, "with" at four letters stays lowercase in Chicago style.`,
+    whySectionBody: `"With" is a preposition – a word that shows the relationship between a noun and another element in the sentence ("coffee with milk," "a book with a blue cover"). Prepositions are one of those word categories that title case rules single out for special treatment.\n\nMost style guides use word length as the deciding factor. AP and APA draw the line at four letters: anything shorter stays lowercase, anything four letters or longer gets capitalized. "With" has exactly four letters, so it lands on the capitalize side in both.\n\nChicago and MLA disagree. The 17th edition of the Chicago Manual of Style lowercased all prepositions in titles regardless of length. The 18th edition (2024) updated the rule: prepositions of five or more letters now get capitalized, but "with" at four letters still stays lowercase. MLA is stricter still – it lowercases every preposition in a title, no matter how long.`,
     styleGuideRows: [
       { guide: "AP",      capitalize: true,  rule: "Capitalize words of four or more letters" },
       { guide: "APA",     capitalize: true,  rule: "Capitalize words of four or more letters" },
       { guide: "Chicago", capitalize: false, rule: "Lowercase prepositions of four or fewer letters (18th ed.)" },
-      { guide: "MLA",     capitalize: true,  rule: "Capitalize words of four or more letters" },
+      { guide: "MLA",     capitalize: false, rule: "Lowercase all prepositions regardless of length" },
     ],
-    contextNote: `The reason "with" trips people up is that it sits right on the boundary. Three-letter prepositions like "for" and "yet" are lowercase in every major style guide. But at four letters, "with" crosses the threshold in AP, APA, and MLA. If you're not following a specific style guide, the safest choice is to capitalize "with." Three out of four major guides agree on this, and it's what most readers expect to see.`,
+    contextNote: `The reason "with" trips people up is that it sits right on the boundary and the major guides split evenly. Three-letter prepositions like "for" are lowercase in every major style guide. At four letters, "with" crosses the threshold in AP and APA – but Chicago and MLA still lowercase it. If you're not following a specific style guide, pick one treatment and stay consistent; capitalized "With" follows the AP/APA convention most web headlines use.`,
     doExamples: [
       "Cooking With Fresh Herbs",
       "The Girl With the Dragon Tattoo",
@@ -60,7 +60,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
     ],
     alternativeExamples: [
       {
-        label: "Chicago style (also correct)",
+        label: "Chicago and MLA style (also correct)",
         examples: [
           "Cooking with Fresh Herbs",
           "The Girl with the Dragon Tattoo",
@@ -73,7 +73,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       `"With" as the first word. Every style guide agrees: capitalize the first word of a title, no exceptions. "With Great Power Comes Great Responsibility" — ✓ (all styles).`,
       `"With" as the last word. AP, APA, Chicago, and MLA all require capitalizing the last word of a title. "The Team I Work With" — ✓ (all styles).`,
       `"With" after a colon or dash. Most style guides treat the word after a colon as the start of a new title segment. Capitalize "with" after a colon in all styles. "Remote Work: With the Right Tools, It's Easy" — ✓.`,
-      `"With" in a hyphenated compound. If "with" appears in a hyphenated word in a title (rare), capitalize it in AP, APA, and MLA. Chicago lowercases it.`,
+      `"With" in a hyphenated compound. If "with" appears in a hyphenated word in a title (rare), capitalize it in AP and APA. Chicago and MLA lowercase it.`,
     ],
     faqItems: [
       {
@@ -94,7 +94,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       },
       {
         question: `Should I capitalize "without" in a title?`,
-        answer: `Yes, in all four major style guides. "Without" has seven letters, so AP, APA, and MLA capitalize it. Chicago 18th edition also capitalizes prepositions of five or more letters, so "without" gets capitalized there too.`,
+        answer: `In three of the four major style guides, yes. "Without" has seven letters, so AP and APA capitalize it, and Chicago 18th edition capitalizes prepositions of five or more letters too. MLA is the exception – it lowercases all prepositions in titles, even seven-letter ones.`,
       },
     ],
     ctaWord: "cooking with fresh herbs",
@@ -432,16 +432,16 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   {
     slug: "from-capitalized-in-title-case",
     word: "from",
-    answerBox: `Yes – in most style guides, "from" is capitalized in a title. AP, APA, and MLA capitalize "from" because it has four letters, meeting their minimum length threshold. Chicago is the exception – it keeps prepositions of four or fewer letters lowercase, even in the updated 18th edition (2024).`,
+    answerBox: `It depends on the style guide – AP and APA capitalize "from" in a title because it has four letters, meeting their minimum length threshold. Chicago keeps prepositions of four or fewer letters lowercase even in the updated 18th edition (2024), and MLA lowercases all prepositions regardless of length.`,
     whySectionHeading: `Why "From" Gets Capitalized (or Not)`,
-    whySectionBody: `"From" is a preposition – it shows the starting point or origin of something ("a letter from my sister," "far from home," "dates from 1995"). Prepositions are the first category of words that title case rules single out for special attention, and they're also the most confusing because different style guides handle them differently.\n\nAP, APA, and MLA use a simple rule: capitalize any word of four or more letters, regardless of what part of speech it is. Since "from" has four letters, it gets capitalized in these three guides. This makes "from" one of the boundary words – it's just long enough to trigger capitalization in most styles, but not so long that every guide automatically includes it.\n\nChicago takes a different approach. The 17th edition of the Chicago Manual of Style lowercased all prepositions in titles, regardless of length. This meant "from" was lowercase, even though it had four letters. However, the 18th edition (2024) revised this rule. Now Chicago capitalizes prepositions of five or more letters while keeping prepositions of four or fewer letters lowercase. Since "from" has exactly four letters, it remains lowercase under the updated Chicago style.`,
+    whySectionBody: `"From" is a preposition – it shows the starting point or origin of something ("a letter from my sister," "far from home," "dates from 1995"). Prepositions are the first category of words that title case rules single out for special attention, and they're also the most confusing because different style guides handle them differently.\n\nAP and APA use a simple rule: capitalize any word of four or more letters, regardless of what part of speech it is. Since "from" has four letters, it gets capitalized in these two guides. This makes "from" one of the boundary words – it's just long enough to trigger capitalization in AP and APA, but not so long that every guide automatically includes it.\n\nChicago takes a different approach. The 17th edition of the Chicago Manual of Style lowercased all prepositions in titles, regardless of length. This meant "from" was lowercase, even though it had four letters. However, the 18th edition (2024) revised this rule. Now Chicago capitalizes prepositions of five or more letters while keeping prepositions of four or fewer letters lowercase. Since "from" has exactly four letters, it remains lowercase under the updated Chicago style.\n\nMLA is the strictest of the four: it lowercases every preposition in a title, no matter how long. "From" stays lowercase in MLA for the same reason "between" and "through" do.`,
     styleGuideRows: [
       { guide: "AP",      capitalize: true,  rule: "Capitalize words of four or more letters" },
       { guide: "APA",     capitalize: true,  rule: "Capitalize words of four or more letters" },
       { guide: "Chicago", capitalize: false, rule: "Lowercase prepositions of four or fewer letters (18th ed.)" },
-      { guide: "MLA",     capitalize: true,  rule: "Capitalize words of four or more letters" },
+      { guide: "MLA",     capitalize: false, rule: "Lowercase all prepositions regardless of length" },
     ],
-    contextNote: `"From" sits right at the threshold where most guides differ. Three-letter prepositions like "for," "but," and "yet" are universally lowercase. Five-letter prepositions like "about," "under," and "after" are capitalized by AP, APA, and MLA – and also by Chicago 18th edition. But four-letter prepositions like "from," "with," and "into" are where the guides split. If you're writing for a general audience, the safest choice is to capitalize "from." Three out of four major guides agree, and it's what most readers expect to see.`,
+    contextNote: `"From" sits right at the threshold where the guides split evenly. Three-letter prepositions like "for" are universally lowercase. Five-letter prepositions like "about," "under," and "after" are capitalized by AP, APA, and Chicago 18th edition – though not by MLA, which lowercases all prepositions. Four-letter prepositions like "from," "with," and "into" divide the guides two against two: AP and APA capitalize, Chicago and MLA lowercase. If you're writing for a general audience, pick one treatment and stay consistent; capitalized "From" follows the AP/APA convention most web headlines use.`,
     doExamples: [
       "Travels From East to West",
       "A Lesson From My Father",
@@ -449,12 +449,12 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       "Messages From Around the World",
     ],
     doNotExamples: [
-      { text: "Travels from East to West", reason: "Correct in Chicago style only — incorrect for AP, APA, and MLA" },
+      { text: "Travels from East to West", reason: "Correct in Chicago and MLA style — incorrect for AP and APA" },
       { text: "A Lesson FROM My Father", reason: "All-caps preposition — never correct in any style guide" },
     ],
     alternativeExamples: [
       {
-        label: "Chicago style (also correct)",
+        label: "Chicago and MLA style (also correct)",
         examples: [
           "Travels from East to West",
           "A Lesson from My Father",
@@ -465,8 +465,8 @@ export const IS_X_ARTICLES: IsXArticle[] = [
     edgeCasesBody: `A few situations where the standard rules shift:`,
     edgeCaseItems: [
       `"From" as the first word of a title. All style guides capitalize the first word of a title regardless of part of speech or length. "From the Ashes: A Story of Renewal" — ✓ (all styles). "From Russia With Love" — ✓ (all styles).`,
-      `"From" as the last word of a title. Most style guides require capitalizing the last word of a title. So if "from" ends your title, capitalize it in AP, APA, and MLA.`,
-      `"From" in date ranges. Titles sometimes include date ranges using "from...to" construction. In this context, "from" is still a preposition – capitalize in AP/APA/MLA, lowercase in Chicago. "Sales Data From 2015 to 2020" — ✓ (AP, APA, MLA).`,
+      `"From" as the last word of a title. All four major style guides capitalize the last word of a title, so if "from" ends your title, capitalize it in every style.`,
+      `"From" in date ranges. Titles sometimes include date ranges using "from...to" construction. In this context, "from" is still a preposition – capitalize in AP and APA, lowercase in Chicago and MLA. "Sales Data From 2015 to 2020" — ✓ (AP, APA).`,
       `"From" after a colon. When a colon introduces a subtitle, the first word after the colon is treated as a new title segment and capitalized in all guides. "The History of Science: From Alchemy to Modern Chemistry" — ✓.`,
     ],
     faqItems: [
@@ -476,7 +476,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       },
       {
         question: `Should I capitalize "from" in an email subject line?`,
-        answer: `It depends on the style guide you're following. For AP, APA, or MLA style, yes – capitalize "from." For Chicago style, no – keep it lowercase. If you're writing an informal email subject line without adhering to a specific style, capitalize "from" as most people expect it.`,
+        answer: `It depends on the style guide you're following. For AP or APA style, yes – capitalize "from." For Chicago or MLA style, keep it lowercase. If you're writing an informal email subject line without adhering to a specific style, capitalize "from" as most people expect it.`,
       },
       {
         question: `Did the Chicago Manual of Style 18th edition change how "from" is capitalized?`,
@@ -484,11 +484,11 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       },
       {
         question: `What about "from" in book titles – should I follow a specific style?`,
-        answer: `Book titles typically follow the style guide of the publisher or author. Major publishers use either AP/APA/MLA (capitalize "from") or Chicago (lowercase "from"). Check your publisher's style guide, or if self-publishing, choose one guide and stay consistent. Capitalize "from" if you're uncertain – it's the more common choice.`,
+        answer: `Book titles typically follow the style guide of the publisher or author. Publishers following AP or APA conventions capitalize "from," while Chicago and MLA houses lowercase it. Check your publisher's style guide, or if self-publishing, choose one guide and stay consistent. Capitalize "from" if you're uncertain – it's the more common choice in web and marketing copy.`,
       },
       {
         question: `Why is "from" a 4-letter boundary word while "for" is not?`,
-        answer: `Both "for" and "from" are prepositions, but they have different letter counts. "For" has three letters, so it's lowercase in all four major guides. "From" has four letters, which is the minimum threshold for AP, APA, and MLA capitalization, but Chicago treats prepositions specially and keeps four-letter prepositions lowercase.`,
+        answer: `Both "for" and "from" are prepositions, but they have different letter counts. "For" has three letters, so it's lowercase in all four major guides. "From" has four letters, which is the minimum threshold for AP and APA capitalization – but Chicago keeps four-letter prepositions lowercase, and MLA lowercases prepositions of any length.`,
       },
     ],
     ctaWord: "Travels From East to West",
@@ -502,16 +502,16 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   {
     slug: "your-capitalized-in-title-case",
     word: "your",
-    answerBox: `Yes – "your" is capitalized in a title in all major style guides. "Your" is capitalized for two independent reasons: it has four letters (meeting the length rule in AP, APA, and MLA) and it's a pronoun (which Chicago capitalizes regardless of length).`,
+    answerBox: `Yes – "your" is capitalized in a title in all major style guides. "Your" is capitalized for two independent reasons: it has four letters (meeting the length rule in AP and APA) and it's a pronoun (which Chicago and MLA capitalize as a principal word regardless of length).`,
     whySectionHeading: `Why "Your" Gets Capitalized`,
-    whySectionBody: `"Your" is a possessive pronoun (or determinative pronoun) that shows possession or belonging. Pronouns are one of the word categories that title case rules treat specially. The way "your" gets capitalized depends on which style guide you follow, but all four major guides capitalize it – just for different reasons.\n\nAP, APA, and MLA use the four-letter rule: capitalize words of four letters or more. "Your" has exactly four letters, so it passes this threshold. In these styles, "your" is capitalized primarily because of its length, not because it's a pronoun.\n\nChicago style takes a different approach. Instead of relying mainly on word length, Chicago capitalizes all pronouns regardless of length. So in Chicago style, "your" would be capitalized because it's a pronoun – the length is irrelevant. This is why even in the rare cases where a pronoun has fewer than four letters, Chicago capitalizes it.\n\nThe result is the same in all styles: "your" is always capitalized. But the grammatical reasoning differs depending on which guide you follow.`,
+    whySectionBody: `"Your" is a possessive pronoun (or determinative pronoun) that shows possession or belonging. Pronouns are one of the word categories that title case rules treat specially. The way "your" gets capitalized depends on which style guide you follow, but all four major guides capitalize it – just for different reasons.\n\nAP and APA use the four-letter rule: capitalize words of four letters or more. "Your" has exactly four letters, so it passes this threshold. In these styles, "your" is capitalized primarily because of its length, not because it's a pronoun.\n\nChicago and MLA take a different approach. Instead of relying on word length, both treat pronouns as principal words and capitalize them regardless of length. So in Chicago or MLA style, "your" would be capitalized because it's a pronoun – the length is irrelevant. This is why even pronouns with fewer than four letters, like "it" or "my," are capitalized in these guides.\n\nThe result is the same in all styles: "your" is always capitalized. But the grammatical reasoning differs depending on which guide you follow.`,
     styleGuideRows: [
       { guide: "AP",      capitalize: true, rule: "Capitalize words of four or more letters" },
       { guide: "APA",     capitalize: true, rule: "Capitalize words of four or more letters" },
       { guide: "Chicago", capitalize: true, rule: "Capitalize all pronouns" },
-      { guide: "MLA",     capitalize: true, rule: "Capitalize words of four or more letters" },
+      { guide: "MLA",     capitalize: true, rule: "Pronouns are principal words – always capitalized" },
     ],
-    contextNote: `Pronouns sit between verbs and prepositions in the title case hierarchy. Verbs are always capitalized (like "is," "am," "run") regardless of length. Pronouns usually follow the length rule, but Chicago makes all pronouns an exception. Prepositions and conjunctions shorter than four letters stay lowercase ("to," "for," "but") unless they're the first or last word. "Your" is unambiguous in all four major styles because it satisfies both criteria: it's four letters (meets the length rule) AND it's a pronoun (Chicago's pronoun rule).`,
+    contextNote: `Pronouns sit between verbs and prepositions in the title case hierarchy. Verbs are always capitalized (like "is," "am," "run") regardless of length. Pronouns follow the length rule in AP and APA, while Chicago and MLA capitalize all pronouns as principal words. Prepositions and conjunctions shorter than four letters stay lowercase ("to," "for," "but") unless they're the first or last word. "Your" is unambiguous in all four major styles because it satisfies both criteria: it's four letters (meets the AP/APA length rule) AND it's a pronoun (the Chicago/MLA principal-word rule).`,
     doExamples: [
       "Your Guide to Title Case",
       "Living Your Best Life",
@@ -564,12 +564,12 @@ export const IS_X_ARTICLES: IsXArticle[] = [
     word: "that",
     answerBox: `Yes – "that" is capitalized in a title in all major style guides. "That" can function as a subordinating conjunction, a relative pronoun, or a demonstrative pronoun. Regardless of its grammatical role, it's capitalized in AP, APA, MLA, and Chicago styles.`,
     whySectionHeading: `Why "That" Is Always Capitalized`,
-    whySectionBody: `"That" is a versatile word in English. It can introduce a subordinate clause as a conjunction ("the book that he read"), function as a relative pronoun in the same way, or act as a demonstrative adjective or pronoun ("that one over there"). Despite these different roles, title case capitalizes "that" in all of them.\n\nThe reason is twofold. First, "that" has four letters, meeting the length threshold in AP, APA, and MLA. Second, when "that" acts as a subordinating conjunction (the most common role in titles), subordinating conjunctions are always capitalized in title case, unlike coordinating conjunctions such as "but," "or," and "and." A subordinating conjunction introduces a dependent clause that adds essential information to the sentence. These are considered more grammatically significant than coordinating conjunctions, so they get capitalized.\n\nThe distinction between subordinating and coordinating conjunctions is crucial here. If you remember that "that" is a subordinating conjunction (not a coordinating one), you'll never wonder whether to capitalize it. Even in Chicago style, which has different rules for prepositions, subordinating conjunctions like "that" are always capitalized.`,
+    whySectionBody: `"That" is a versatile word in English. It can introduce a subordinate clause as a conjunction ("the book that he read"), function as a relative pronoun in the same way, or act as a demonstrative adjective or pronoun ("that one over there"). Despite these different roles, title case capitalizes "that" in all of them.\n\nThe reason is twofold. First, "that" has four letters, meeting the length threshold in AP and APA. Second, when "that" acts as a subordinating conjunction (the most common role in titles), subordinating conjunctions are always capitalized in title case, unlike coordinating conjunctions such as "but," "or," and "and." A subordinating conjunction introduces a dependent clause that adds essential information to the sentence. These are considered more grammatically significant than coordinating conjunctions, so they get capitalized.\n\nThe distinction between subordinating and coordinating conjunctions is crucial here. If you remember that "that" is a subordinating conjunction (not a coordinating one), you'll never wonder whether to capitalize it. Even in Chicago style, which has different rules for prepositions, subordinating conjunctions like "that" are always capitalized.`,
     styleGuideRows: [
       { guide: "AP",      capitalize: true, rule: "Subordinating conjunctions capitalized; 4+ letter rule also applies" },
       { guide: "APA",     capitalize: true, rule: "Capitalize words of four or more letters; subordinating conjunctions capitalized" },
       { guide: "Chicago", capitalize: true, rule: "Subordinating conjunctions are always capitalized" },
-      { guide: "MLA",     capitalize: true, rule: "Capitalize words of four or more letters; subordinating conjunctions capitalized" },
+      { guide: "MLA",     capitalize: true, rule: "Subordinating conjunctions are always capitalized" },
     ],
     contextNote: `Subordinating conjunctions like "that," "because," "although," "if," and "when" introduce dependent clauses and are grammatically more complex. They carry more semantic weight than coordinating conjunctions like "and," "but," "or," and "so." Compare "The Day That Changed Everything" (subordinating conjunction – capitalized) with "Coffee and Cream" (coordinating conjunction – lowercase). In both titles, the conjunctions join elements, but "that" introduces a subordinate clause while "and" merely lists items. That's why "that" is capitalized and "and" is not.`,
     doExamples: [
@@ -593,7 +593,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
     faqItems: [
       {
         question: `What's the difference between "that" and "which" in title case?`,
-        answer: `Both can be relative pronouns, but "which" is longer (five letters) and is always capitalized in AP, APA, and MLA because of the length rule. "That" is capitalized for multiple reasons (length + conjunction type). In editing, "that" introduces restrictive clauses (essential info) while "which" introduces non-restrictive clauses (extra info) – but both are capitalized in titles.`,
+        answer: `Both can be relative pronouns, and both are always capitalized in titles. "Which" (five letters) clears the AP/APA length rule, and Chicago and MLA capitalize it as a pronoun. "That" is capitalized for multiple reasons (length + conjunction type). In editing, "that" introduces restrictive clauses (essential info) while "which" introduces non-restrictive clauses (extra info) – but both are capitalized in titles.`,
       },
       {
         question: `Is "that" a pronoun or a conjunction?`,
@@ -739,7 +739,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       },
       {
         question: `Is "upon" treated the same way as "up"?`,
-        answer: `No. "Upon" is a preposition and has four letters. AP, APA, and MLA capitalize it (four-letter rule). Chicago lowercases it (preposition rule). "Up" as a standalone preposition is always lowercase because it has three letters. But "upon" follows different rules.`,
+        answer: `No. "Upon" is a preposition and has four letters. AP and APA capitalize it (four-letter rule). Chicago lowercases it (four letters or fewer), and MLA lowercases all prepositions. "Up" as a standalone preposition is always lowercase because it has three letters. But "upon" follows different rules.`,
       },
     ],
     ctaWord: "Give Up Hope and Try Again",
@@ -752,14 +752,14 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   {
     slug: "between-capitalized-in-title-case",
     word: "between",
-    answerBox: `Yes – "between" is capitalized in all major style guides. "Between" has seven letters, well above the minimum length threshold for capitalization. AP, APA, and MLA capitalize it without question. Chicago also capitalizes it in the 18th edition (2024), which updated the preposition rule to capitalize five-letter-or-longer words.`,
-    whySectionHeading: `Why "Between" Is Always Capitalized`,
-    whySectionBody: `"Between" is a preposition – a word that shows the relationship between elements in a sentence ("the space between the trees," "a choice between two options," "between you and me"). Prepositions are one of the primary categories that title case rules examine, but they're handled differently depending on the style guide.\n\n"Between" is a seven-letter word, which puts it well above every threshold in the major style guides. AP, APA, and MLA all capitalize words of four or more letters, so "between" qualifies easily. Chicago's approach to prepositions is more complex. Historically, the Chicago Manual of Style lowercased all prepositions regardless of length. However, the 18th edition (2024) revised this rule to capitalize prepositions of five or more letters while keeping shorter prepositions lowercase. Since "between" has seven letters, it gets capitalized under the new Chicago rule as well.\n\nThe result is unique and straightforward: there is no major style guide in which "between" should be lowercase. This makes it one of the simplest words to handle in title case.`,
+    answerBox: `Usually yes – AP, APA, and Chicago capitalize "between" in a title. It has seven letters, well above the length thresholds in AP and APA, and Chicago's 18th edition (2024) capitalizes prepositions of five or more letters. MLA is the exception – it lowercases all prepositions regardless of length.`,
+    whySectionHeading: `Why "Between" Is Usually Capitalized`,
+    whySectionBody: `"Between" is a preposition – a word that shows the relationship between elements in a sentence ("the space between the trees," "a choice between two options," "between you and me"). Prepositions are one of the primary categories that title case rules examine, but they're handled differently depending on the style guide.\n\n"Between" is a seven-letter word, which puts it well above the length thresholds in AP and APA – both capitalize words of four or more letters, so "between" qualifies easily. Chicago's approach is more complex. Historically, the Chicago Manual of Style lowercased all prepositions regardless of length. However, the 18th edition (2024) revised this rule to capitalize prepositions of five or more letters while keeping shorter prepositions lowercase. Since "between" has seven letters, it gets capitalized under the new Chicago rule as well.\n\nMLA is the one holdout: it lowercases every preposition in a title, no matter how long. So in MLA style, "between" stays lowercase – "The Choice between Good and Evil." In the other three guides, capitalize it.`,
     styleGuideRows: [
       { guide: "AP",      capitalize: true, rule: "Capitalize words of four or more letters" },
       { guide: "APA",     capitalize: true, rule: "Capitalize words of four or more letters" },
       { guide: "Chicago", capitalize: true, rule: "Capitalize prepositions of five or more letters (18th ed.)" },
-      { guide: "MLA",     capitalize: true, rule: "Capitalize words of four or more letters" },
+      { guide: "MLA",     capitalize: false, rule: "Lowercase all prepositions regardless of length" },
     ],
     contextNote: `"Between" is a word that highlights the difference between Chicago Manual of Style 17th edition (pre-2024) and 18th edition (2024). In the 17th edition, Chicago lowercased all prepositions in titles regardless of length – so "between" would have been lowercase: "The Choice between Good and Evil." However, the 18th edition updated this rule. Since "between" has seven letters, it now gets capitalized: "The Choice Between Good and Evil." Other long prepositions affected by this change include "without," "through," "before," "after," and "during." In contrast, short prepositions like "to," "for," "in," "on," and "from" remain lowercase in both editions.`,
     doExamples: [
@@ -769,7 +769,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       "Living Between Two Worlds",
     ],
     doNotExamples: [
-      { text: "The Choice between Two Paths", reason: "Correct under Chicago 17th (outdated) — incorrect under all current guides" },
+      { text: "The Choice between Two Paths", reason: "Correct in MLA (and Chicago 17th) — incorrect for AP, APA, and Chicago 18th" },
       { text: "A Bridge BETWEEN Nations", reason: "All-caps preposition — never correct in any style guide" },
     ],
     edgeCasesHeading: "Edge Cases",
@@ -777,13 +777,13 @@ export const IS_X_ARTICLES: IsXArticle[] = [
     edgeCaseItems: [
       `"Between" as the first word of a title. All style guides capitalize the first word of a title regardless of part of speech or length. "Between the Lines: A Reading Guide" — ✓ (all styles).`,
       `"Between" as the last word of a title. Most style guides require capitalizing the last word of a title, regardless of length or part of speech. "The Secrets We Keep Between" — ✓ (all styles).`,
-      `"Between" in date or range expressions. Titles sometimes express ranges using "between...and" construction. In this context, "between" is a preposition showing range boundaries – capitalize it in all current styles. "Historical Data Between 1950 and 2000" — ✓.`,
+      `"Between" in date or range expressions. Titles sometimes express ranges using "between...and" construction. In this context, "between" is a preposition showing range boundaries – capitalize it in AP, APA, and Chicago; lowercase in MLA. "Historical Data Between 1950 and 2000" — ✓ (AP, APA, Chicago).`,
       `"Between" after a colon or dash. When a colon introduces a subtitle, the first word after the colon is treated as a new title segment. Capitalize "between" after a colon in all styles. "Relationships: Between Conflict and Connection" — ✓.`,
     ],
     faqItems: [
       {
         question: `Is "between" a preposition or a conjunction?`,
-        answer: `"Between" is a preposition. It shows the relationship between two or more things. Conjunctions like "and" and "but" connect words or clauses, but "between" connects a noun or pronoun to other elements in the sentence. This grammatical distinction doesn't affect title capitalization – "between" is capitalized because of its length.`,
+        answer: `"Between" is a preposition. It shows the relationship between two or more things. Conjunctions like "and" and "but" connect words or clauses, but "between" connects a noun or pronoun to other elements in the sentence. Its part of speech is exactly why the guides differ: AP, APA, and Chicago capitalize it because of its length, while MLA lowercases it because it lowercases all prepositions.`,
       },
       {
         question: `Should I capitalize "between" in email subject lines?`,
@@ -799,7 +799,7 @@ export const IS_X_ARTICLES: IsXArticle[] = [
       },
       {
         question: `Is there any style guide where "between" would be lowercase?`,
-        answer: `Not in modern practice. Chicago 17th edition lowercased "between," but that edition is now superseded by the 18th edition. All current major style guides – AP, APA, Chicago 18th, and MLA – capitalize "between."`,
+        answer: `Yes – MLA. The MLA Handbook lowercases all prepositions in titles regardless of length, so "between" stays lowercase in MLA style. Chicago 17th edition also lowercased it, but that edition is superseded by the 18th. AP, APA, and Chicago 18th all capitalize "between."`,
       },
     ],
     ctaWord: "The Choice Between Two Paths",

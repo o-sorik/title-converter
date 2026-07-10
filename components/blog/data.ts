@@ -146,7 +146,7 @@ export const blogArticles: Article[] = [
   {
     slug: "with-capitalized-in-title-case",
     title: `Is "With" Capitalized in a Title?`,
-    excerpt: `Is "with" capitalized in a title? Yes in AP, APA, and MLA style (4+ letter rule). No in Chicago style. See the rules, examples, and edge cases.`,
+    excerpt: `Is "with" capitalized in a title? Yes in AP and APA (4+ letter rule). No in Chicago and MLA. See the rules, examples, and edge cases.`,
     categoryId: "grammar-101",
     author: "Sophia Stewart",
     updatedAt: "2026-03-05",
@@ -157,7 +157,7 @@ export const blogArticles: Article[] = [
   {
     slug: "from-capitalized-in-title-case",
     title: `Is "From" Capitalized in a Title?`,
-    excerpt: `Is "from" capitalized in a title? Yes in AP, APA, and MLA (4-letter rule). No in Chicago style. Learn the rules, Chicago 18th ed. update, and examples.`,
+    excerpt: `Is "from" capitalized in a title? Yes in AP and APA (4-letter rule). No in Chicago and MLA. Learn the rules, Chicago 18th ed. update, and examples.`,
     categoryId: "grammar-101",
     author: "Sophia Stewart",
     updatedAt: "2026-03-05",
@@ -212,7 +212,7 @@ export const blogArticles: Article[] = [
   {
     slug: "between-capitalized-in-title-case",
     title: `Is "Between" Capitalized in a Title?`,
-    excerpt: `Yes – "between" is capitalized in all major style guides. At seven letters, it meets every guide's threshold. Chicago 18th ed. updated the rule in 2024.`,
+    excerpt: `Usually yes – AP, APA, and Chicago 18th ed. (2024) capitalize "between." MLA is the exception: it lowercases all prepositions regardless of length.`,
     categoryId: "grammar-101",
     author: "Sophia Stewart",
     updatedAt: "2026-03-05",

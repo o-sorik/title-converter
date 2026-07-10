@@ -61,17 +61,17 @@ const STYLE_META: Record<GuidanceStyle, { title: string; summary: string }> = {
   ap: {
     title: "AP style guidance",
     summary:
-      "AP often capitalizes prepositions with five or more letters in titles; shorter connectors are usually lowercased in the middle.",
+      "AP capitalizes prepositions and conjunctions with four or more letters in titles; shorter connectors are lowercased in the middle.",
   },
   chicago: {
     title: "Chicago style guidance",
     summary:
-      "Chicago keeps many middle prepositions/conjunctions lowercase and relies strongly on first/last-word positioning.",
+      "Chicago (18th edition, 2024) capitalizes prepositions of five or more letters and keeps shorter prepositions and conjunctions lowercase in middle positions.",
   },
   mla: {
     title: "MLA style guidance",
     summary:
-      "MLA headline-style patterns are close to Chicago for many connectors, with consistency across editorial usage as priority.",
+      "MLA lowercases all prepositions regardless of length – the strictest of the major guides – while capitalizing every other principal word.",
   },
   apa: {
     title: "APA style guidance",
@@ -88,7 +88,7 @@ export const STYLE_GUIDE_SECTIONS: StyleGuideSection[] = [
     description:
       "The AP Stylebook is the primary reference for journalists, newsrooms, and digital media. It favors readability and consistency in headline casing, capitalizing longer prepositions while keeping short function words lowercase.",
     keyRules: [
-      "Capitalize words with 5 or more letters, including prepositions and conjunctions",
+      "Capitalize words with 4 or more letters, including prepositions and conjunctions",
       "Lowercase articles (a, an, the) in middle positions",
       "Always capitalize the first and last word of the title",
       "Capitalize both parts of hyphenated compounds in most cases",
@@ -118,11 +118,11 @@ export const STYLE_GUIDE_SECTIONS: StyleGuideSection[] = [
     name: "MLA",
     fullName: "MLA Handbook",
     description:
-      "The MLA Handbook serves humanities scholars and literature students. Its title case conventions are close to Chicago style, keeping most prepositions and conjunctions lowercase regardless of length.",
+      "The MLA Handbook serves humanities scholars and literature students. Its title case conventions are the strictest of the major guides: all prepositions stay lowercase in middle positions regardless of length.",
     keyRules: [
       "Capitalize the first and last word of the title and subtitle",
       "Lowercase articles, prepositions, and coordinating conjunctions in middle positions",
-      "Capitalize all other words, including long prepositions like \"between\" or \"through\"",
+      "Lowercase all prepositions regardless of length, even long ones like \"between\" or \"through\"",
       "Capitalize the first word after a colon",
     ],
     sourceUrl: "https://www.mla.org/",
@@ -134,16 +134,16 @@ export const STYLE_GUIDE_SECTIONS: StyleGuideSection[] = [
     name: "Chicago",
     fullName: "The Chicago Manual of Style",
     description:
-      "The Chicago Manual of Style is the gold standard for book publishing and formal editorial work. It uses a traditional approach that lowercases most prepositions and conjunctions in middle positions.",
+      "The Chicago Manual of Style is the gold standard for book publishing and formal editorial work. The 18th edition (2024) capitalizes prepositions of five or more letters, while shorter prepositions and conjunctions stay lowercase in middle positions.",
     keyRules: [
       "Lowercase articles (a, an, the) in middle positions",
       "Lowercase coordinating conjunctions (and, but, or, nor, yet, so, for)",
-      "Lowercase prepositions in middle positions regardless of length",
+      "Lowercase prepositions of four or fewer letters; capitalize prepositions of five or more letters (18th ed.)",
       "Always capitalize the first and last word of title and subtitle",
     ],
     sourceUrl: "https://www.chicagomanualofstyle.org/",
     sourceName: "Chicago Manual of Style",
-    editionNote: "17th Edition (2017)",
+    editionNote: "18th Edition (2024)",
   },
   {
     id: "standard",
@@ -172,9 +172,9 @@ export const COMPARISON_SCENARIOS: ComparisonScenario[] = [
       ap: "Running Across the Bridge at Night",
       apa: "Running Across the Bridge at Night",
       mla: "Running across the Bridge at Night",
-      chicago: "Running across the Bridge at Night",
+      chicago: "Running Across the Bridge at Night",
     },
-    notes: "AP and APA capitalize \"across\" (5+ and 4+ letters). Standard, MLA, and Chicago keep it lowercase.",
+    notes: "AP, APA, and Chicago (18th ed.) capitalize \"across\" – it clears every length threshold. Standard and MLA keep it lowercase.",
   },
   {
     scenario: "Long preposition: \"between\" (7 letters)",
@@ -184,33 +184,33 @@ export const COMPARISON_SCENARIOS: ComparisonScenario[] = [
       ap: "The Cat Is Between the Boxes",
       apa: "The Cat Is Between the Boxes",
       mla: "The Cat Is between the Boxes",
-      chicago: "The Cat Is between the Boxes",
+      chicago: "The Cat Is Between the Boxes",
     },
-    notes: "Despite its length, only AP and APA capitalize \"between\". Chicago and MLA keep all prepositions lowercase.",
+    notes: "AP, APA, and Chicago (18th ed.) capitalize \"between\" (7 letters). MLA keeps all prepositions lowercase regardless of length.",
   },
   {
     scenario: "Short preposition: \"with\" (4 letters)",
     example: "writing with confidence and purpose",
     results: {
       standard: "Writing with Confidence and Purpose",
-      ap: "Writing with Confidence and Purpose",
+      ap: "Writing With Confidence and Purpose",
       apa: "Writing With Confidence and Purpose",
       mla: "Writing with Confidence and Purpose",
       chicago: "Writing with Confidence and Purpose",
     },
-    notes: "Only APA capitalizes \"with\" (4+ letter threshold). All other styles keep it lowercase.",
+    notes: "AP and APA capitalize \"with\" (4-letter threshold). Standard, MLA, and Chicago (5+ letters) keep it lowercase.",
   },
   {
     scenario: "Short preposition: \"from\" (4 letters)",
     example: "ideas from around the world",
     results: {
       standard: "Ideas from around the World",
-      ap: "Ideas from Around the World",
+      ap: "Ideas From Around the World",
       apa: "Ideas From Around the World",
       mla: "Ideas from around the World",
-      chicago: "Ideas from around the World",
+      chicago: "Ideas from Around the World",
     },
-    notes: "APA capitalizes both \"from\" (4 letters) and \"around\" (6 letters). AP capitalizes only \"around\" (5+ letters).",
+    notes: "AP and APA capitalize both \"from\" (4 letters) and \"around\" (6 letters). Chicago capitalizes only \"around\" (5+ letters), so \"from\" stays lowercase.",
   },
   {
     scenario: "Subtitle after colon",
@@ -232,9 +232,9 @@ export const COMPARISON_SCENARIOS: ComparisonScenario[] = [
       ap: "The Rules About Writing and Thinking",
       apa: "The Rules About Writing and Thinking",
       mla: "The Rules about Writing and Thinking",
-      chicago: "The Rules about Writing and Thinking",
+      chicago: "The Rules About Writing and Thinking",
     },
-    notes: "AP capitalizes \"about\" at exactly 5 letters (its threshold). APA does too (4+ letters).",
+    notes: "\"About\" hits Chicago's 5-letter threshold exactly, so AP (4+), APA (4+), and Chicago (5+) all capitalize it. Standard and MLA do not.",
   },
   {
     scenario: "Preposition \"after\" (5 letters)",
@@ -244,9 +244,9 @@ export const COMPARISON_SCENARIOS: ComparisonScenario[] = [
       ap: "She Walked Along the River After Lunch",
       apa: "She Walked Along the River After Lunch",
       mla: "She Walked Along the River after Lunch",
-      chicago: "She Walked Along the River after Lunch",
+      chicago: "She Walked Along the River After Lunch",
     },
-    notes: "\"Along\" is capitalized by all styles (5+ letters), but \"after\" splits AP/APA from the rest.",
+    notes: "\"Along\" reads as part of the verb here, so every style capitalizes it. \"After\" (5 letters) splits AP, APA, and Chicago from standard and MLA.",
   },
 ]
 
@@ -280,12 +280,12 @@ const EDGE_CASE_EXAMPLES: GuidanceExample[] = [
     outputs: {
       standard: "Walking during the Light",
       ap: "Walking During the Light",
-      chicago: "Walking during the Light",
+      chicago: "Walking During the Light",
       mla: "Walking during the Light",
       apa: "Walking During the Light",
     },
     whyItMatters:
-      "The word 'during' changes across styles and is a common source of editorial inconsistency.",
+      "The word 'during' changes across styles and is a common source of editorial inconsistency. Chicago's 18th edition (2024) now capitalizes it too.",
   },
   {
     caseLabel: "Subtitle after colon",
@@ -344,13 +344,13 @@ const EDGE_CASE_EXAMPLES: GuidanceExample[] = [
     input: "writing with confidence and purpose",
     outputs: {
       standard: "Writing with Confidence and Purpose",
-      ap: "Writing with Confidence and Purpose",
+      ap: "Writing With Confidence and Purpose",
       chicago: "Writing with Confidence and Purpose",
       mla: "Writing with Confidence and Purpose",
       apa: "Writing With Confidence and Purpose",
     },
     whyItMatters:
-      "APA's 4-letter threshold uniquely capitalizes \"with\" — the only style to do so. This is one of the most common APA-specific differences.",
+      "The 4-letter threshold in AP and APA capitalizes \"with,\" while Chicago (5+ letters) and MLA (all prepositions lowercase) keep it lowercase. It is the most common boundary word.",
   },
 ]
 

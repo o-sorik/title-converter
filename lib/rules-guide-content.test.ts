@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest"
 
+import { convert } from "./converters"
 import {
   getRulesGuideViewModel,
   getRulesGuideViewModelWithContext,
@@ -108,6 +109,18 @@ describe("COMPARISON_SCENARIOS", () => {
   test("each scenario has non-empty notes", () => {
     for (const scenario of COMPARISON_SCENARIOS) {
       expect(scenario.notes.length).toBeGreaterThan(0)
+    }
+  })
+
+  test("every documented result matches actual converter output", () => {
+    const styles = ["standard", "ap", "apa", "mla", "chicago"] as const
+    for (const scenario of COMPARISON_SCENARIOS) {
+      for (const style of styles) {
+        expect(
+          convert(scenario.example, "title", { titleStyle: style }),
+          `"${scenario.scenario}" / ${style}`,
+        ).toBe(scenario.results[style])
+      }
     }
   })
 })

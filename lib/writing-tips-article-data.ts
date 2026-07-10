@@ -142,7 +142,7 @@ export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
               { label: "into (4 letters)", guides: { ap: true, apa: true, chicago: false, mla: false } },
               { label: "between (7 letters)", guides: { ap: true, apa: true, chicago: true, mla: false } },
               { label: "through (7 letters)", guides: { ap: true, apa: true, chicago: true, mla: false } },
-              { label: "about (5 letters)", guides: { ap: true, apa: true, chicago: false, mla: false } },
+              { label: "about (5 letters)", guides: { ap: true, apa: true, chicago: true, mla: false } },
             ],
           },
           {

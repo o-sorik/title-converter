@@ -6,6 +6,7 @@ import { getRulesGuideHubViewModel } from "@/lib/rules-guide-content"
 import { parseConverterInitialStateFromSearchParams, toConverterContext } from "@/lib/converter-context"
 import type { GuidanceStyle } from "@/lib/rules-guide-content"
 import { SITE_URL } from "@/lib/constants"
+import { POPULAR_CAPITALIZATION_QUESTIONS } from "@/lib/home-content-data"
 
 export const revalidate = 604800
 
@@ -203,6 +204,24 @@ export default async function CapitalizationRulesGuidePage({ searchParams }: Rul
                             </details>
                         ))}
                     </div>
+                </section>
+
+                {/* Popular questions */}
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-bold tracking-tight">Popular Capitalization Questions</h2>
+                    <p className="text-muted-foreground">
+                        Specific words and situations the general rules do not fully cover – each answered against AP, APA, MLA, and Chicago.
+                    </p>
+                    <ul className="grid gap-x-8 gap-y-3 md:grid-cols-2">
+                        {POPULAR_CAPITALIZATION_QUESTIONS.map((item) => (
+                            <li key={item.href} className="text-sm">
+                                <Link href={item.href} className="font-medium underline underline-offset-4 hover:text-foreground">
+                                    {item.question}
+                                </Link>
+                                <p className="mt-0.5 text-xs text-muted-foreground">{item.hint}</p>
+                            </li>
+                        ))}
+                    </ul>
                 </section>
 
                 {/* Internal links + actions */}
