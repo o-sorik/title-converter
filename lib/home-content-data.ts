@@ -20,6 +20,8 @@ export const POPULAR_CAPITALIZATION_QUESTIONS: PopularCapitalizationQuestion[] =
   { question: "Is Math Capitalized?", href: "/blog/is-math-capitalized", hint: "Lowercase unless it names a specific course." },
   { question: "Do You Capitalize Majors?", href: "/blog/do-you-capitalize-majors", hint: "Lowercase in most sentences – with a language exception." },
   { question: "Is Bachelor's Degree Capitalized?", href: "/blog/is-bachelors-degree-capitalized", hint: "Usually lowercase, unlike the full degree name." },
+  { question: "Is God Capitalized?", href: "/blog/is-god-capitalized", hint: "A proper name in monotheism, a common noun in the plural." },
+  { question: "Title Case vs Sentence Case", href: "/blog/sentence-vs-title-case", hint: "Which style fits news, academic, and UX writing." },
   { question: "What Words Are Not Capitalized in a Title?", href: "/blog/what-words-are-not-capitalized-in-a-title", hint: "Articles, short prepositions, and short conjunctions." },
 ]
 

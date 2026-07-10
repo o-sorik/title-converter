@@ -123,7 +123,7 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
     ctaWord: `President Biden Addresses the Nation`,
     ctaText: `Try the free Title Case Converter to check capitalization in your titles and headings.`,
 
-    relatedSlugs: ["do-you-capitalize-seasons", "do-you-capitalize-after-a-colon", "is-professor-capitalized"],
+    relatedSlugs: ["is-constitution-capitalized", "is-god-capitalized", "do-you-capitalize-seasons", "is-professor-capitalized"],
   },
 
   {
@@ -301,7 +301,7 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
     ctaWord: `How Life on Earth Began`,
     ctaText: `Writing a title that includes "Earth"? Our free Title Case Converter handles capitalization across AP, APA, Chicago, and MLA styles.`,
 
-    relatedSlugs: ["do-you-capitalize-seasons", "is-president-capitalized"],
+    relatedSlugs: ["is-god-capitalized", "do-you-capitalize-seasons", "is-president-capitalized"],
   },
 
   {
@@ -926,6 +926,182 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
     ctaText: `Writing a title that includes "English"? Our free Title Case Converter handles capitalization across AP, APA, Chicago, and MLA styles automatically.`,
 
     relatedSlugs: ["is-math-capitalized", "do-you-capitalize-majors", "is-professor-capitalized", "is-president-capitalized"],
+  },
+  {
+    slug: "is-god-capitalized",
+    word: "God",
+    answerVariant: "it-depends",
+    answerBox: `It depends on which god you mean. Capitalize "God" when it refers to the deity of a monotheistic religion – Christianity, Judaism, or Islam – because it functions as a proper name. Keep it lowercase when the word works as a category: the Greek gods, a sun god, gods and goddesses.`,
+
+    whenHeading: `When to Capitalize "God"`,
+    whenBody: `The rule comes down to whether the word is being used as a name or as a label. In monotheistic religions, "God" is the name of a specific being – there's only one, and the word points directly at it, the same way "Maria" points at a specific person. Proper names get capital letters, so God prayed to, thanked, or quoted in scripture is always capitalized.\n\nThe moment the word describes a type of being instead of naming one, it becomes a common noun. Ancient Greece had many gods. Thor is a god of thunder. In those sentences, "god" works like "king" or "hero" – a category, not a name.\n\nNote that the names of individual deities in any religion are still capitalized: Zeus, Odin, Vishnu, Allah. What stays lowercase is the category word "god" itself when it isn't functioning as a name.`,
+
+    ruleBlockHeading: "Quick Rules",
+    ruleBlock: {
+      capitalizeRules: [
+        `The monotheistic deity, used as a name: God created the heavens.`,
+        `Proper names of specific deities in any religion: Zeus, Allah, Vishnu, Yahweh.`,
+        `Common expressions that reference the deity: thank God, God willing, act of God.`,
+        `Compounds built on the name: God-fearing, God-given.`,
+      ],
+      lowercaseRules: [
+        `Plural or generic references: the gods of Olympus, gods and goddesses.`,
+        `With an article describing a type: a sun god, the god of war.`,
+        `Metaphorical uses: he treats money as a god.`,
+        `Derived adjectives and nouns: godly, godlike, godsend, godparent.`,
+      ],
+      tip: `Substitute a personal name. If "God blessed them" works like "Maria blessed them," capitalize. If the word needs "a" or "the" in front to make sense, it's a category – lowercase.`,
+    },
+
+    styleComparisonHeading: `What About Pronouns – He or he?`,
+    styleComparisonBody: `The noun is settled – every major style guide capitalizes "God" for the monotheistic deity. The real disagreement is over pronouns.\n\nAP style lowercases all pronouns referring to the deity: he, him, his, thee, thou. News writing treats deity pronouns like any other pronoun.\n\nChicago (CMOS 8.95) also lowercases them by default, but explicitly allows capitalization if the author or publisher prefers it. Chicago notes that capitalizing "He" and "Him" can read as an expression of the writer's own faith, so the choice depends on the audience.\n\nReligious publishing often goes the other way – many Christian publishers capitalize deity pronouns as a mark of reverence. If you're writing for a general audience, lowercase is the safer default. If you're writing devotional or liturgical material, follow the publisher's house style and be consistent.`,
+
+    doExamples: [
+      `She prays to God every morning.`,
+      `The Greek gods lived on Mount Olympus.`,
+      `Thank God the storm passed quickly.`,
+      `Hindu tradition includes many gods and goddesses.`,
+    ],
+
+    doNotExamples: [
+      {
+        text: `We studied the Greek Gods in mythology class.`,
+        reason: `Generic plural – "gods" is a category here, not a name. Lowercase: the Greek gods.`,
+      },
+      {
+        text: `Do you believe in god?`,
+        reason: `This refers to the monotheistic deity by name – capitalize: Do you believe in God?`,
+      },
+      {
+        text: `He's a God at chess.`,
+        reason: `Metaphorical use – the word means "extremely skilled person," not the deity. Lowercase: a god at chess.`,
+      },
+    ],
+
+    edgeCasesHeading: `Edge Cases Worth Knowing`,
+    edgeCasesBody: `"God" produces more borderline calls than most capitalization questions because the same three letters can be a name, a category, an exclamation, or part of a compound. These are the cases writers actually hit.`,
+    edgeCaseItems: [
+      `"Oh my God" vs. "omg." In full spelling, most style guides capitalize the exclamation because it invokes the name: oh my God. The texting abbreviation is lowercase by convention: omg. AP uses OMG in the rare cases it prints the abbreviation.`,
+      `"Goddess" follows the same logic. Capitalize only as part of a name or formal title (the Goddess Athena in some translations); lowercase as a category: the goddess of wisdom, ancient goddesses.`,
+      `Substitute names are capitalized. Words used in place of the name – the Lord, the Almighty, the Creator – take capitals, exactly like the name itself.`,
+      `Compounds split by meaning. Keep the capital when the compound contains the name: God-given talent, God-fearing. Lowercase when the word has drifted into ordinary vocabulary: godsend, godfather, godspeed.`,
+    ],
+
+    faqItems: [
+      {
+        question: `Is "god" capitalized in "oh my god"?`,
+        answer: `In formal writing, yes – the phrase invokes the deity by name: oh my God. In casual text messages and the abbreviation "omg," lowercase is the accepted convention. Pick based on the formality of what you're writing.`,
+      },
+      {
+        question: `Do you capitalize "He" and "Him" when referring to God?`,
+        answer: `AP style says no – deity pronouns are lowercase. Chicago also defaults to lowercase but allows author preference. Many religious publishers capitalize them as a mark of reverence. Choose one approach for your document and stay consistent.`,
+      },
+      {
+        question: `Is "gods" capitalized when writing about Greek mythology?`,
+        answer: `No. Plural and generic uses are common nouns: the Greek gods, the gods of Olympus. The individual names are capitalized – Zeus, Athena, Apollo – but the category word "gods" stays lowercase.`,
+      },
+      {
+        question: `Is "godly" capitalized?`,
+        answer: `No. Adjectives and derived words are lowercase: godly, godlike, godsend, godless. The exception is compounds that contain the actual name, which keep the capital: God-fearing, God-given.`,
+      },
+      {
+        question: `Is "god" capitalized in a title?`,
+        answer: `Yes, always. In title case, every noun is capitalized regardless of the sentence-level rules – so both "In Search of God" and "The Greek Gods of Olympus" capitalize the word. The lowercase rules above apply to regular sentences, not titles.`,
+      },
+    ],
+
+    ctaWord: `a history of the greek gods`,
+    ctaText: `Writing a title with "god" in it? Our free Title Case Converter applies AP, APA, Chicago, or MLA capitalization automatically.`,
+
+    relatedSlugs: ["is-earth-capitalized", "is-president-capitalized", "is-english-capitalized", "do-you-capitalize-seasons"],
+  },
+  {
+    slug: "is-constitution-capitalized",
+    word: "Constitution",
+    answerVariant: "it-depends",
+    answerBox: `It depends on which constitution. Capitalize "Constitution" when referring to the U.S. Constitution – with or without the "U.S." – and when naming another nation's or state's constitution directly: the French Constitution, the Massachusetts Constitution. Lowercase generic references: the state constitution, the club's constitution, constitutional rights.`,
+
+    whenHeading: `When to Capitalize "Constitution"`,
+    whenBody: `"Constitution" follows the standard rule for document titles: capitalize it when it names a specific formal document, lowercase it when it describes a type of document.\n\nIn American writing, the U.S. Constitution gets special treatment. AP style capitalizes it even without the "U.S." in front – The senator quoted the Constitution – because readers know exactly which document is meant. Chicago style agrees: the Constitution of the United States, the U.S. Constitution, and the shorthand the Constitution are all capitalized.\n\nFor other constitutions, capitalization depends on whether the name is attached. Write the French Constitution and the Massachusetts Constitution – but the nation's constitution, the state constitution, and the organization's constitution stay lowercase, because those phrases describe rather than name.`,
+
+    ruleBlockHeading: "Quick Rules",
+    ruleBlock: {
+      capitalizeRules: [
+        `The U.S. Constitution, with or without the modifier: She cited the Constitution.`,
+        `Another nation's or state's constitution named directly: the French Constitution, the Texas Constitution.`,
+        `Formal document titles: the Constitution of the United States.`,
+        `Specific amendments: the First Amendment, the 14th Amendment.`,
+      ],
+      lowercaseRules: [
+        `Generic references: the state constitution, the nation's constitution.`,
+        `Organizations and clubs: the union's constitution, our chess club's constitution.`,
+        `The adjective, always: constitutional law, unconstitutional.`,
+        `Generic amendments: a constitutional amendment, several amendments.`,
+      ],
+      tip: `If you could put the phrase on the document's cover page as its title, capitalize it. If it just describes what kind of document it is, lowercase.`,
+    },
+
+    styleComparisonHeading: `AP Style vs. Chicago Style`,
+    styleComparisonBody: `The two big guides agree on the essentials here – both capitalize the U.S. Constitution with or without the modifier, both capitalize named amendments, and both lowercase "constitutional" in every position.\n\nThe practical difference is in how amendments are numbered. AP spells out First through Ninth and switches to numerals from 10 up: the First Amendment, the 14th Amendment. Chicago spells out numbers through one hundred: the Fourteenth Amendment.\n\nOne shared trap: "constitutional" never inherits the capital from "Constitution." Even in phrases tied directly to the U.S. document – constitutional convention, constitutional scholar, constitutional rights – the adjective is lowercase in both guides.`,
+
+    doExamples: [
+      `The Supreme Court interprets the Constitution.`,
+      `The First Amendment protects freedom of speech.`,
+      `Delegates drafted the Massachusetts Constitution in 1779.`,
+      `The bylaws function as the club's constitution.`,
+    ],
+
+    doNotExamples: [
+      {
+        text: `The law was ruled unconstitutional under the constitution.`,
+        reason: `Reference to the U.S. Constitution – capitalize: under the Constitution. ("Unconstitutional" is correctly lowercase.)`,
+      },
+      {
+        text: `Every member received a copy of the club's Constitution.`,
+        reason: `An organization's governing document is a generic reference – lowercase: the club's constitution.`,
+      },
+      {
+        text: `The court cited the first amendment.`,
+        reason: `Named amendments are capitalized: the First Amendment.`,
+      },
+    ],
+
+    edgeCasesHeading: `Edge Cases Worth Knowing`,
+    edgeCasesBody: `Most mistakes with "constitution" come from over-capitalizing – writers see a legal context and reach for the capital letter. These are the boundaries.`,
+    edgeCaseItems: [
+      `Standalone references to other countries' constitutions. With the country name, capitalize: the French Constitution. Without it, lowercase: France adopted a new constitution in 1958.`,
+      `"Constitutional" never takes a capital – not in constitutional convention, constitutional law, or constitutional amendment. The adjective is always lowercase, even right next to a capitalized "Constitution."`,
+      `Amendment numbers follow your style guide. AP: First through Ninth spelled out, numerals from the 10th Amendment on. Chicago: spelled out through one hundred – the Fourteenth Amendment.`,
+      `Historical documents follow the same title rule: the Articles of Confederation, the Bill of Rights, and the Declaration of Independence are all capitalized as formal document names.`,
+    ],
+
+    faqItems: [
+      {
+        question: `Is "constitution" capitalized when it stands alone?`,
+        answer: `Only when it refers to the U.S. Constitution. AP and Chicago both capitalize the standalone shorthand – defend the Constitution – because it names a specific document. A standalone reference to any other constitution is lowercase: the country ratified its constitution.`,
+      },
+      {
+        question: `Is "constitutional" capitalized?`,
+        answer: `No, never. The adjective is always lowercase: constitutional rights, constitutional law, unconstitutional. This holds in every major style guide, even when the word sits next to a capitalized "Constitution."`,
+      },
+      {
+        question: `Do you capitalize "amendment"?`,
+        answer: `Capitalize named amendments: the First Amendment, the 14th Amendment. Lowercase generic uses: a constitutional amendment, the amendment process. The word only takes a capital when it's part of a specific amendment's name.`,
+      },
+      {
+        question: `Is "bill of rights" capitalized?`,
+        answer: `Yes – the Bill of Rights is the formal name of the first ten amendments to the U.S. Constitution, so it's capitalized as a document title. A generic bill of rights for another context (a consumer bill of rights) is lowercase.`,
+      },
+      {
+        question: `Is "constitution" capitalized in a title?`,
+        answer: `Yes. In title case, all nouns are capitalized regardless of sentence-level rules – "A Guide to the Constitution" and "How State Constitutions Work" both capitalize it. The lowercase rules apply to regular sentences, not headlines.`,
+      },
+    ],
+
+    ctaWord: `a beginner's guide to the constitution`,
+    ctaText: `Writing a headline about law or government? Our free Title Case Converter applies AP, APA, Chicago, or MLA rules automatically.`,
+
+    relatedSlugs: ["is-president-capitalized", "is-earth-capitalized", "is-high-school-capitalized", "is-god-capitalized"],
   },
 ]
 

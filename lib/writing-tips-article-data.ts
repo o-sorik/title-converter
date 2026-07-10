@@ -56,6 +56,11 @@ export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
             type: "paragraph",
             text: "In title case, most words get capitalized – but short “function words” stay lowercase. These include articles (*a, an, the*), short prepositions (*in, on, at, to, for, of, by*), and short conjunctions (*and, but, or, nor, yet, so*). The catch: every style guide defines “short” differently, and some words change depending on how they’re used in the sentence. Here’s the full breakdown by word type and style guide.",
           },
+          {
+            type: "paragraph",
+            variant: "note",
+            text: "Still deciding between capitalization styles themselves? See [Title Case vs Sentence Case: When to Use Each](/blog/sentence-vs-title-case).",
+          },
         ],
       },
       {
@@ -375,6 +380,240 @@ export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
               "[MLA Style: Capitalization of Titles](https://style.mla.org/capitalization-of-titles/) – MLA’s Q&A on headline-style capitalization",
               "[Chicago Manual of Style: Titles FAQ](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/CapitalizationTitles/faq0007.html) – CMOS headline-style capitalization principles",
               "[Purdue OWL: Help with Capitals](https://owl.purdue.edu/owl/general_writing/mechanics/help_with_capitals.html) – multi-style reference (AP, APA, MLA, Chicago)",
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "sentence-vs-title-case",
+    tags: ["Title Case", "Sentence Case", "Writing Tips"],
+    ctaWord: "how to choose between title case and sentence case",
+    ctaText: "Try both styles on your own headline – our free converter switches between title case (AP, APA, Chicago, MLA) and sentence case instantly.",
+    relatedSlugs: [
+      "what-words-are-not-capitalized-in-a-title",
+      "do-you-capitalize-after-a-colon",
+      "apa-7-title-case-guide",
+      "ap-title-capitalization-basics",
+    ],
+    faqItems: [
+      {
+        question: `Is title case or sentence case better for SEO?`,
+        answer: `Neither. Google ignores capitalization when ranking pages – "How to Write Headlines" and "How to write headlines" are the same query target. Choose based on readability and brand consistency, not rankings. Click-through differences between the two styles are small and audience-dependent.`,
+      },
+      {
+        question: `Should email subject lines use title case or sentence case?`,
+        answer: `Both work. Sentence case reads more personal and conversational – like a note from a colleague. Title case reads more formal and promotional. Newsletters often use title case; personal outreach usually performs better in sentence case. Pick one style per campaign and stay consistent.`,
+      },
+      {
+        question: `Do British and American publications capitalize headlines differently?`,
+        answer: `Broadly, yes. Most British outlets – the BBC, The Guardian, The Times – use sentence case for headlines. Major American papers like The New York Times and The Wall Street Journal still use title case, though many digital-first US outlets have switched to sentence case.`,
+      },
+      {
+        question: `Does APA use title case or sentence case?`,
+        answer: `Both, in different places. APA 7 uses title case for your paper's title, all headings, and titles of works mentioned in the text. It uses sentence case for article and book titles in the reference list. That split trips up more students than any other APA capitalization rule.`,
+      },
+      {
+        question: `What about writing headlines in ALL CAPS?`,
+        answer: `Avoid it for anything longer than a word or two. All caps removes the word shapes readers use to scan text, so it's measurably slower to read – and it reads as shouting. It's fine for short interface labels and section markers, not for headlines.`,
+      },
+    ],
+    sections: [
+      {
+        id: "intro",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "Title case capitalizes most words: *How to Write Better Headlines*. Sentence case capitalizes only the first word and proper nouns: *How to write better headlines*. Neither is more correct – they're competing conventions, and the right one depends on where the text will live. News headlines, academic papers, app interfaces, and email subject lines each have their own norms. Here's how the two styles work and when to use each.",
+          },
+        ],
+      },
+      {
+        id: "difference-at-a-glance",
+        heading: "The Difference at a Glance",
+        tocLabel: "At a glance",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "The mechanical difference is simple – title case has rules about which words to capitalize, sentence case barely has rules at all.",
+          },
+          {
+            type: "table",
+            headers: ["", "Title Case", "Sentence Case"],
+            rows: [
+              ["What's capitalized", "First word, last word, all major words", "First word and proper nouns only"],
+              ["Example", "The Art of Saying No", "The art of saying no"],
+              ["Feels", "Formal, editorial, polished", "Conversational, modern, quiet"],
+              ["Common in", "US news, books, academic headings", "UK news, UX writing, web content"],
+              ["Rule complexity", "High – style guides disagree on details", "Low – one rule, few exceptions"],
+            ],
+          },
+        ],
+      },
+      {
+        id: "what-is-title-case",
+        heading: "What Is Title Case?",
+        tocLabel: "Title case",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "Title case (also called headline case or headline style) capitalizes the first word, the last word, and every major word between them – nouns, verbs, adjectives, adverbs, and pronouns. Minor words stay lowercase: articles (*a, an, the*), short prepositions, and coordinating conjunctions (*and, but, or*).",
+          },
+          {
+            type: "paragraph",
+            text: "The complexity lives in the word “short.” AP and APA capitalize prepositions of four or more letters, Chicago (18th edition) capitalizes five or more, and MLA lowercases all prepositions regardless of length. The full breakdown is in [What Words Are Not Capitalized in a Title?](/blog/what-words-are-not-capitalized-in-a-title) and our [capitalization rules guide](/capitalization-rules-guide).",
+          },
+          {
+            type: "paragraph",
+            text: "One common misunderstanding: title case is not Capitalizing Every Single Word. *The Art Of Saying No* – with a capital “Of” – isn't any recognized style. Every guide lowercases at least the articles and short prepositions.",
+          },
+        ],
+      },
+      {
+        id: "what-is-sentence-case",
+        heading: "What Is Sentence Case?",
+        tocLabel: "Sentence case",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "Sentence case capitalizes a headline exactly like a sentence: first word up, everything else down unless it's a proper noun. *Why remote teams need better meeting notes.* That's the whole rule.",
+          },
+          {
+            type: "paragraph",
+            text: "The exceptions are the ones you'd expect in any sentence – proper nouns (*Google, October, English*), the pronoun *I*, and acronyms (*NASA, SEO*) keep their capitals. After a colon, most styles capitalize the next word only if it starts a complete sentence – the same judgment call covered in [Do You Capitalize After a Colon?](/blog/do-you-capitalize-after-a-colon)",
+          },
+          {
+            type: "paragraph",
+            text: "Because there are no length thresholds and no style-guide disagreements, sentence case is faster to write consistently – which is a big part of why digital products have gravitated toward it.",
+          },
+        ],
+      },
+      {
+        id: "side-by-side",
+        heading: "The Same Headlines, Side by Side",
+        tocLabel: "Side by side",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "Seeing the two styles on identical text makes the tonal difference obvious – title case announces, sentence case talks.",
+          },
+          {
+            type: "table",
+            headers: ["Title Case", "Sentence Case"],
+            rows: [
+              ["10 Ways to Improve Your Writing Today", "10 ways to improve your writing today"],
+              ["Why We Switched from Slack to Email", "Why we switched from Slack to email"],
+              ["A Beginner's Guide to Investing in Index Funds", "A beginner's guide to investing in index funds"],
+              ["What the New Privacy Law Means for You", "What the new privacy law means for you"],
+            ],
+          },
+          {
+            type: "paragraph",
+            text: "Note the second row: “Slack” keeps its capital in sentence case because it's a brand name. Sentence case never means lowercasing proper nouns.",
+          },
+        ],
+      },
+      {
+        id: "when-to-use-which",
+        heading: "When to Use Which",
+        tocLabel: "When to use which",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "There's no universal answer – there are conventions per medium. These are the ones that matter in practice.",
+          },
+          {
+            type: "paragraph",
+            variant: "subheading",
+            text: "News and journalism: split by tradition",
+          },
+          {
+            type: "paragraph",
+            text: "The New York Times and The Wall Street Journal still run title case headlines. The BBC, The Guardian, and most British outlets use sentence case – and many digital-first American publications have followed them. If you write for a publication, its style guide decides; [AP's own composition-title rules](/blog/ap-title-capitalization-basics) govern how titles of works appear inside articles.",
+          },
+          {
+            type: "paragraph",
+            variant: "subheading",
+            text: "Academic writing: title case, with one APA exception",
+          },
+          {
+            type: "paragraph",
+            text: "Paper titles and headings use title case in APA, MLA, and Chicago. The exception: [APA 7 switches to sentence case in the reference list](/blog/apa-7-title-case-guide) – *Thinking, fast and slow* in the references, but *Thinking, Fast and Slow* in the body text.",
+          },
+          {
+            type: "paragraph",
+            variant: "subheading",
+            text: "Interfaces and product writing: the giants disagree",
+          },
+          {
+            type: "paragraph",
+            text: "Apple's Human Interface Guidelines use title case for most controls – menu items, buttons, alert titles. Google standardized on sentence case across Material Design and its developer documentation. Neither is wrong; what's wrong is mixing them. Pick one, write it into your design system, and apply it everywhere.",
+          },
+          {
+            type: "paragraph",
+            variant: "subheading",
+            text: "Marketing and email: match the register",
+          },
+          {
+            type: "paragraph",
+            text: "Title case signals polish and promotion – it suits product launches, landing pages, and newsletter mastheads. Sentence case signals a person talking – it suits outreach, onboarding emails, and UX copy. The practical test: read it aloud. If it should sound like an announcement, use title case; if it should sound like a message, use sentence case.",
+          },
+        ],
+      },
+      {
+        id: "common-mistakes",
+        heading: "Common Mistakes",
+        tocLabel: "Common mistakes",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "Most capitalization problems aren't about picking the wrong style – they're about applying the chosen style inconsistently.",
+          },
+          {
+            type: "list",
+            items: [
+              "**Mixing styles on one page.** A title case H1 above sentence case H2s (or the reverse) reads as sloppy even when each heading is individually correct. Audit the whole page, not each heading.",
+              "**Capitalizing Every Word Including The Small Ones.** That's not title case – articles and short prepositions stay lowercase in every style guide.",
+              "**Lowercasing proper nouns in sentence case.** *why iphone users switch to android* is wrong in any style – brand names and proper nouns always keep their capitals.",
+              "**Forgetting the first and last word rule.** In title case, the first and last words are capitalized no matter what they are: *Something to Believe In* ends with a capitalized “In.”",
+              "**Letting your CMS decide.** Some themes force uppercase or title case via CSS. Check what's actually rendered, not just what you typed.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "quick-reference",
+        heading: "Quick Reference",
+        tocLabel: "Quick reference",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "**Choose title case if** you're writing for US news, books, academic titles and headings, or a brand with a formal, editorial voice.",
+          },
+          {
+            type: "paragraph",
+            text: "**Choose sentence case if** you're writing UK-style news, UX and interface copy, conversational marketing, or documentation – or if you want the lowest-maintenance rule set.",
+          },
+          {
+            type: "paragraph",
+            text: "**Either way:** apply one style everywhere, keep proper nouns capitalized, and let a tool handle the fiddly words. Our [Title Case Converter](/) applies AP, APA, Chicago, or MLA rules, and the [Sentence Case Converter](/sentence-case-converter) handles the reverse in one click.",
+          },
+        ],
+      },
+      {
+        id: "sources",
+        heading: "Sources",
+        hideFromToc: true,
+        blocks: [
+          {
+            type: "list",
+            items: [
+              "[APA Style: Title Case Capitalization](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case) – where APA requires title case",
+              "[APA Style: Sentence Case Capitalization](https://apastyle.apa.org/style-grammar-guidelines/capitalization/sentence-case) – where APA requires sentence case, including reference lists",
+              "[MLA Style: Capitalization of Titles](https://style.mla.org/capitalization-of-titles/) – MLA's headline-style rules",
+              "[Google Developer Documentation Style Guide: Capitalization](https://developers.google.com/style/capitalization) – Google's sentence-case standard for headings and UI",
+              "[Apple Human Interface Guidelines: Writing](https://developer.apple.com/design/human-interface-guidelines/writing) – Apple's title-case conventions for interface elements",
             ],
           },
         ],

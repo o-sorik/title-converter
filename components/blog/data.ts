@@ -2,7 +2,6 @@ export type Category = {
   id: string
   name: string
   description: string
-  articleCount: number
 }
 
 export type Article = {
@@ -29,37 +28,31 @@ export const blogCategories: Category[] = [
     id: "apa-style",
     name: "APA Style",
     description: "Academic formatting guidance for titles, citations, and headings.",
-    articleCount: 12,
   },
   {
     id: "mla-style",
     name: "MLA Style",
     description: "Humanities-first rules for capitalization and title treatment.",
-    articleCount: 8,
   },
   {
     id: "chicago",
     name: "Chicago",
     description: "Formal editorial standards used in books and publishing.",
-    articleCount: 15,
   },
   {
     id: "journalism",
     name: "Journalism",
     description: "AP-focused guidance for newsroom and digital media workflows.",
-    articleCount: 10,
   },
   {
     id: "grammar-101",
     name: "Grammar 101",
     description: "Rule essentials to build confidence before style-specific decisions.",
-    articleCount: 30,
   },
   {
     id: "writing-tips",
     name: "Writing Tips",
     description: "Actionable copy and readability best practices for everyday writing.",
-    articleCount: 18,
   },
 ]
 
@@ -387,14 +380,37 @@ export const blogArticles: Article[] = [
   },
   {
     slug: "sentence-vs-title-case",
-    title: "Title Case vs Sentence Case: Choosing Your Voice",
+    title: "Title Case vs Sentence Case: When to Use Each",
     excerpt:
-      "Understand when to favor each style for UX copy, editorial pages, and professional messaging.",
+      "Title case capitalizes major words; sentence case only the first. Side-by-side examples plus which style fits news, academic, and UX writing.",
     categoryId: "writing-tips",
-    author: "Mila Ross",
-    updatedAt: "2023-10-15",
-    readTime: "4 min read",
-    image: "/images/blog/generated/checklist-desk-cover.webp",
+    author: "Sophia Stewart",
+    updatedAt: "2026-07-10",
+    readTime: "6 min",
+    image: "/images/blog/generated/laptop-workflow-cover.webp",
+    verifiedFor: "AP, APA, Chicago, MLA",
+  },
+  {
+    slug: "is-god-capitalized",
+    title: `Is "God" Capitalized?`,
+    excerpt: `Is "god" capitalized? Yes for the monotheistic deity – it's a proper name. Lowercase for gods in general. See the rules, pronoun guidance, and examples.`,
+    categoryId: "grammar-101",
+    author: "Sophia Stewart",
+    updatedAt: "2026-07-10",
+    readTime: "5 min",
+    image: "/images/blog/generated/editing-hands-cover.webp",
+    verifiedFor: "AP, Chicago",
+  },
+  {
+    slug: "is-constitution-capitalized",
+    title: `Is "Constitution" Capitalized?`,
+    excerpt: `Is "constitution" capitalized? Yes for the U.S. Constitution and named documents; lowercase generic references. See the rules, amendments, and examples.`,
+    categoryId: "grammar-101",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-07-10",
+    readTime: "5 min",
+    image: "/images/blog/generated/style-guides-stack-cover.webp",
+    verifiedFor: "AP, Chicago",
   },
 ]
 
