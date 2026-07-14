@@ -28,7 +28,7 @@ export function WritingTipsTemplate({ data, article }: WritingTipsTemplateProps)
       {data.relatedSlugs.length > 0 && (
         <section data-testid="writing-tips-related">
           <Separator className="mb-8" />
-          <h3 className="text-lg font-bold text-slate-900 dark:text-zinc-100">Related Capitalization Questions</h3>
+          <h3 className="text-lg font-bold text-slate-900 dark:text-zinc-100">Related Articles</h3>
           <ul className="mt-3 space-y-2 text-base text-slate-600 dark:text-zinc-300">
             {data.relatedSlugs.map((slug) => (
               <li key={slug}>

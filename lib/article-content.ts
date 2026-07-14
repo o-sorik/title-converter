@@ -85,6 +85,46 @@ export type ArticleBlock =
       rowHeader: string
       rows: { label: string; guides: Record<StyleGuideName, boolean> }[]
     }
+  | {
+      /**
+       * Grid of 1-4 headline figures. `value` is the big number ("238 WPM"),
+       * `label` the plain-text caption; `sourceName`/`sourceHref` render a
+       * small attribution link under the caption.
+       */
+      type: "statHighlight"
+      items: {
+        value: string
+        label: string
+        sourceName?: string
+        sourceHref?: string
+      }[]
+    }
+  | {
+      /**
+       * Horizontal percentage bars. `percent` (0-100) sets the bar width;
+       * `display` is the text shown next to the label ("73%", "51 WPM") so a
+       * bar can visualize non-percentage magnitudes scaled by the author.
+       */
+      type: "barList"
+      items: { label: string; percent: number; display: string }[]
+    }
+  | {
+      /**
+       * "Key Statistics" digest near the top of stats articles — the block
+       * both LLMs and linking bloggers lift. Items support the inline
+       * markdown subset; every item should carry a year and a source link.
+       */
+      type: "keyStats"
+      items: string[]
+    }
+  | {
+      /**
+       * Numbered primary-source list at the end of a stats article. Kept
+       * structured (not markdown) so sources stay queryable for audits.
+       */
+      type: "sources"
+      items: { name: string; publisher: string; year: string; href: string }[]
+    }
 
 export interface ArticleSection {
   id: string

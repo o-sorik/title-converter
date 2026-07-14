@@ -66,6 +66,71 @@ describe("ArticleBlockRenderer", () => {
     expect(html).toContain("<em>Success at Work</em>")
   })
 
+  test("renders statHighlight grid with source attribution link", () => {
+    const html = renderToStaticMarkup(
+      <ArticleBlockRenderer
+        block={{
+          type: "statHighlight",
+          items: [
+            { value: "52 WPM", label: "Average typing speed", sourceName: "Dhakal et al., 2018", sourceHref: "https://userinterfaces.aalto.fi/136Mkeystrokes/" },
+            { value: "36.2 WPM", label: "Average mobile typing speed", sourceName: "Palin et al., 2019" },
+          ],
+        }}
+      />
+    )
+    expect(html).toContain("52 WPM")
+    expect(html).toContain('href="https://userinterfaces.aalto.fi/136Mkeystrokes/"')
+    expect(html).toContain("Palin et al., 2019")
+    expect(html).toContain("sm:grid-cols-2")
+  })
+
+  test("renders barList with clamped widths", () => {
+    const html = renderToStaticMarkup(
+      <ArticleBlockRenderer
+        block={{
+          type: "barList",
+          items: [
+            { label: "Ages 10–19", percent: 100, display: "39.6 WPM" },
+            { label: "Ages 50–59", percent: 120, display: "26.3 WPM" },
+          ],
+        }}
+      />
+    )
+    expect(html).toContain("39.6 WPM")
+    expect(html).toContain("width:100%")
+    expect(html).not.toContain("width:120%")
+  })
+
+  test("renders keyStats digest with inline markdown", () => {
+    const html = renderToStaticMarkup(
+      <ArticleBlockRenderer
+        block={{
+          type: "keyStats",
+          items: ["**238 WPM** – average silent reading speed ([Brysbaert, 2019](https://example.com/paper))"],
+        }}
+      />
+    )
+    expect(html).toContain("Key Statistics")
+    expect(html).toContain("<strong>238 WPM</strong>")
+    expect(html).toContain('href="https://example.com/paper"')
+  })
+
+  test("renders numbered sources with publisher and year", () => {
+    const html = renderToStaticMarkup(
+      <ArticleBlockRenderer
+        block={{
+          type: "sources",
+          items: [
+            { name: "Observations on Typing from 136 Million Keystrokes", publisher: "Aalto University", year: "2018", href: "https://userinterfaces.aalto.fi/136Mkeystrokes/" },
+          ],
+        }}
+      />
+    )
+    expect(html).toContain("<ol")
+    expect(html).toContain("Aalto University, 2018")
+    expect(html).toContain('rel="noopener noreferrer"')
+  })
+
   test("renders paragraph variants", () => {
     const note = renderToStaticMarkup(<ArticleBlockRenderer block={{ type: "paragraph", text: "note", variant: "note" }} />)
     expect(note).toContain("text-sm")

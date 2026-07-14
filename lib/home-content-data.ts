@@ -23,6 +23,8 @@ export const POPULAR_CAPITALIZATION_QUESTIONS: PopularCapitalizationQuestion[] =
   { question: "Is God Capitalized?", href: "/blog/is-god-capitalized", hint: "A proper name in monotheism, a common noun in the plural." },
   { question: "Title Case vs Sentence Case", href: "/blog/sentence-vs-title-case", hint: "Which style fits news, academic, and UX writing." },
   { question: "What Words Are Not Capitalized in a Title?", href: "/blog/what-words-are-not-capitalized-in-a-title", hint: "Articles, short prepositions, and short conjunctions." },
+  { question: "What Is the Average Typing Speed?", href: "/blog/average-typing-speed", hint: "52 WPM on a keyboard – data from 200,000+ typists." },
+  { question: "How Many Words Are in a Novel?", href: "/blog/how-many-words-in-a-novel", hint: "40,000 words officially, 80,000–100,000 commercially." },
 ]
 
 export const TITLE_CASE_MISTAKES: TitleCaseMistake[] = [

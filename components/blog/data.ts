@@ -54,6 +54,11 @@ export const blogCategories: Category[] = [
     name: "Writing Tips",
     description: "Actionable copy and readability best practices for everyday writing.",
   },
+  {
+    id: "writing-statistics",
+    name: "Writing Statistics",
+    description: "Verified, sourced statistics on writing, reading, and grammar – every figure traced to primary research.",
+  },
 ]
 
 export const blogArticles: Article[] = [
@@ -411,6 +416,72 @@ export const blogArticles: Article[] = [
     readTime: "5 min",
     image: "/images/blog/generated/style-guides-stack-cover.webp",
     verifiedFor: "AP, Chicago",
+  },
+  {
+    slug: "average-typing-speed",
+    title: "What Is the Average Typing Speed? (Data From 200K Typists)",
+    excerpt:
+      "The average typing speed is 52 WPM on a physical keyboard and 36 WPM on a phone, per Aalto University studies of 200,000+ typists. See where you rank.",
+    categoryId: "writing-statistics",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-07-14",
+    readTime: "7 min read",
+    image: "/images/blog/generated/laptop-workflow-cover.webp",
+  },
+  {
+    slug: "how-long-should-a-blog-post-be",
+    title: "How Long Should a Blog Post Be? What the Data Says",
+    excerpt:
+      "The average blog post is 1,333 words in 2025 – and shrinking for the first time in the AI era. What 912 million posts reveal about ideal blog length.",
+    categoryId: "writing-statistics",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-07-14",
+    readTime: "8 min read",
+    image: "/images/blog/generated/checklist-desk-cover.webp",
+  },
+  {
+    slug: "commonly-misspelled-words",
+    title: "What Are the Most Commonly Misspelled Words?",
+    excerpt:
+      "\"Publicly\" tops Oxford's 2-billion-word corpus of misspellings. See the full list, state-by-state Google data, and survey stats – every figure sourced.",
+    categoryId: "writing-statistics",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-07-14",
+    readTime: "9 min read",
+    image: "/images/blog/generated/editing-hands-cover.webp",
+  },
+  {
+    slug: "common-grammar-mistakes",
+    title: "What Are the Most Common Grammar Mistakes?",
+    excerpt:
+      "The #1 grammar mistake is using the wrong word – 13.7% of all errors in a national study of 877 college papers. See the full top 20, ranked by real data.",
+    categoryId: "writing-statistics",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-07-14",
+    readTime: "8 min read",
+    image: "/images/blog/generated/checklist-desk-cover.webp",
+  },
+  {
+    slug: "average-reading-speed",
+    title: "What Is the Average Reading Speed?",
+    excerpt:
+      "Adults silently read non-fiction at 238 words per minute (Brysbaert, 2019). Full stats by age, grade, and medium – every figure with its primary source.",
+    categoryId: "writing-statistics",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-07-14",
+    readTime: "8 min read",
+    image: "/images/blog/generated/apa-notebook-cover.webp",
+  },
+  {
+    slug: "how-many-words-in-a-novel",
+    title: "How Many Words Are in a Novel? The Real Numbers",
+    excerpt:
+      "A novel officially starts at 40,000 words, but publishers expect 80,000–100,000. Verified word counts by genre, famous books, pages, and chapters.",
+    categoryId: "writing-statistics",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-07-14",
+    readTime: "8 min read",
+    image: "/images/blog/generated/style-guides-stack-cover.webp",
   },
 ]
 

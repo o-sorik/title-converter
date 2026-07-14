@@ -144,6 +144,94 @@ export function ArticleBlockRenderer({ block }: { block: ArticleBlock }) {
           </table>
         </div>
       )
+    case "statHighlight":
+      return (
+        <div
+          className={cn(
+            "grid gap-4",
+            block.items.length === 1 && "grid-cols-1",
+            block.items.length === 2 && "grid-cols-1 sm:grid-cols-2",
+            block.items.length >= 3 && "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          )}
+        >
+          {block.items.map((item, index) => (
+            <div key={index} className="border-t-2 border-slate-900 pt-3 dark:border-zinc-100">
+              <p className="text-3xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-4xl">
+                {item.value}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-slate-700 dark:text-zinc-300">{item.label}</p>
+              {item.sourceName &&
+                (item.sourceHref ? (
+                  <a
+                    href={item.sourceHref}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    className="mt-1 inline-block cursor-pointer text-xs text-slate-500 underline underline-offset-4 dark:text-zinc-400"
+                  >
+                    {item.sourceName}
+                  </a>
+                ) : (
+                  <p className="mt-1 text-xs text-slate-500 dark:text-zinc-400">{item.sourceName}</p>
+                ))}
+            </div>
+          ))}
+        </div>
+      )
+    case "barList":
+      return (
+        <div className="space-y-4">
+          {block.items.map((item, index) => (
+            <div key={index}>
+              <div className="flex items-baseline justify-between gap-4">
+                <span className={cn(li, "font-medium")}>{renderInline(item.label)}</span>
+                <span className="shrink-0 text-sm font-bold tabular-nums text-slate-900 dark:text-zinc-100">
+                  {item.display}
+                </span>
+              </div>
+              <div className="mt-1.5 h-2 rounded-full bg-slate-100 dark:bg-zinc-800">
+                <div
+                  className="h-2 rounded-full bg-blue-600 dark:bg-blue-500"
+                  style={{ width: `${Math.min(Math.max(item.percent, 0), 100)}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    case "keyStats":
+      return (
+        <div className="border-t-2 border-slate-900 pt-4 dark:border-zinc-100">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-blue-700 dark:text-blue-400">
+            Key Statistics
+          </p>
+          <ul className="mt-3 space-y-2.5">
+            {block.items.map((item, index) => (
+              <li key={index} className={cn(li, "flex gap-3")}>
+                <span aria-hidden className="mt-[11px] h-1.5 w-1.5 shrink-0 rounded-full bg-blue-600 dark:bg-blue-500" />
+                <span>{renderInline(item)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )
+    case "sources":
+      return (
+        <ol className="list-decimal space-y-2 pl-5">
+          {block.items.map((item, index) => (
+            <li key={index} className="text-sm leading-6 text-slate-600 dark:text-zinc-400">
+              <a
+                href={item.href}
+                rel="noopener noreferrer"
+                target="_blank"
+                className={cn(linkClass, "cursor-pointer")}
+              >
+                {item.name}
+              </a>{" "}
+              — {item.publisher}, {item.year}
+            </li>
+          ))}
+        </ol>
+      )
     case "styleGuideMatrix":
       return (
         <div className={tableWrap}>

@@ -6,9 +6,9 @@ describe("getBlogIndexPageViewModel", () => {
     const model = getBlogIndexPageViewModel()
     const slugs = model.latest.map((article) => article.slug)
 
-    expect(slugs).toContain("sentence-vs-title-case")
-    expect(slugs).toContain("is-god-capitalized")
-    expect(slugs).toContain("is-constitution-capitalized")
+    expect(slugs).toContain("average-typing-speed")
+    expect(slugs).toContain("how-long-should-a-blog-post-be")
+    expect(slugs).toContain("commonly-misspelled-words")
   })
 })
 
