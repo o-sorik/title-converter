@@ -6,9 +6,9 @@ describe("getBlogIndexPageViewModel", () => {
     const model = getBlogIndexPageViewModel()
     const slugs = model.latest.map((article) => article.slug)
 
-    expect(slugs).toContain("average-typing-speed")
-    expect(slugs).toContain("how-long-should-a-blog-post-be")
-    expect(slugs).toContain("commonly-misspelled-words")
+    expect(slugs).toContain("words-per-page")
+    expect(slugs).toContain("how-many-words-average-person-knows")
+    expect(slugs).toContain("average-book-length")
   })
 })
 

@@ -483,6 +483,50 @@ export const blogArticles: Article[] = [
     readTime: "8 min read",
     image: "/images/blog/generated/style-guides-stack-cover.webp",
   },
+  {
+    slug: "words-per-page",
+    title: "How Many Words Are on a Page? The 250/500 Rule, Verified",
+    excerpt:
+      "A page holds ~500 words single-spaced or 250 double-spaced – but only under settings Word doesn't default to. Conversions, history, and printed-book data.",
+    categoryId: "writing-statistics",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-08-13",
+    readTime: "8 min read",
+    image: "/images/blog/generated/editing-hands-cover.webp",
+  },
+  {
+    slug: "how-many-words-average-person-knows",
+    title: "How Many Words Does the Average Person Know? (42,000)",
+    excerpt:
+      "The average 20-year-old knows 42,000 lemmas, per a study of 221,268 people. Vocabulary by age, words per day, Shakespeare, and what fluency really takes.",
+    categoryId: "writing-statistics",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-08-13",
+    readTime: "9 min read",
+    image: "/images/blog/generated/apa-notebook-cover.webp",
+  },
+  {
+    slug: "average-book-length",
+    title: "What Is the Average Book Length? Real Page-Count Data",
+    excerpt:
+      "Bestsellers average just under 400 pages – not the mythical 300. Measured data by genre, business books, audiobooks, picture books, and reading time.",
+    categoryId: "writing-statistics",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-08-13",
+    readTime: "9 min read",
+    image: "/images/blog/generated/style-guides-stack-cover.webp",
+  },
+  {
+    slug: "books-per-year",
+    title: "How Many Books Does the Average Person Read per Year?",
+    excerpt:
+      "The mean is 12.6 books a year, the median just 2–5, and a quarter read zero. Gallup, Pew, and YouGov data on who reads what – plus the CEO myth, debunked.",
+    categoryId: "writing-statistics",
+    author: "Oleh Kovalenko",
+    updatedAt: "2026-08-13",
+    readTime: "8 min read",
+    image: "/images/blog/generated/ap-typewriter-cover.webp",
+  },
 ]
 
 export const styleComparisons: Comparison[] = [

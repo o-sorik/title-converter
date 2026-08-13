@@ -8,10 +8,10 @@ export const AVERAGE_TYPING_SPEED_ARTICLE: WritingTipsArticle = {
     "Typed your draft at full speed? Formatting is the slow part – paste your headline into our free Title Case Converter and it applies AP, APA, Chicago, or MLA capitalization automatically.",
   relatedSlugs: [
     "average-reading-speed",
+    "words-per-page",
     "how-long-should-a-blog-post-be",
     "commonly-misspelled-words",
     "common-grammar-mistakes",
-    "how-many-words-in-a-novel",
   ],
   faqItems: [
     {

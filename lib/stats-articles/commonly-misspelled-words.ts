@@ -11,7 +11,7 @@ export const COMMONLY_MISSPELLED_WORDS_ARTICLE: WritingTipsArticle = {
     "average-typing-speed",
     "average-reading-speed",
     "how-long-should-a-blog-post-be",
-    "how-many-words-in-a-novel",
+    "how-many-words-average-person-knows",
   ],
   faqItems: [
     {

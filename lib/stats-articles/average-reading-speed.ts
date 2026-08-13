@@ -9,9 +9,9 @@ export const AVERAGE_READING_SPEED_ARTICLE: WritingTipsArticle = {
   relatedSlugs: [
     "average-typing-speed",
     "how-many-words-in-a-novel",
-    "how-long-should-a-blog-post-be",
-    "commonly-misspelled-words",
-    "common-grammar-mistakes",
+    "average-book-length",
+    "books-per-year",
+    "how-many-words-average-person-knows",
   ],
   faqItems: [
     {

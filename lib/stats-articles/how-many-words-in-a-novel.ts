@@ -7,11 +7,11 @@ export const HOW_MANY_WORDS_IN_A_NOVEL_ARTICLE: WritingTipsArticle = {
   ctaText:
     "Finished the manuscript? Your book title and chapter headings still need correct capitalization – run them through the free Title Case Converter before you submit.",
   relatedSlugs: [
+    "average-book-length",
+    "words-per-page",
     "average-reading-speed",
+    "books-per-year",
     "how-long-should-a-blog-post-be",
-    "average-typing-speed",
-    "commonly-misspelled-words",
-    "common-grammar-mistakes",
   ],
   faqItems: [
     {
