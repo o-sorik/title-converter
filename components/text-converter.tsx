@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 
-import { convert, convertWithExplanations, type ConversionType, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
+import { convertWithExplanations, convertWithSegments, type ConversionType, type OutputSegment, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
 import { TITLE_STYLES, STYLE_RULE_SUMMARY } from "@/lib/title-styles"
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
@@ -267,15 +267,27 @@ export function TextConverter({
     )
 
     // Derived state for output and explanations - converts live as the user types
-    const { output, explanations } = React.useMemo(() => {
+    // Segmented conversion drives both the output text and the inline diff, so
+    // the highlighting can never disagree with the result it annotates.
+    const { output, segments } = React.useMemo(() => {
         if (!deferredInput) {
-            return { output: "", explanations: [] as WordExplanation[] }
+            return { output: "", segments: [] as OutputSegment[] }
         }
-        if (showExplanations && outputSupportsExplanations) {
-            return convertWithExplanations(deferredInput, activeType, conversionOptions)
+        return convertWithSegments(deferredInput, activeType, conversionOptions)
+    }, [deferredInput, activeType, conversionOptions])
+
+    const changeCount = React.useMemo(
+        () => segments.filter((segment) => segment.type !== "unchanged").length,
+        [segments]
+    )
+
+    const explanations = React.useMemo(() => {
+        if (!deferredInput || !showExplanations || !outputSupportsExplanations) {
+            return [] as WordExplanation[]
         }
-        return { output: convert(deferredInput, activeType, conversionOptions), explanations: [] as WordExplanation[] }
+        return convertWithExplanations(deferredInput, activeType, conversionOptions).explanations
     }, [deferredInput, activeType, showExplanations, outputSupportsExplanations, conversionOptions])
+
     const canCopy = Boolean(output)
     const copyFeedbackMessage = getCopyFeedbackMessage(copyFeedbackState, canCopy)
     const showVisibleCopyFeedback = copyFeedbackState === "success" || copyFeedbackState === "error"
@@ -577,9 +589,9 @@ export function TextConverter({
                         {/* Output Area */}
                         <div className="space-y-2 group" data-testid="output-zone">
                             <div className="flex items-center justify-between px-1">
-                                <label htmlFor="converter-output" className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
+                                <span id="converter-output-label" className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
                                     {CONVERSION_TYPES.find(t => t.id === activeType)?.label} output
-                                </label>
+                                </span>
                                 <div className="flex items-center gap-2">
                                     <span
                                         data-testid="copy-feedback-visible"
@@ -637,19 +649,53 @@ export function TextConverter({
                             >
                                 {copyFeedbackMessage}
                             </p>
-                            <Textarea
+                            <div
                                 id="converter-output"
-                                readOnly
-                                placeholder="Result Will Appear Here..."
+                                data-testid="converter-output"
+                                role="textbox"
+                                aria-readonly="true"
+                                aria-label="Converted output"
+                                aria-describedby="copy-feedback"
+                                tabIndex={0}
+                                onAnimationEnd={() => setReveal(false)}
                                 className={cn(
-                                  "min-h-[140px] sm:min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 text-foreground font-medium focus-visible:ring-0 placeholder:text-zinc-500 dark:placeholder:text-zinc-400",
+                                  "min-h-[140px] sm:min-h-[160px] md:min-h-[200px] overflow-y-auto whitespace-pre-wrap break-words text-lg p-6 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 text-foreground font-medium outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
                                   reveal && "animate-result-reveal"
                                 )}
-                                value={output}
-                                onAnimationEnd={() => setReveal(false)}
-                                aria-describedby="copy-feedback"
-                                aria-label="Converted output"
-                            />
+                            >
+                                {output
+                                    ? segments.map((segment, index) => (
+                                        segment.type === "unchanged"
+                                            ? <React.Fragment key={index}>{segment.text}</React.Fragment>
+                                            : (
+                                                <mark
+                                                    key={index}
+                                                    title={segment.reason}
+                                                    data-change={segment.type}
+                                                    className={cn(
+                                                        "rounded-[3px] px-0.5 bg-transparent decoration-2 underline-offset-4",
+                                                        segment.type === "capitalized"
+                                                            ? "text-emerald-700 dark:text-emerald-400 underline decoration-emerald-400/60 dark:decoration-emerald-500/50"
+                                                            : "text-blue-700 dark:text-blue-400 underline decoration-blue-400/60 dark:decoration-blue-500/50"
+                                                    )}
+                                                >
+                                                    {segment.text}
+                                                </mark>
+                                            )
+                                    ))
+                                    : <span className="text-zinc-500 dark:text-zinc-400">Result Will Appear Here...</span>}
+                            </div>
+                            {changeCount > 0 && (
+                                <p className="px-1 text-xs text-muted-foreground" data-testid="diff-legend">
+                                    <span className="font-medium text-foreground">{changeCount}</span>
+                                    {changeCount === 1 ? " change" : " changes"}
+                                    {" · "}
+                                    <span className="text-emerald-700 dark:text-emerald-400">capitalized</span>
+                                    {" · "}
+                                    <span className="text-blue-700 dark:text-blue-400">lowercased</span>
+                                    <span className="hidden sm:inline"> · hover a word for the rule</span>
+                                </p>
+                            )}
                             <div
                                 className="flex justify-end"
                                 data-testid="output-rules-entry"

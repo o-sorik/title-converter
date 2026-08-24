@@ -517,6 +517,42 @@ function buildTitleTransforms(text: string, style: TitleCaseStyle): TitleWordTra
     });
 }
 
+/**
+ * A run of the OUTPUT text, tagged with whether this conversion changed it.
+ *
+ * Lets the UI highlight exactly which words moved and why, inline in the
+ * result, instead of only listing them in a separate panel.
+ */
+export interface OutputSegment {
+    text: string
+    type: "unchanged" | "capitalized" | "lowercased"
+    /** The rule that produced the change. Absent when nothing changed. */
+    reason?: string
+}
+
+function buildSegments(text: string, transforms: TitleWordTransform[]): OutputSegment[] {
+    const segments: OutputSegment[] = [];
+    let cursor = 0;
+
+    for (const transform of transforms) {
+        if (transform.start > cursor) {
+            segments.push({ text: text.slice(cursor, transform.start), type: "unchanged" });
+        }
+        const changed = transform.converted !== transform.word;
+        segments.push(
+            changed
+                ? { text: transform.converted, type: transform.type, reason: transform.reason }
+                : { text: transform.converted, type: "unchanged" },
+        );
+        cursor = transform.end;
+    }
+
+    if (cursor < text.length) {
+        segments.push({ text: text.slice(cursor), type: "unchanged" });
+    }
+    return segments;
+}
+
 function applyTransforms(text: string, transforms: TitleWordTransform[]): string {
     let result = text;
     let offset = 0;
@@ -711,4 +747,33 @@ export function convertWithExplanations(text: string, type: ConversionType, opti
     }
 
     return { output, explanations };
+}
+
+/**
+ * Conversion plus a segmented view of the output, so the UI can mark each
+ * changed word in place and show the rule behind it.
+ *
+ * Only title and sentence case run through the rule pipeline; every other mode
+ * returns a single unchanged segment.
+ */
+export function convertWithSegments(
+    text: string,
+    type: ConversionType,
+    options: ConvertOptions = {},
+): { output: string; segments: OutputSegment[] } {
+    if (!text) return { output: "", segments: [] };
+
+    const titleStyle = options.titleStyle ?? "standard";
+    const transforms =
+        type === "title" ? buildTitleTransforms(text, titleStyle)
+        : type === "sentence" ? buildSentenceTransforms(text)
+        : null;
+
+    if (!transforms) {
+        const output = convert(text, type, options);
+        return { output, segments: [{ text: output, type: "unchanged" }] };
+    }
+
+    const segments = buildSegments(text, transforms);
+    return { output: segments.map((segment) => segment.text).join(""), segments };
 }
