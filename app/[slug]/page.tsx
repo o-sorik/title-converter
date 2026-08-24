@@ -8,7 +8,6 @@ import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
 import { WebApplicationJsonLd, FAQPageJsonLd } from "@/components/json-ld"
 import type { Metadata } from "next"
-import { parseConverterInitialStateFromSearchParams } from "@/lib/converter-context"
 
 export const revalidate = 604800
 export const dynamicParams = false
@@ -23,7 +22,6 @@ export function generateStaticParams() {
 // 2. Dynamic Metadata with full SEO
 type Props = {
     params: Promise<{ slug: string }>
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -31,7 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const config = SEO_CONFIG[slug]
 
     if (!config) {
-        return {}
+        // Returning {} here produced a title-less 200 page for unknown slugs.
+        notFound()
     }
 
     const pageUrl = `${SITE_URL}/${slug}`
@@ -58,7 +57,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 }
 
-export default async function ConverterPage({ params, searchParams }: Props) {
+export default async function ConverterPage({ params }: Props) {
     const { slug } = await params
     const config = SEO_CONFIG[slug]
 
@@ -68,8 +67,6 @@ export default async function ConverterPage({ params, searchParams }: Props) {
 
     const pageUrl = `${SITE_URL}/${slug}`
     const relatedLinks = getRelatedLinksForMode(config.mode)
-    const converterContext = parseConverterInitialStateFromSearchParams((await searchParams) ?? {})
-    const defaultMode = converterContext.initialMode ?? config.mode
 
     return (
         <div className="relative min-h-screen bg-zinc-50 dark:bg-zinc-950">
@@ -100,12 +97,7 @@ export default async function ConverterPage({ params, searchParams }: Props) {
                     </div>
 
                     {/* Converter Section */}
-                    <TextConverter
-                        defaultMode={defaultMode}
-                        initialInput={converterContext.initialInput}
-                        initialTitleStyle={converterContext.initialTitleStyle}
-                        initialContextRef={converterContext.initialContextRef}
-                    />
+                    <TextConverter defaultMode={config.mode} />
 
                     {/* SEO Content Section */}
                     <article className="prose prose-zinc dark:prose-invert max-w-none w-full">

@@ -16,7 +16,7 @@ import { convertWithExplanations, convertWithSegments, type ConversionType, type
 import { TITLE_STYLES, STYLE_RULE_SUMMARY } from "@/lib/title-styles"
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
-import { getConverterContextStorageKey, parseConverterContextPayload } from "@/lib/converter-context"
+import { getConverterContextStorageKey, parseConverterContextPayload, parseConverterInitialStateFromQuery } from "@/lib/converter-context"
 import { getHighIntentBlogHref, getHighIntentEntryFromInput } from "@/lib/high-intent-guidance"
 import { cn } from "@/lib/utils"
 
@@ -232,10 +232,27 @@ export function TextConverter({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeType])
 
+    // Deep-link context is read from the URL here, on the client, on purpose.
+    // Reading searchParams in the page component opted the whole route out of
+    // static generation. Restoring it after mount keeps the static HTML intact
+    // and treats the ctx_* round-trip as a progressive enhancement.
     React.useEffect(() => {
-        if (!initialContextRef) return
+        let contextRef = initialContextRef
+
         try {
-            const raw = window.sessionStorage.getItem(getConverterContextStorageKey(initialContextRef))
+            const fromUrl = parseConverterInitialStateFromQuery(new URLSearchParams(window.location.search))
+            contextRef = fromUrl.initialContextRef ?? initialContextRef
+
+            if (fromUrl.initialInput) setInput(fromUrl.initialInput)
+            if (fromUrl.initialMode) setActiveType(fromUrl.initialMode)
+            if (fromUrl.initialTitleStyle) setTitleStyle(fromUrl.initialTitleStyle)
+        } catch {
+            // no-op: deep-link restoration is best-effort
+        }
+
+        if (!contextRef) return
+        try {
+            const raw = window.sessionStorage.getItem(getConverterContextStorageKey(contextRef))
             if (!raw) return
             const restored = parseConverterContextPayload(raw)
             if (!restored) return
