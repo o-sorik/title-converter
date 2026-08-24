@@ -37,7 +37,22 @@ export function getArticlePageViewModel(slug: string) {
         .slice(0, 3)
     : []
 
-  const defaultRelated = getArticlesByCategory(article.categoryId)
+  // Editorially authored cross-links win over "same category", then category
+  // siblings fill any remaining slots. Category-only produced an empty sidebar
+  // for any article that is the sole entry in its category.
+  const authoredRelated =
+    content.template === "writing-tips"
+      ? content.data.relatedSlugs
+          .map((slug) => getArticleBySlug(slug))
+          .filter((candidate): candidate is NonNullable<typeof candidate> => Boolean(candidate))
+      : []
+
+  const defaultRelated = [
+    ...authoredRelated,
+    ...getArticlesByCategory(article.categoryId).filter(
+      (candidate) => !authoredRelated.some((authored) => authored.slug === candidate.slug),
+    ),
+  ]
     .filter((candidate) => candidate.slug !== article.slug)
     .slice(0, 3)
 
