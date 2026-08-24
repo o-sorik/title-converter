@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import type { ConversionType, TitleCaseStyle } from "@/lib/converters"
+import { TITLE_STYLES } from "@/lib/title-styles"
 import { runEditorialQaBatch, type EditorialQaResult } from "@/lib/editorial-qa"
 
 // Only the 4 editorial-relevant modes; code case / fun modes aren't meaningful for QA
@@ -19,13 +20,6 @@ const QA_MODES: { id: ConversionType; label: string }[] = [
     { id: "upper", label: "UPPER CASE" },
 ]
 
-const TITLE_STYLES: { id: TitleCaseStyle; label: string; hint: string }[] = [
-    { id: "standard", label: "Standard", hint: "Balanced default title casing" },
-    { id: "ap", label: "AP", hint: "AP-like: capitalize prepositions with 4+ letters" },
-    { id: "chicago", label: "Chicago", hint: "Classic editorial style defaults" },
-    { id: "mla", label: "MLA", hint: "Common humanities title style" },
-    { id: "apa", label: "APA", hint: "Academic-friendly title style" },
-]
 
 function buildReviewHref(text: string, mode: ConversionType, titleStyle: TitleCaseStyle): string {
     const params = new URLSearchParams({

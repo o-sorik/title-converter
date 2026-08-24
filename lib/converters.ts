@@ -18,6 +18,16 @@ export interface ConvertOptions {
 
 const EXPLANATION_SNIPPET_LENGTH = 20;
 
+// Human-facing style names for explanation text. Avoids leaking internals
+// like "STANDARD style" into the UI.
+const STYLE_LABELS: Record<TitleCaseStyle, string> = {
+    standard: "Standard",
+    ap: "AP",
+    chicago: "Chicago",
+    mla: "MLA",
+    apa: "APA",
+};
+
 const ARTICLES = new Set([
     "a",
     "an",
@@ -173,58 +183,63 @@ const COMMON_BASE_VERBS = new Set([
     "zoom",
 ]);
 
-const KNOWN_ACRONYMS = new Set([
-    "AI",
-    "API",
-    "AWS",
-    "CEO",
-    "CFO",
-    "CIA",
-    "COO",
-    "CPU",
-    "CRM",
-    "CSS",
-    "CTO",
-    "DNS",
-    "ERP",
-    "EU",
-    "FBI",
-    "FTP",
-    "GDP",
-    "GPU",
-    "HTML",
-    "HTTP",
-    "HTTPS",
-    "ID",
-    "IP",
-    "JSON",
-    "JS",
-    "KPI",
-    "MBA",
-    "ML",
-    "MVP",
-    "NASA",
-    "NATO",
-    "PDF",
-    "PhD",
-    "RAM",
-    "ROI",
-    "RSS",
-    "SDK",
-    "SEO",
-    "SQL",
-    "SSH",
-    "TCP",
-    "UI",
-    "UK",
-    "UN",
-    "URL",
-    "USB",
-    "USA",
-    "UX",
-    "VPN",
-    "WHO",
-    "XML",
+// Acronyms we are willing to PROMOTE from lowercase input ("seo" -> "SEO").
+// Keyed by uppercase lookup form, valued by canonical spelling, so mixed-case
+// canonical forms like "PhD" survive the toUpperCase() lookup.
+//
+// Deliberately EXCLUDED: WHO, ID, RAM, COO. Each is an ordinary English word,
+// and promoting it wrecks normal titles ("The Man Who Sold the World" ->
+// "The Man WHO Sold the World"). Already-uppercase input keeps working for them
+// through the deliberate-acronym path below, which needs no dictionary at all.
+const ACRONYM_CANONICAL = new Map<string, string>([
+    ["AI", "AI"],
+    ["API", "API"],
+    ["AWS", "AWS"],
+    ["CEO", "CEO"],
+    ["CFO", "CFO"],
+    ["CIA", "CIA"],
+    ["COVID", "COVID"],
+    ["CPU", "CPU"],
+    ["CRM", "CRM"],
+    ["CSS", "CSS"],
+    ["CTO", "CTO"],
+    ["DNS", "DNS"],
+    ["ERP", "ERP"],
+    ["EU", "EU"],
+    ["FBI", "FBI"],
+    ["FTP", "FTP"],
+    ["GDP", "GDP"],
+    ["GPU", "GPU"],
+    ["HTML", "HTML"],
+    ["HTTP", "HTTP"],
+    ["HTTPS", "HTTPS"],
+    ["IP", "IP"],
+    ["JSON", "JSON"],
+    ["JS", "JS"],
+    ["KPI", "KPI"],
+    ["MBA", "MBA"],
+    ["ML", "ML"],
+    ["MVP", "MVP"],
+    ["NASA", "NASA"],
+    ["NATO", "NATO"],
+    ["PDF", "PDF"],
+    ["PHD", "PhD"],
+    ["ROI", "ROI"],
+    ["RSS", "RSS"],
+    ["SDK", "SDK"],
+    ["SEO", "SEO"],
+    ["SQL", "SQL"],
+    ["SSH", "SSH"],
+    ["TCP", "TCP"],
+    ["UI", "UI"],
+    ["UK", "UK"],
+    ["UN", "UN"],
+    ["URL", "URL"],
+    ["USB", "USB"],
+    ["USA", "USA"],
+    ["UX", "UX"],
+    ["VPN", "VPN"],
+    ["XML", "XML"],
 ]);
 
 function capitalize(word: string): string {
@@ -298,25 +313,116 @@ function tokenizeWords(text: string): WordToken[] {
     }));
 }
 
-function getCanonicalAcronym(word: string): string | null {
-    const upper = word.toUpperCase();
-    if (KNOWN_ACRONYMS.has(upper)) return upper;
-    if (/^[A-Za-z](?:\.[A-Za-z])+\.?$/.test(word)) return upper;
+type InputShape = "all-caps" | "all-lower" | "mixed";
+
+/**
+ * Whether the INPUT's casing carries information.
+ *
+ * In all-caps input ("THE NBA FINALS") every word is uppercase, so uppercase
+ * tells us nothing and everything must be normalised. In mixed input
+ * ("The NBA Finals") an all-caps token is a deliberate signal from the writer
+ * and has to survive untouched.
+ *
+ * Known limit: acronyms in all-caps input are unrecoverable except through the
+ * dictionary — "THE NBA FINALS" cannot be distinguished from "THE BIG GAME".
+ */
+function detectInputShape(tokens: WordToken[]): InputShape {
+    let hasUpper = false;
+    let hasLower = false;
+    for (const token of tokens) {
+        if (/[a-z]/.test(token.word)) hasLower = true;
+        if (/[A-Z]/.test(token.word)) hasUpper = true;
+        if (hasUpper && hasLower) return "mixed";
+    }
+    return hasUpper ? "all-caps" : "all-lower";
+}
+
+// Short all-caps runs are structurally acronym-shaped (NBA, IBM, DIY, FAQ,
+// NASA, USSR). Longer ones are far more likely to be a shouted English word
+// ("Hello WORLD"), so they need dictionary confirmation instead.
+const ACRONYM_STRUCTURAL_MAX_LENGTH = 4;
+
+/**
+ * An all-caps token inside mixed-case input: NBA, IBM, DIY, URLs, NASA's.
+ * No dictionary needed — the writer already told us by shouting it.
+ *
+ * Two guards keep this from swallowing ordinary shouting: a length cap, and an
+ * exclusion for function words, so "The NBA And THE Man" still lowercases the
+ * shouted "AND" and "THE" through the normal style rules.
+ */
+function isDeliberateAcronym(word: string): boolean {
+    const core = word.replace(/['‘’]s$/i, "").replace(/s$/, "");
+    if (core.length < 2 || core.length > ACRONYM_STRUCTURAL_MAX_LENGTH) return false;
+    if (!/^[A-Z0-9]+$/.test(core) || !/[A-Z]/.test(core)) return false;
+
+    const lower = core.toLowerCase();
+    if (ARTICLES.has(lower) || CONJUNCTIONS.has(lower) || PREPOSITIONS.has(lower)) return false;
+    return true;
+}
+
+/**
+ * Irregular INTERNAL casing: iPhone, eBay, macOS, PhD, JavaScript, McDonald.
+ *
+ * This must not match an ordinary title-cased word like "Guide". The previous
+ * implementation did, which froze every already-capitalised word and made the
+ * converter a no-op on the most common input people paste.
+ */
+function hasIrregularCasing(word: string): boolean {
+    return /[a-z]/.test(word) && /[A-Z]/.test(word.slice(1));
+}
+
+/** Dictionary lookup that tolerates a possessive or plural suffix. */
+function promoteKnownAcronym(word: string): string | null {
+    const possessive = /['‘’]s$/i.test(word) ? word.slice(-2) : "";
+    const base = possessive ? word.slice(0, -2) : word;
+    const tail = possessive.toLowerCase();
+
+    const direct = ACRONYM_CANONICAL.get(base.toUpperCase());
+    if (direct) return direct + tail;
+
+    if (/s$/i.test(base) && base.length > 2) {
+        const singular = ACRONYM_CANONICAL.get(base.slice(0, -1).toUpperCase());
+        if (singular) return `${singular}s${tail}`;
+    }
+    return null;
+}
+
+function getCanonicalAcronym(word: string, preserveDeliberateCaps: boolean): string | null {
+    if (preserveDeliberateCaps && isDeliberateAcronym(word)) return word;
+
+    const promoted = promoteKnownAcronym(word);
+    if (promoted) return promoted;
+
+    // Dotted initialisms: U.S.A., U.N.C.L.E.
+    if (/^[A-Za-z](?:\.[A-Za-z])+\.?$/.test(word)) return word.toUpperCase();
+
     if (/[0-9]/.test(word) && /^[A-Za-z0-9]{2,}$/.test(word)) {
         if (/^\d+(st|nd|rd|th)$/i.test(word)) return null;
-        if (/^[A-Z0-9]+$/.test(word)) return upper;
+        if (/^[A-Z0-9]+$/.test(word)) return word.toUpperCase();
         return null;
     }
     return null;
 }
 
-function hasCustomCasing(word: string): boolean {
-    return /[a-z]/.test(word) && /[A-Z]/.test(word) && word !== word.toLowerCase() && word !== word.toUpperCase();
+/** Strip an -ing/-ed inflection back to candidate base forms. */
+function stemCandidates(lower: string): string[] {
+    const out = [lower];
+    for (const suffix of ["ing", "ed"]) {
+        if (!lower.endsWith(suffix) || lower.length <= suffix.length + 1) continue;
+        const trimmed = lower.slice(0, -suffix.length);
+        out.push(trimmed, `${trimmed}e`);
+        if (/(.)\1$/.test(trimmed)) out.push(trimmed.slice(0, -1));
+    }
+    return out;
 }
 
+/**
+ * Only genuine verbs trigger the adverbial-particle rule. The previous version
+ * treated ANY -ed/-ing word as a verb, so "The Wedding in Paris" came out as
+ * "The Wedding In Paris".
+ */
 function looksVerbLike(word: string): boolean {
-    const lower = word.toLowerCase();
-    return COMMON_BASE_VERBS.has(lower) || lower.endsWith("ed") || lower.endsWith("ing");
+    return stemCandidates(word.toLowerCase()).some((candidate) => COMMON_BASE_VERBS.has(candidate));
 }
 
 function tokenizeIdentifierWords(text: string): string[] {
@@ -332,6 +438,7 @@ function buildTitleTransforms(text: string, style: TitleCaseStyle): TitleWordTra
     if (!tokens.length) return [];
 
     const lowerWords = tokens.map((t) => t.word.toLowerCase());
+    const shape = detectInputShape(tokens);
 
     return tokens.map((token, i) => {
         const lower = lowerWords[i];
@@ -348,20 +455,20 @@ function buildTitleTransforms(text: string, style: TitleCaseStyle): TitleWordTra
         const inHyphenCompound = isHyphenLeft || isHyphenRight;
         const isHyphenCompoundStart = isHyphenRight && !isHyphenLeft;
 
-        const canonicalAcronym = getCanonicalAcronym(token.word);
+        const canonicalAcronym = getCanonicalAcronym(token.word, shape === "mixed");
         if (canonicalAcronym) {
             return {
                 word: token.word,
                 converted: canonicalAcronym,
-                reason: "Likely acronym",
+                reason: "Acronym keeps its uppercase form",
                 type: canonicalAcronym === token.word ? "unchanged" : "capitalized",
                 start: token.start,
                 end: token.end,
             };
         }
 
-        if (hasCustomCasing(token.word)) {
-            return { word: token.word, converted: token.word, reason: "Custom/proper noun casing preserved", type: "unchanged", start: token.start, end: token.end };
+        if (hasIrregularCasing(token.word)) {
+            return { word: token.word, converted: token.word, reason: "Brand or proper-noun casing preserved", type: "unchanged", start: token.start, end: token.end };
         }
 
         if (isFirst) {
@@ -401,11 +508,12 @@ function buildTitleTransforms(text: string, style: TitleCaseStyle): TitleWordTra
         }
 
         const decision = getTitleCaseDecision(lower, style);
+        const reason = decision.reason.includes("style") ? decision.reason : `${decision.reason} (${STYLE_LABELS[style]} style)`;
         if (decision.convertToLower) {
-            return { word: token.word, converted: lower, reason: `${decision.reason} (${style.toUpperCase()} style)`, type: "lowercased", start: token.start, end: token.end };
+            return { word: token.word, converted: lower, reason, type: "lowercased", start: token.start, end: token.end };
         }
 
-        return { word: token.word, converted: capitalize(lower), reason: `${decision.reason} (${style.toUpperCase()} style)`, type: "capitalized", start: token.start, end: token.end };
+        return { word: token.word, converted: capitalize(lower), reason, type: "capitalized", start: token.start, end: token.end };
     });
 }
 
@@ -431,14 +539,30 @@ function buildSentenceTransforms(text: string): TitleWordTransform[] {
         const prevToken = i > 0 ? tokens[i - 1] : null;
         const betweenPrevAndCurrent = prevToken ? text.slice(prevToken.end, token.start) : "";
         const sentenceStart = i === 0 || /[.!?]/.test(betweenPrevAndCurrent);
-        const canonicalAcronym = getCanonicalAcronym(token.word);
+        // Sentence case deliberately de-shouts: "he said HELLO" -> "he said hello".
+        // So it never treats a bare all-caps token as a deliberate acronym, and
+        // relies on the dictionary instead.
+        const canonicalAcronym = getCanonicalAcronym(token.word, false);
 
-        if (hasCustomCasing(token.word) || canonicalAcronym) {
+        if (hasIrregularCasing(token.word) || canonicalAcronym) {
             return {
                 word: token.word,
                 converted: canonicalAcronym ?? token.word,
-                reason: "Custom casing or acronym preserved",
+                reason: "Brand casing or acronym preserved",
                 type: !canonicalAcronym || canonicalAcronym === token.word ? "unchanged" : "capitalized",
+                start: token.start,
+                end: token.end,
+            };
+        }
+
+        // The pronoun "I" and its contractions are always capitalised.
+        if (/^i(['‘’](m|ll|ve|d))?$/i.test(token.word)) {
+            const converted = capitalize(token.word.toLowerCase());
+            return {
+                word: token.word,
+                converted,
+                reason: 'The pronoun "I" is always capitalized',
+                type: converted === token.word ? "unchanged" : "capitalized",
                 start: token.start,
                 end: token.end,
             };

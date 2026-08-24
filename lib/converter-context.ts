@@ -58,6 +58,7 @@ export function appendConverterContextToHref(href: string, context: ConverterCon
   url.searchParams.set("ctx_ref", DEFAULT_CONVERTER_CONTEXT_REF)
   url.searchParams.set("ctx_mode", context.mode)
   url.searchParams.set("ctx_style", context.titleStyle)
+  url.searchParams.set("ctx_input", context.input)
   const query = url.searchParams.toString()
   return `${url.pathname}${query ? `?${query}` : ""}${url.hash}`
 }

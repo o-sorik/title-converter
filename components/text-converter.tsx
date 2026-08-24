@@ -13,6 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 
 import { convert, convertWithExplanations, type ConversionType, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
+import { TITLE_STYLES, STYLE_RULE_SUMMARY } from "@/lib/title-styles"
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
 import { getConverterContextStorageKey, parseConverterContextPayload } from "@/lib/converter-context"
@@ -38,13 +39,6 @@ const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
 
 // Modes that support explanations
 const EXPLANATION_MODES: ConversionType[] = ["title", "sentence"]
-const TITLE_STYLES: { id: TitleCaseStyle; label: string; hint: string }[] = [
-    { id: "standard", label: "Standard", hint: "Balanced default title casing" },
-    { id: "ap", label: "AP", hint: "AP-like: capitalize prepositions with 4+ letters" },
-    { id: "chicago", label: "Chicago", hint: "Classic editorial style defaults" },
-    { id: "mla", label: "MLA", hint: "Common humanities title style" },
-    { id: "apa", label: "APA", hint: "Academic-friendly title style" },
-]
 
 const CONVERSION_GROUPS: { label: string; ids: ConversionType[] }[] = [
     { label: "Text Case", ids: ["title", "sentence", "upper", "lower"] },
@@ -65,13 +59,6 @@ const CONVERSION_TOOLTIPS: Record<ConversionType, { desc: string; example: strin
     inverse:     { desc: "Flips the case of each letter",          example: "hELLO wORLD" },
 }
 
-const STYLE_RULE_SUMMARY: Record<TitleCaseStyle, string> = {
-    standard: "Lowercases most prepositions and conjunctions; capitalizes major words plus first/last positions.",
-    ap: "Capitalizes prepositions with 5+ letters, lowercases shorter ones in the middle of titles.",
-    chicago: "Lowercases prepositions and conjunctions in most middle positions; strong positional rules.",
-    mla: "Similar to Chicago for core capitalization; emphasizes consistent headline style usage.",
-    apa: "Capitalizes prepositions and conjunctions with 4+ letters; lowercases shorter ones in the middle.",
-}
 
 interface TextConverterProps {
     defaultMode?: ConversionType
@@ -281,7 +268,7 @@ export function TextConverter({
 
     // Derived state for output and explanations - converts live as the user types
     const { output, explanations } = React.useMemo(() => {
-        if (!deferredInput.trim()) {
+        if (!deferredInput) {
             return { output: "", explanations: [] as WordExplanation[] }
         }
         if (showExplanations && outputSupportsExplanations) {

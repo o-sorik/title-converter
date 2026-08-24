@@ -65,6 +65,14 @@ test.each([
   expect(html).toContain(expectedOutput)
 })
 
+test("preserves whitespace-only output for modes whose engine preserves whitespace", () => {
+  const html = renderToStaticMarkup(<TextConverter defaultMode="title" initialInput="   " />)
+  const outputTextarea = html.match(/<textarea[^>]*id="converter-output"[\s\S]*?<\/textarea>/)?.[0] ?? ""
+
+  expect(outputTextarea).toContain('aria-label="Converted output"')
+  expect(outputTextarea).toContain(">   </textarea>")
+})
+
 test("mode controls expose keyboard-friendly toggle semantics", () => {
   const html = renderToStaticMarkup(<TextConverter defaultMode="title" />)
   expect(html).toContain('aria-label="Mode Controls"')
