@@ -1,5 +1,6 @@
 import { CONVERTER_SLUGS } from "@/lib/seo-config"
 import { SITE_URL } from "@/lib/constants"
+import { blogArticles, blogCategories } from "@/components/blog/data"
 
 export const revalidate = 86400
 
@@ -7,6 +8,23 @@ export function GET() {
     const converterLinks = CONVERTER_SLUGS.map(
         (slug) => `- [${slug.replaceAll("-", " ")}](${SITE_URL}/${slug})`,
     ).join("\n")
+
+    // Every article, grouped by category. The file previously listed only the
+    // blog index, so none of the individual guides – including the whole
+    // Writing Statistics cluster built for citation – were discoverable here.
+    const articleSections = blogCategories
+        .map((category) => {
+            const articles = blogArticles.filter((article) => article.categoryId === category.id)
+            if (articles.length === 0) return null
+
+            const links = articles
+                .map((article) => `- [${article.title}](${SITE_URL}/blog/${article.slug}): ${article.excerpt}`)
+                .join("\n")
+
+            return `### ${category.name}\n\n${links}`
+        })
+        .filter(Boolean)
+        .join("\n\n")
 
     const body = `# Title Case Converter
 
@@ -28,6 +46,10 @@ ${converterLinks}
 
 - [Grammar & Style Guides Blog](${SITE_URL}/blog): capitalization guides and writing tips
 - [RSS feed](${SITE_URL}/blog/feed.xml)
+
+## Articles
+
+${articleSections}
 
 ## Editorial
 

@@ -1,5 +1,6 @@
 import type { ArticleSection, FAQItem } from "@/lib/article-content"
 import { STATS_ARTICLES } from "@/lib/stats-articles"
+import { STYLE_GUIDE_ARTICLES } from "@/lib/style-guide-articles"
 
 export interface WritingTipsArticle {
   slug: string
@@ -630,5 +631,5 @@ export function getWritingTipsArticleBySlug(slug: string): WritingTipsArticle | 
 // Stats-article modules only type-import from this file, so the runtime
 // module graph stays acyclic despite the cross-reference.
 export function getAllWritingTipsArticles(): WritingTipsArticle[] {
-  return [...WRITING_TIPS_ARTICLES, ...STATS_ARTICLES]
+  return [...WRITING_TIPS_ARTICLES, ...STATS_ARTICLES, ...STYLE_GUIDE_ARTICLES]
 }

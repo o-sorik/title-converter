@@ -5,7 +5,8 @@ import {
   getArticleTocItems,
   FAQ_SECTION_ID,
 } from "./article-content"
-import { WRITING_TIPS_ARTICLES } from "./writing-tips-article-data"
+import { WRITING_TIPS_ARTICLES, getAllWritingTipsArticles } from "./writing-tips-article-data"
+import { blogArticles } from "@/components/blog/data"
 import { convert } from "./converters"
 
 describe("getArticleContentBySlug", () => {
@@ -18,7 +19,36 @@ describe("getArticleContentBySlug", () => {
     expect(getArticleContentBySlug("is-president-capitalized").template).toBe("gen-cap")
     expect(getArticleContentBySlug("what-words-are-not-capitalized-in-a-title").template).toBe("writing-tips")
     expect(getArticleContentBySlug("of-capitalized-in-title-case").template).toBe("grammar-101")
-    expect(getArticleContentBySlug("apa-citing-titles").template).toBe("legacy")
+    expect(getArticleContentBySlug("apa-citing-titles").template).toBe("writing-tips")
+  })
+
+  test("no published article falls through to the legacy placeholder", () => {
+    // The legacy branch rendered one hardcoded APA body for every slug that
+    // reached it. Five indexed URLs shared it, including the featured article.
+    // Nothing may rely on it again.
+    const onLegacy = blogArticles
+      .map((article) => article.slug)
+      .filter((slug) => getArticleContentBySlug(slug).template === "legacy")
+
+    expect(onLegacy, `slugs still rendering the placeholder body: ${onLegacy.join(", ")}`).toEqual([])
+  })
+
+  test("every style-guide article has its own distinct body", () => {
+    const slugs = [
+      "apa-7-title-case-guide",
+      "apa-citing-titles",
+      "apa-heading-levels",
+      "ap-title-capitalization-basics",
+      "mla-vs-apa-headlines",
+    ]
+    const firstParagraphs = slugs.map((slug) => {
+      const content = getArticleContentBySlug(slug)
+      if (content.template !== "writing-tips") throw new Error(`${slug} is not on the block model`)
+      const block = content.data.sections[0].blocks[0]
+      return block.type === "paragraph" ? block.text : ""
+    })
+
+    expect(new Set(firstParagraphs).size).toBe(slugs.length)
   })
 })
 
@@ -68,7 +98,8 @@ describe("styleGuideMatrix alignment with converter engine", () => {
     const styleMap = { ap: "ap", apa: "apa", chicago: "chicago", mla: "mla" } as const
     let checkedRows = 0
 
-    for (const article of WRITING_TIPS_ARTICLES) {
+    // Every block-model article, including the stats and style-guide clusters.
+    for (const article of getAllWritingTipsArticles()) {
       for (const section of article.sections) {
         for (const block of section.blocks) {
           if (block.type !== "styleGuideMatrix") continue
@@ -92,6 +123,6 @@ describe("styleGuideMatrix alignment with converter engine", () => {
       }
     }
 
-    expect(checkedRows).toBeGreaterThanOrEqual(6)
+    expect(checkedRows).toBeGreaterThanOrEqual(20)
   })
 })

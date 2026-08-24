@@ -92,6 +92,33 @@ const PREPOSITIONS = new Set([
     "without",
     "into",
     "onto",
+    // Added 2026-08: these were missing, so every style treated them as major
+    // words and capitalized them unconditionally. "among" was the visible case –
+    // it showed up in Search Console as "among capitalized in title" while the
+    // converter capitalized it even under MLA, which lowercases all prepositions.
+    "along",
+    "amid",
+    "amidst",
+    "among",
+    "amongst",
+    "atop",
+    "besides",
+    "beyond",
+    "concerning",
+    "despite",
+    "down",
+    "like",
+    "minus",
+    "opposite",
+    "plus",
+    "regarding",
+    "round",
+    "than",
+    "till",
+    "unlike",
+    "unto",
+    "versus",
+    "worth",
 ]);
 
 const PHRASAL_VERB_PAIRS = new Set([
