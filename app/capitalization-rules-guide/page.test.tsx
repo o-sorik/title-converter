@@ -60,4 +60,5 @@ test("keeps converter context in return link for round-trip continuity", async (
   expect(html).toContain('href="/?ctx_ref=latest')
   expect(html).toContain("ctx_mode=title")
   expect(html).toContain("ctx_style=ap")
+  expect(html).toContain("ctx_input=walking+during+the+light")
 })

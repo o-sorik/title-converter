@@ -8,7 +8,6 @@ import { ArticleHeader } from "@/components/blog/article/article-header"
 import { ArticleMainContent } from "@/components/blog/article/article-main-content"
 import { ArticlePrevNext } from "@/components/blog/article/article-prev-next"
 import { ArticleSidebar } from "@/components/blog/article/article-sidebar"
-import { parseConverterInitialStateFromSearchParams, toConverterContext } from "@/lib/converter-context"
 import {
   getArticlePageViewModel,
   getBlogArticleMetadataBySlug,
@@ -18,7 +17,6 @@ import { SITE_URL } from "@/lib/constants"
 
 type Props = {
   params: Promise<{ slug: string }>
-  searchParams?: Promise<Record<string, string | string[] | undefined>>
 }
 
 export const revalidate = 604800
@@ -32,20 +30,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const metadata = getBlogArticleMetadataBySlug(slug)
   if (!metadata) {
-    return {}
+    // Returning {} here produced a title-less 200 page for unknown slugs.
+    notFound()
   }
 
   return metadata
 }
 
-export default async function ArticlePage({ params, searchParams }: Props) {
+export default async function ArticlePage({ params }: Props) {
   const { slug } = await params
   const viewModel = getArticlePageViewModel(slug)
   if (!viewModel) {
     notFound()
   }
-  const converterInitialState = parseConverterInitialStateFromSearchParams((await searchParams) ?? {})
-  const converterContext = toConverterContext(converterInitialState)
   const {
     article,
     category,
@@ -88,7 +85,7 @@ export default async function ArticlePage({ params, searchParams }: Props) {
       <ArticleHeader article={article} category={category} authorData={authorData ?? undefined} />
 
       <section className="grid gap-5 md:gap-6 lg:grid-cols-[2fr_1fr]">
-        <ArticleMainContent article={article} converterContext={converterContext} />
+        <ArticleMainContent article={article} />
         <ArticleSidebar related={related} tocItems={tocItems} relatedTitle={relatedTitle} />
       </section>
 

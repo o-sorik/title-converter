@@ -7,7 +7,6 @@ import { ContentSection } from "@/components/content-section"
 import { WebApplicationJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/json-ld"
 import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
-import { parseConverterInitialStateFromSearchParams } from "@/lib/converter-context"
 import { ScrollReveal } from "@/components/scroll-reveal"
 import { IconCheck } from "@tabler/icons-react"
 
@@ -23,14 +22,8 @@ export const metadata: Metadata = {
   },
 }
 
-interface HomePageProps {
-  searchParams?: Promise<Record<string, string | string[] | undefined>>
-}
-
-export default async function Home({ searchParams }: HomePageProps) {
+export default async function Home() {
   const config = HOME_PAGE_CONFIG;
-  const converterContext = parseConverterInitialStateFromSearchParams((await searchParams) ?? {})
-  const defaultMode = converterContext.initialMode ?? config.mode
 
   return (
     <div className="relative min-h-screen bg-zinc-50 dark:bg-zinc-950">
@@ -69,12 +62,7 @@ export default async function Home({ searchParams }: HomePageProps) {
             </p>
           </div>
 
-          <TextConverter
-            defaultMode={defaultMode}
-            initialInput={converterContext.initialInput}
-            initialTitleStyle={converterContext.initialTitleStyle}
-            initialContextRef={converterContext.initialContextRef}
-          />
+          <TextConverter defaultMode={config.mode} />
 
           <ScrollReveal><AudienceSection /></ScrollReveal>
 

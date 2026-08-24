@@ -2,6 +2,27 @@ import { renderToStaticMarkup } from "react-dom/server"
 import { expect, test } from "vitest"
 import { TextConverter } from "./text-converter"
 
+function extractOutputRegion(html: string): string {
+  return html.match(/<div[^>]*id="converter-output"[\s\S]*?<\/div>/)?.[0] ?? ""
+}
+
+/**
+ * The output is rendered as segments so changed words can be marked inline,
+ * so its text is no longer one contiguous string in the markup. Strip the tags
+ * to assert on what the user actually reads.
+ */
+function extractOutputText(html: string): string {
+  return extractOutputRegion(html)
+    .replace(/<[^>]+>/g, "")
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;/g, "'")
+    .replace(/&amp;/g, "&")
+}
+
+function extractDiffLegendText(html: string): string {
+  return (html.match(/data-testid="diff-legend"[\s\S]*?<\/p>/)?.[0] ?? "").replace(/<[^>]+>/g, "")
+}
+
 function extractModeControlsMarkup(html: string): string {
   const match = html.match(/data-testid="mode-controls"[\s\S]*?<\/div>/)
   return match?.[0] ?? ""
@@ -62,7 +83,44 @@ test.each([
   expect(activeCount).toBe(1)
   expect(modeControls).toContain(`data-active="true"`)
   expect(html).toContain(outputLabel)
-  expect(html).toContain(expectedOutput)
+  expect(extractOutputText(html)).toBe(expectedOutput)
+})
+
+test("preserves whitespace-only output for modes whose engine preserves whitespace", () => {
+  const html = renderToStaticMarkup(<TextConverter defaultMode="title" initialInput="   " />)
+  const outputRegion = extractOutputRegion(html)
+
+  expect(outputRegion).toContain('aria-label="Converted output"')
+  expect(outputRegion).toContain('aria-readonly="true"')
+  expect(outputRegion).toContain("   ")
+  expect(outputRegion).not.toContain("Result Will Appear Here")
+})
+
+test("marks changed words inline in the output with the rule that moved them", () => {
+  const html = renderToStaticMarkup(
+    <TextConverter defaultMode="title" initialInput="A Guide To Better Writing" />
+  )
+
+  // "To" is lowered by the infinitive rule and must be marked as a change.
+  expect(html).toContain('data-change="lowercased"')
+  expect(html).toMatch(/<mark[^>]*data-change="lowercased"[^>]*>to<\/mark>/)
+  // The rule travels with the mark so hovering explains the change.
+  expect(html).toMatch(/<mark[^>]*title="[^"]+"/)
+})
+
+test("summarises how many words changed", () => {
+  const html = renderToStaticMarkup(
+    <TextConverter defaultMode="title" initialInput="A Guide To Better Writing" />
+  )
+  expect(html).toContain('data-testid="diff-legend"')
+  expect(extractDiffLegendText(html)).toContain("1 change")
+})
+
+test("shows no diff legend when the input needs no changes", () => {
+  const html = renderToStaticMarkup(
+    <TextConverter defaultMode="title" initialInput="A Guide to Better Writing" />
+  )
+  expect(html).not.toContain('data-testid="diff-legend"')
 })
 
 test("mode controls expose keyboard-friendly toggle semantics", () => {
@@ -99,8 +157,8 @@ test("style selection updates title output for the same input", () => {
     <TextConverter defaultMode="title" initialInput="walking during the light" initialTitleStyle="ap" />
   )
 
-  expect(standardHtml).toContain("Walking during the Light")
-  expect(apHtml).toContain("Walking During the Light")
+  expect(extractOutputText(standardHtml)).toBe("Walking during the Light")
+  expect(extractOutputText(apHtml)).toBe("Walking During the Light")
 })
 
 test("shows style-contextual guidance entry point in title mode without duplicates", () => {
@@ -241,6 +299,6 @@ test("continuity context and output always follow the current selected mode", ()
   expect(html).not.toContain("ctx_output_mode")
   // Realtime: output renders immediately in the selected mode, no stale state
   expect(html).toContain("Sentence case output")
-  expect(html).toContain("Is and capitalized")
+  expect(extractOutputText(html)).toBe("Is and capitalized")
   expect(html).not.toContain("Settings changed")
 })

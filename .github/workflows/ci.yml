@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   quality:
-    name: Lint + Test + SEO QA
+    name: Lint + Test + Content QA
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,6 +33,15 @@ jobs:
 
       - name: SEO QA
         run: npm run seo:qa
+
+      # Part of `npm run release:gate` but previously missing from CI, so
+      # template regressions could reach main unseen.
+      - name: Content template QA
+        run: npm run template:qa
+
+      # `npm run intent:qa` is deliberately NOT here. It reads the Ahrefs export
+      # in /_bmad-output/, which .gitignore excludes on purpose, so it cannot run
+      # from a clean checkout. It stays a local pre-release gate.
 
   deploy:
     name: Deploy to production
@@ -65,10 +74,24 @@ jobs:
             fi
             echo "OK: $1 ($code)"
           }
+          # An unknown slug must be rejected, not answered. Reading searchParams
+          # in a page silently opts its route out of static generation, which
+          # turns `dynamicParams = false` into a no-op and lets junk URLs return
+          # 200. Only a negative-path check catches that regression.
+          expect_404() {
+            code=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 15 "$1")
+            if [ "$code" != "404" ]; then
+              echo "FAIL: $1 returned $code, expected 404 (soft-404 regression)"
+              exit 1
+            fi
+            echo "OK: $1 ($code)"
+          }
           check https://titlecaseconverter.online/
           check https://titlecaseconverter.online/blog
           check https://titlecaseconverter.online/sentence-case-converter
           check https://titlecaseconverter.online/sitemap.xml
+          expect_404 https://titlecaseconverter.online/blog/ci-soft-404-probe-does-not-exist
+          expect_404 https://titlecaseconverter.online/ci-soft-404-probe-does-not-exist
           curl -s --max-time 15 https://titlecaseconverter.online/ | grep -qi "converter" \
             || { echo "FAIL: homepage content check"; exit 1; }
           echo "All smoke tests passed"

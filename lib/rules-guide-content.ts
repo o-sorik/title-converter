@@ -257,7 +257,7 @@ export const RULES_PAGE_FAQS: RulesPageFAQ[] = [
   },
   {
     question: "What is the main difference between AP and Chicago title case?",
-    answer: "The key difference is how they treat longer prepositions. AP capitalizes prepositions with 5 or more letters (like \"Between\" and \"Through\"), while Chicago keeps all prepositions lowercase in middle positions regardless of length.",
+    answer: "The key difference is the length threshold for prepositions. AP capitalizes prepositions with 4 or more letters, so \"With\" and \"From\" are capitalized. Chicago's 18th edition raised its threshold to 5 or more letters, so \"About\" and \"Through\" are capitalized while \"with\" and \"from\" stay lowercase.",
   },
   {
     question: "Should I capitalize \"is\" in a title?",

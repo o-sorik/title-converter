@@ -4,12 +4,10 @@ import { IconThumbUp, IconThumbDown } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import type { Article } from "@/components/blog/data"
-import type { ConverterContext } from "@/lib/converter-context"
 import { Grammar101Template } from "./grammar-101-template"
 import { IsXTemplate } from "./is-x-template"
 import { GenCapTemplate } from "./gen-cap-template"
 import {
-  getHighIntentConverterHref,
   getHighIntentRelatedEntries,
 } from "@/lib/high-intent-guidance"
 import { getArticleContentBySlug, LEGACY_SECTION_IDS } from "@/lib/article-content"
@@ -26,10 +24,8 @@ function ArticleShell({ article, children }: { article: Article; children: React
 
 export function ArticleMainContent({
   article,
-  converterContext,
 }: {
   article: Article
-  converterContext?: ConverterContext | null
 }) {
   const content = getArticleContentBySlug(article.slug)
 
@@ -60,13 +56,12 @@ export function ArticleMainContent({
   if (content.template === "grammar-101") {
     const highIntentEntry = content.data
     const relatedHighIntent = getHighIntentRelatedEntries(highIntentEntry)
-    const converterHref = getHighIntentConverterHref(highIntentEntry.converterInput, converterContext)
     return (
       <ArticleShell article={article}>
         <Grammar101Template
           article={article}
           entry={highIntentEntry}
-          converterHref={converterHref}
+          converterInput={highIntentEntry.converterInput}
           relatedSlugs={relatedHighIntent}
         />
       </ArticleShell>

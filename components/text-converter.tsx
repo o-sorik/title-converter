@@ -12,10 +12,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 
-import { convert, convertWithExplanations, type ConversionType, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
+import { convertWithExplanations, convertWithSegments, type ConversionType, type OutputSegment, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
+import { TITLE_STYLES, STYLE_RULE_SUMMARY } from "@/lib/title-styles"
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
-import { getConverterContextStorageKey, parseConverterContextPayload } from "@/lib/converter-context"
+import { getConverterContextStorageKey, parseConverterContextPayload, parseConverterInitialStateFromQuery } from "@/lib/converter-context"
 import { getHighIntentBlogHref, getHighIntentEntryFromInput } from "@/lib/high-intent-guidance"
 import { cn } from "@/lib/utils"
 
@@ -38,13 +39,6 @@ const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
 
 // Modes that support explanations
 const EXPLANATION_MODES: ConversionType[] = ["title", "sentence"]
-const TITLE_STYLES: { id: TitleCaseStyle; label: string; hint: string }[] = [
-    { id: "standard", label: "Standard", hint: "Balanced default title casing" },
-    { id: "ap", label: "AP", hint: "AP-like: capitalize prepositions with 4+ letters" },
-    { id: "chicago", label: "Chicago", hint: "Classic editorial style defaults" },
-    { id: "mla", label: "MLA", hint: "Common humanities title style" },
-    { id: "apa", label: "APA", hint: "Academic-friendly title style" },
-]
 
 const CONVERSION_GROUPS: { label: string; ids: ConversionType[] }[] = [
     { label: "Text Case", ids: ["title", "sentence", "upper", "lower"] },
@@ -65,13 +59,6 @@ const CONVERSION_TOOLTIPS: Record<ConversionType, { desc: string; example: strin
     inverse:     { desc: "Flips the case of each letter",          example: "hELLO wORLD" },
 }
 
-const STYLE_RULE_SUMMARY: Record<TitleCaseStyle, string> = {
-    standard: "Lowercases most prepositions and conjunctions; capitalizes major words plus first/last positions.",
-    ap: "Capitalizes prepositions with 5+ letters, lowercases shorter ones in the middle of titles.",
-    chicago: "Lowercases prepositions and conjunctions in most middle positions; strong positional rules.",
-    mla: "Similar to Chicago for core capitalization; emphasizes consistent headline style usage.",
-    apa: "Capitalizes prepositions and conjunctions with 4+ letters; lowercases shorter ones in the middle.",
-}
 
 interface TextConverterProps {
     defaultMode?: ConversionType
@@ -245,10 +232,27 @@ export function TextConverter({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeType])
 
+    // Deep-link context is read from the URL here, on the client, on purpose.
+    // Reading searchParams in the page component opted the whole route out of
+    // static generation. Restoring it after mount keeps the static HTML intact
+    // and treats the ctx_* round-trip as a progressive enhancement.
     React.useEffect(() => {
-        if (!initialContextRef) return
+        let contextRef = initialContextRef
+
         try {
-            const raw = window.sessionStorage.getItem(getConverterContextStorageKey(initialContextRef))
+            const fromUrl = parseConverterInitialStateFromQuery(new URLSearchParams(window.location.search))
+            contextRef = fromUrl.initialContextRef ?? initialContextRef
+
+            if (fromUrl.initialInput) setInput(fromUrl.initialInput)
+            if (fromUrl.initialMode) setActiveType(fromUrl.initialMode)
+            if (fromUrl.initialTitleStyle) setTitleStyle(fromUrl.initialTitleStyle)
+        } catch {
+            // no-op: deep-link restoration is best-effort
+        }
+
+        if (!contextRef) return
+        try {
+            const raw = window.sessionStorage.getItem(getConverterContextStorageKey(contextRef))
             if (!raw) return
             const restored = parseConverterContextPayload(raw)
             if (!restored) return
@@ -280,15 +284,27 @@ export function TextConverter({
     )
 
     // Derived state for output and explanations - converts live as the user types
-    const { output, explanations } = React.useMemo(() => {
-        if (!deferredInput.trim()) {
-            return { output: "", explanations: [] as WordExplanation[] }
+    // Segmented conversion drives both the output text and the inline diff, so
+    // the highlighting can never disagree with the result it annotates.
+    const { output, segments } = React.useMemo(() => {
+        if (!deferredInput) {
+            return { output: "", segments: [] as OutputSegment[] }
         }
-        if (showExplanations && outputSupportsExplanations) {
-            return convertWithExplanations(deferredInput, activeType, conversionOptions)
+        return convertWithSegments(deferredInput, activeType, conversionOptions)
+    }, [deferredInput, activeType, conversionOptions])
+
+    const changeCount = React.useMemo(
+        () => segments.filter((segment) => segment.type !== "unchanged").length,
+        [segments]
+    )
+
+    const explanations = React.useMemo(() => {
+        if (!deferredInput || !showExplanations || !outputSupportsExplanations) {
+            return [] as WordExplanation[]
         }
-        return { output: convert(deferredInput, activeType, conversionOptions), explanations: [] as WordExplanation[] }
+        return convertWithExplanations(deferredInput, activeType, conversionOptions).explanations
     }, [deferredInput, activeType, showExplanations, outputSupportsExplanations, conversionOptions])
+
     const canCopy = Boolean(output)
     const copyFeedbackMessage = getCopyFeedbackMessage(copyFeedbackState, canCopy)
     const showVisibleCopyFeedback = copyFeedbackState === "success" || copyFeedbackState === "error"
@@ -590,9 +606,9 @@ export function TextConverter({
                         {/* Output Area */}
                         <div className="space-y-2 group" data-testid="output-zone">
                             <div className="flex items-center justify-between px-1">
-                                <label htmlFor="converter-output" className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
+                                <span id="converter-output-label" className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
                                     {CONVERSION_TYPES.find(t => t.id === activeType)?.label} output
-                                </label>
+                                </span>
                                 <div className="flex items-center gap-2">
                                     <span
                                         data-testid="copy-feedback-visible"
@@ -650,19 +666,53 @@ export function TextConverter({
                             >
                                 {copyFeedbackMessage}
                             </p>
-                            <Textarea
+                            <div
                                 id="converter-output"
-                                readOnly
-                                placeholder="Result Will Appear Here..."
+                                data-testid="converter-output"
+                                role="textbox"
+                                aria-readonly="true"
+                                aria-label="Converted output"
+                                aria-describedby="copy-feedback"
+                                tabIndex={0}
+                                onAnimationEnd={() => setReveal(false)}
                                 className={cn(
-                                  "min-h-[140px] sm:min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 text-foreground font-medium focus-visible:ring-0 placeholder:text-zinc-500 dark:placeholder:text-zinc-400",
+                                  "min-h-[140px] sm:min-h-[160px] md:min-h-[200px] overflow-y-auto whitespace-pre-wrap break-words text-lg p-6 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-950 text-foreground font-medium outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
                                   reveal && "animate-result-reveal"
                                 )}
-                                value={output}
-                                onAnimationEnd={() => setReveal(false)}
-                                aria-describedby="copy-feedback"
-                                aria-label="Converted output"
-                            />
+                            >
+                                {output
+                                    ? segments.map((segment, index) => (
+                                        segment.type === "unchanged"
+                                            ? <React.Fragment key={index}>{segment.text}</React.Fragment>
+                                            : (
+                                                <mark
+                                                    key={index}
+                                                    title={segment.reason}
+                                                    data-change={segment.type}
+                                                    className={cn(
+                                                        "rounded-[3px] px-0.5 bg-transparent decoration-2 underline-offset-4",
+                                                        segment.type === "capitalized"
+                                                            ? "text-emerald-700 dark:text-emerald-400 underline decoration-emerald-400/60 dark:decoration-emerald-500/50"
+                                                            : "text-blue-700 dark:text-blue-400 underline decoration-blue-400/60 dark:decoration-blue-500/50"
+                                                    )}
+                                                >
+                                                    {segment.text}
+                                                </mark>
+                                            )
+                                    ))
+                                    : <span className="text-zinc-500 dark:text-zinc-400">Result Will Appear Here...</span>}
+                            </div>
+                            {changeCount > 0 && (
+                                <p className="px-1 text-xs text-muted-foreground" data-testid="diff-legend">
+                                    <span className="font-medium text-foreground">{changeCount}</span>
+                                    {changeCount === 1 ? " change" : " changes"}
+                                    {" · "}
+                                    <span className="text-emerald-700 dark:text-emerald-400">capitalized</span>
+                                    {" · "}
+                                    <span className="text-blue-700 dark:text-blue-400">lowercased</span>
+                                    <span className="hidden sm:inline"> · hover a word for the rule</span>
+                                </p>
+                            )}
                             <div
                                 className="flex justify-end"
                                 data-testid="output-rules-entry"

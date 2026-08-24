@@ -4,15 +4,16 @@ import { Separator } from "@/components/ui/separator"
 import type { Article } from "@/components/blog/data"
 import type { HighIntentGuidanceEntry } from "@/lib/high-intent-guidance"
 import { GRAMMAR_101_SECTION_IDS } from "@/lib/article-content"
+import { ConverterCtaLink } from "./converter-cta-link"
 
 type Grammar101TemplateProps = {
   article: Article
   entry: HighIntentGuidanceEntry
-  converterHref: string
+  converterInput: string
   relatedSlugs: HighIntentGuidanceEntry[]
 }
 
-export function Grammar101Template({ article, entry, converterHref, relatedSlugs }: Grammar101TemplateProps) {
+export function Grammar101Template({ article, entry, converterInput, relatedSlugs }: Grammar101TemplateProps) {
   const styleGuideLinks: Array<{ key: keyof HighIntentGuidanceEntry["middlePositionVerdictByStyle"]; label: string; href: string }> = [
     { key: "standard", label: "Standard", href: "/capitalization-rules-guide?mode=title&style=standard" },
     { key: "ap", label: "AP", href: "/capitalization-rules-guide?mode=title&style=ap" },
@@ -131,7 +132,7 @@ export function Grammar101Template({ article, entry, converterHref, relatedSlugs
           Open the converter with a prefilled example and adapt it to your headline.
         </p>
         <Button asChild className="mt-4 bg-white text-blue-800 hover:bg-blue-50 dark:border dark:border-white/35 dark:bg-white/10 dark:text-white dark:backdrop-blur dark:hover:bg-white/20">
-          <Link href={converterHref}>Start Converting</Link>
+          <ConverterCtaLink converterInput={converterInput}>Start Converting</ConverterCtaLink>
         </Button>
       </section>
 

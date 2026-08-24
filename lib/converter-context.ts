@@ -58,24 +58,37 @@ export function appendConverterContextToHref(href: string, context: ConverterCon
   url.searchParams.set("ctx_ref", DEFAULT_CONVERTER_CONTEXT_REF)
   url.searchParams.set("ctx_mode", context.mode)
   url.searchParams.set("ctx_style", context.titleStyle)
+  url.searchParams.set("ctx_input", context.input.slice(0, MAX_CONTEXT_INPUT_LENGTH))
   const query = url.searchParams.toString()
   return `${url.pathname}${query ? `?${query}` : ""}${url.hash}`
 }
 
+/**
+ * ctx_input carries arbitrary user text through the URL. Cap it so a long paste
+ * can't produce an unusable link, and so the read side never accepts more than
+ * the write side should ever have produced.
+ */
+export const MAX_CONTEXT_INPUT_LENGTH = 280
+
+function parseConverterInitialState(get: (key: string) => string | undefined): ConverterInitialState {
+  return {
+    initialInput: (get("ctx_input") ?? "").slice(0, MAX_CONTEXT_INPUT_LENGTH),
+    initialMode: asMode(get("ctx_mode")),
+    initialTitleStyle: asStyle(get("ctx_style")),
+    initialContextRef: normalizeContextRef(get("ctx_ref")),
+  }
+}
+
+/** Server side: Next's `searchParams` record. */
 export function parseConverterInitialStateFromSearchParams(
   searchParams?: Record<string, string | string[] | undefined>
 ): ConverterInitialState {
-  const input = firstValue(searchParams?.ctx_input) ?? ""
-  const mode = asMode(firstValue(searchParams?.ctx_mode))
-  const style = asStyle(firstValue(searchParams?.ctx_style))
-  const contextRef = normalizeContextRef(firstValue(searchParams?.ctx_ref))
+  return parseConverterInitialState((key) => firstValue(searchParams?.[key]))
+}
 
-  return {
-    initialInput: input,
-    initialMode: mode,
-    initialTitleStyle: style,
-    initialContextRef: contextRef,
-  }
+/** Client side: the URLSearchParams handed back by `useSearchParams()`. */
+export function parseConverterInitialStateFromQuery(query: URLSearchParams | null): ConverterInitialState {
+  return parseConverterInitialState((key) => query?.get(key) ?? undefined)
 }
 
 export function toConverterContext(state: ConverterInitialState): ConverterContext | null {
