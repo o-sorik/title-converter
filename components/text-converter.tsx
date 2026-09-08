@@ -19,6 +19,7 @@ import { getContextualRuleGuidance } from "@/lib/rule-guidance"
 import { getConverterContextStorageKey, parseConverterContextPayload, parseConverterInitialStateFromQuery } from "@/lib/converter-context"
 import { getHighIntentBlogHref, getHighIntentEntryFromInput } from "@/lib/high-intent-guidance"
 import { cn } from "@/lib/utils"
+import { trackEvent } from "@/lib/analytics"
 
 const MAX_VISIBLE_EXPLANATIONS = 15
 const COPY_FEEDBACK_DISMISS_MS = 2500
@@ -354,11 +355,22 @@ export function TextConverter({
         return () => window.clearTimeout(timeoutId)
     }, [copyFeedbackState, copyFeedbackTick])
 
+    const selectMode = (mode: ConversionType) => {
+        setActiveType(mode)
+        trackEvent("mode_change", { mode })
+    }
+
+    const selectStyle = (style: TitleCaseStyle) => {
+        setTitleStyle(style)
+        trackEvent("style_change", { style })
+    }
+
     const handleCopy = async () => {
         if (!output) return
         try {
             await navigator.clipboard.writeText(output)
             setCopied(true)
+            trackEvent("copy_output", { mode: activeType, style: titleStyle, chars: output.length })
             setCopyFeedbackState("success")
             setCopyFeedbackTick((prev) => nextCopyFeedbackTick(prev))
         } catch {
@@ -373,6 +385,7 @@ export function TextConverter({
         try {
             const text = await navigator.clipboard.readText()
             setInput(text)
+            trackEvent("paste_input", { mode: activeType })
             toast.success("Pasted from clipboard")
         } catch {
             toast.error("Failed to paste", { description: "Please allow clipboard access." })
@@ -387,6 +400,7 @@ export function TextConverter({
     }
 
     const handleReportTitleStyleError = () => {
+        trackEvent("report_style_error", { style: titleStyle })
         const inputSnippet = input.trim().slice(0, FEEDBACK_SNIPPET_CHAR_LIMIT) || "(empty)"
         const outputSnippet = output.trim().slice(0, FEEDBACK_SNIPPET_CHAR_LIMIT) || "(empty)"
         const subject = `[Title Style Feedback] ${titleStyle.toUpperCase()}`
@@ -445,7 +459,7 @@ export function TextConverter({
                                                 <TooltipTrigger asChild>
                                                     <button
                                                         ref={el => { if (el) buttonRefs.current[type.id] = el }}
-                                                        onClick={() => setActiveType(type.id)}
+                                                        onClick={() => selectMode(type.id)}
                                                         aria-pressed={isActive}
                                                         data-active={isActive ? "true" : "false"}
                                                         className={cn(
@@ -488,7 +502,7 @@ export function TextConverter({
                                 </span>
                                 <Tabs
                                     value={titleStyle}
-                                    onValueChange={(value) => setTitleStyle(value as TitleCaseStyle)}
+                                    onValueChange={(value) => selectStyle(value as TitleCaseStyle)}
                                     className="w-fit"
                                 >
                                     <TabsList className="w-fit h-auto flex-wrap justify-start gap-1 p-1 bg-zinc-100 dark:bg-zinc-900">
@@ -516,7 +530,7 @@ export function TextConverter({
                             selector sits below the output on small screens, so give
                             mobile users a way to switch mode before typing */}
                         <div className="md:hidden flex gap-2" data-testid="mobile-mode-controls">
-                            <Select value={activeType} onValueChange={(value) => setActiveType(value as ConversionType)}>
+                            <Select value={activeType} onValueChange={(value) => selectMode(value as ConversionType)}>
                                 <SelectTrigger className="flex-1 min-h-11" aria-label="Conversion mode">
                                     <SelectValue />
                                 </SelectTrigger>
@@ -537,7 +551,7 @@ export function TextConverter({
                                 </SelectContent>
                             </Select>
                             {activeType === "title" && (
-                                <Select value={titleStyle} onValueChange={(value) => setTitleStyle(value as TitleCaseStyle)}>
+                                <Select value={titleStyle} onValueChange={(value) => selectStyle(value as TitleCaseStyle)}>
                                     <SelectTrigger className="w-32 min-h-11" aria-label="Title style">
                                         <SelectValue />
                                     </SelectTrigger>
