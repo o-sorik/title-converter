@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const APA_7_TITLE_CASE_GUIDE_ARTICLE: WritingTipsArticle = {
   slug: "apa-7-title-case-guide",
+  converterLink: {
+    anchor: "APA title case converter",
+    before: "Select APA in the ",
+    after: " and it applies these rules, marking every word it changed.",
+  },
   tags: ["APA Style", "Academic Writing", "Capitalization"],
   ctaWord: "apa title case",
   ctaText:

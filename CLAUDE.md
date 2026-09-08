@@ -131,6 +131,7 @@ These rules are non-negotiable. Every page change must respect them.
 5. **Anti-cannibalization:** Never create a page whose primary query overlaps with an existing page. Run `npm run intent:qa` to verify.
 6. **Rendering:** SSG + ISR by default. Use `revalidate` values from `docs/ops/RENDERING_STRATEGY.md`. Set `dynamicParams = false` on all `[slug]` routes.
 7. **Internal linking:** Every content page needs minimum 3 internal links in and out. At least one link must point to the main converter (`/`).
+   - **Converter anchor rule (2026-09-08):** every article carries exactly one contextual in-body sentence linking to the converter via the required `converterLink` field (`lib/converter-anchors.ts`). The anchor text MUST be one of `CONVERTER_ANCHORS`, a pool built from Search Console converter-intent queries (refresh from GSC quarterly, keep the date in the file header). Vary anchors across articles; the exact-match anchor `title case converter` must stay under 40% of articles (`lib/converter-anchors.test.ts` enforces this). Write the sentence for the article, not a template: it should read as advice, with `before` ending in a space and `after` closing the sentence. The link points to `/` (clean, no `ctx_*` params); the `CTABlock` button keeps the prefilled deep link. Rendered by `ConverterInlineLink` right after the answer box (Is X, Gen Cap) or after the intro section (Writing Tips, Style Guides, Stats).
 8. **No thin content:** Content pages require answer + examples + style context + FAQ. See `docs/ops/CONTENT_TEMPLATE_V1.md`.
 
 ## Testing

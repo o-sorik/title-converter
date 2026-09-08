@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const WORDS_PER_PAGE_ARTICLE: WritingTipsArticle = {
   slug: "words-per-page",
+  converterLink: {
+    anchor: "capitalization checker",
+    before: "Academic papers have strict heading rules on top of page counts. The ",
+    after: " applies APA or MLA capitalization to a heading so it passes the format check.",
+  },
   tags: ["Writing Statistics", "Formatting", "Academic Writing"],
   ctaWord: "words per page",
   ctaText:

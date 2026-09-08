@@ -1,4 +1,5 @@
 import type { DoNotExample, FAQItem } from "@/lib/article-content"
+import type { ConverterLink } from "@/lib/converter-anchors"
 
 // Cross-template primitives live in lib/article-content.ts; re-exported here
 // for existing importers.
@@ -32,11 +33,18 @@ export interface IsXArticle {
   faqItems: FAQItem[]
   ctaWord: string
   relatedSlugs: string[]
+  /** One contextual in-body link to the converter. Anchor must come from CONVERTER_ANCHORS. */
+  converterLink: ConverterLink
 }
 
 export const IS_X_ARTICLES: IsXArticle[] = [
   {
     slug: "with-capitalized-in-title-case",
+    converterLink: {
+      anchor: "title case converter",
+      before: "Not sure how \"with\" should look in your own headline? Paste it into the ",
+      after: " and switch between AP, APA, Chicago, and MLA to see which guides capitalize it.",
+    },
     word: "with",
     answerBox: `It depends on the style guide – AP and APA capitalize "with" in a title because it has four letters. Chicago lowercases prepositions of four or fewer letters, and MLA lowercases all prepositions regardless of length, so both keep "with" lowercase.`,
     whySectionHeading: `Why "With" Gets Capitalized`,
@@ -107,6 +115,11 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   },
   {
     slug: "is-capitalized-in-title-case",
+    converterLink: {
+      anchor: "free title case converter",
+      before: "\"Is\" is short, which is exactly why people lowercase it by mistake. A ",
+      after: " catches it, and every other short verb, in one pass.",
+    },
     word: "is",
     answerBox: `Yes – "is" is always capitalized in a title. All major style guides capitalize verbs in titles regardless of length. Even though "is" is only two letters, it's a verb, and verbs are always capitalized.`,
     whySectionHeading: `Why "Is" Is Always Capitalized`,
@@ -168,6 +181,11 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   },
   {
     slug: "the-capitalized-in-title-case",
+    converterLink: {
+      anchor: "online title case converter",
+      before: "Mid-title articles are the easiest thing to get wrong in a long headline. Run it through the ",
+      after: " and it lowercases \"the\" everywhere except the first and last position.",
+    },
     word: "the",
     answerBox: `Usually no – "the" stays lowercase in title case. "The" is a definite article, and all four major style guides (AP, APA, Chicago, MLA) agree: articles stay lowercase in the middle of a title. The only exceptions are when "the" is the first or last word of the title.`,
     whySectionHeading: `Why "The" Stays Lowercase`,
@@ -230,6 +248,11 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   },
   {
     slug: "and-capitalized-in-title-case",
+    converterLink: {
+      anchor: "title capitalization tool",
+      before: "If your headline has several conjunctions, a ",
+      after: " is faster than checking each one by hand: it lowercases \"and\" mid-title and capitalizes it in first or last position.",
+    },
     word: "and",
     answerBox: `No – "and" is lowercase in title case across all four major style guides (AP, APA, Chicago, MLA). This is one of the rare rules where every guide fully agrees. Capitalize "and" only if it's the first or last word of the title.`,
     whySectionHeading: `Why "And" Stays Lowercase`,
@@ -292,6 +315,11 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   },
   {
     slug: "to-capitalized-in-title-case",
+    converterLink: {
+      anchor: "title case converter",
+      before: "Infinitive \"to\" and preposition \"to\" look identical, and both stay lowercase in every major guide. The ",
+      after: " applies that rule automatically, so you only have to think about the exceptions.",
+    },
     word: "to",
     answerBox: `No – "to" is never capitalized in a title, regardless of which style guide you follow. "To" stays lowercase in AP, APA, Chicago, and MLA, whether it functions as a preposition ("go to school") or as an infinitive marker ("to run"). This rule is consistent across all major styles.`,
     whySectionHeading: `Why "To" Is Always Lowercase`,
@@ -353,6 +381,11 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   },
   {
     slug: "in-capitalized-in-title-case",
+    converterLink: {
+      anchor: "capitalization checker",
+      before: "Two letters, lowercase in every guide, and still easy to miss in a long headline. A quick pass through the ",
+      after: " shows every word it changed and the rule behind each change.",
+    },
     word: "in",
     answerBox: `Usually no, but it depends on how "in" is used. As a preposition, "in" is lowercase in all four major style guides – it's only three letters, below all length thresholds. But when "in" functions as an adverb in a phrasal verb (like "log in," "sign in," "drop in"), AP and Chicago capitalize it, while APA and MLA keep it lowercase.`,
     whySectionHeading: `The Two Roles of "In": Preposition vs. Adverb`,
@@ -431,6 +464,11 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   },
   {
     slug: "from-capitalized-in-title-case",
+    converterLink: {
+      anchor: "title case converter",
+      before: "\"From\" sits right on the four-letter boundary, so the answer changes with the style guide. Pick AP, APA, Chicago, or MLA in the ",
+      after: " and compare the results side by side.",
+    },
     word: "from",
     answerBox: `It depends on the style guide – AP and APA capitalize "from" in a title because it has four letters, meeting their minimum length threshold. Chicago keeps prepositions of four or fewer letters lowercase even in the updated 18th edition (2024), and MLA lowercases all prepositions regardless of length.`,
     whySectionHeading: `Why "From" Gets Capitalized (or Not)`,
@@ -501,6 +539,11 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   },
   {
     slug: "your-capitalized-in-title-case",
+    converterLink: {
+      anchor: "title case checker",
+      before: "Possessive pronouns are capitalized everywhere, which surprises people who lump \"your\" in with articles. The ",
+      after: " marks it capitalized in all four styles.",
+    },
     word: "your",
     answerBox: `Yes – "your" is capitalized in a title in all major style guides. "Your" is capitalized for two independent reasons: it has four letters (meeting the length rule in AP and APA) and it's a pronoun (which Chicago and MLA capitalize as a principal word regardless of length).`,
     whySectionHeading: `Why "Your" Gets Capitalized`,
@@ -561,6 +604,11 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   },
   {
     slug: "that-capitalized-in-title-case",
+    converterLink: {
+      anchor: "free title case converter",
+      before: "\"That\" is capitalized in every guide, yet it is one of the most common words people lowercase out of habit. Paste your headline into the ",
+      after: " and it flags the fix.",
+    },
     word: "that",
     answerBox: `Yes – "that" is capitalized in a title in all major style guides. "That" can function as a subordinating conjunction, a relative pronoun, or a demonstrative pronoun. Regardless of its grammatical role, it's capitalized in AP, APA, MLA, and Chicago styles.`,
     whySectionHeading: `Why "That" Is Always Capitalized`,
@@ -621,6 +669,11 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   },
   {
     slug: "am-capitalized-in-title-case",
+    converterLink: {
+      anchor: "title case converter",
+      before: "Short verbs like \"am\" are the classic slip. Run your title through the ",
+      after: " and it keeps \"am\" capitalized whichever style you pick.",
+    },
     word: "am",
     answerBox: `Yes – "am" is always capitalized in a title. All major style guides capitalize verbs, even when they're extremely short. At only two letters, "am" is one of the shortest English verbs – but it's still capitalized in AP, APA, MLA, and Chicago styles.`,
     whySectionHeading: `Why "Am" Is Always Capitalized`,
@@ -681,6 +734,11 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   },
   {
     slug: "up-capitalized-in-title-case",
+    converterLink: {
+      anchor: "headline capitalization tool",
+      before: "Phrasal verbs are the trickiest case here. A ",
+      after: " that recognizes \"up\" as part of the verb saves you a second read.",
+    },
     word: "up",
     answerBox: `It depends on how "up" is used. When "up" functions as a preposition ("walk up the hill"), it's lowercase in all styles. When "up" functions as an adverb or adjective ("Give Up Hope," "The Up Side"), AP and Chicago capitalize it, while APA and MLA keep it lowercase based on the three-letter rule.`,
     whySectionHeading: `Why "Up" Is Complicated`,
@@ -751,6 +809,11 @@ export const IS_X_ARTICLES: IsXArticle[] = [
   },
   {
     slug: "between-capitalized-in-title-case",
+    converterLink: {
+      anchor: "online title case converter",
+      before: "Seven letters means \"between\" is capitalized in every guide, including Chicago with its five-letter rule. The ",
+      after: " shows the same result across all four styles.",
+    },
     word: "between",
     answerBox: `Usually yes – AP, APA, and Chicago capitalize "between" in a title. It has seven letters, well above the length thresholds in AP and APA, and Chicago's 18th edition (2024) capitalizes prepositions of five or more letters. MLA is the exception – it lowercases all prepositions regardless of length.`,
     whySectionHeading: `Why "Between" Is Usually Capitalized`,

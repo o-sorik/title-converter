@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const AVERAGE_TYPING_SPEED_ARTICLE: WritingTipsArticle = {
   slug: "average-typing-speed",
+  converterLink: {
+    anchor: "free title case converter",
+    before: "Typing fast does not make the headline correct. When the draft is done, run its title through the ",
+    after: " so the capitalization matches your style guide.",
+  },
   tags: ["Writing Statistics", "Typing", "Productivity"],
   ctaWord: "average typing speed",
   ctaText:

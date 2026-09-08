@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const BOOKS_PER_YEAR_ARTICLE: WritingTipsArticle = {
   slug: "books-per-year",
+  converterLink: {
+    anchor: "title case checker",
+    before: "If you keep a reading log, the ",
+    after: " keeps every book title in it formatted the same way.",
+  },
   tags: ["Writing Statistics", "Reading", "Books"],
   ctaWord: "how many books does the average person read",
   ctaText:

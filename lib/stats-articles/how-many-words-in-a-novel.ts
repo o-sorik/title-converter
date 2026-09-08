@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const HOW_MANY_WORDS_IN_A_NOVEL_ARTICLE: WritingTipsArticle = {
   slug: "how-many-words-in-a-novel",
+  converterLink: {
+    anchor: "title converter",
+    before: "Chapter titles follow the same capitalization rules as book titles. The ",
+    after: " applies Chicago style, the standard for most publishers, in one click.",
+  },
   tags: ["Writing Statistics", "Fiction", "Publishing"],
   ctaWord: "how many words in a novel",
   ctaText:

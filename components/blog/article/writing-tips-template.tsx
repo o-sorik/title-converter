@@ -1,3 +1,4 @@
+import * as React from "react"
 import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
 import type { Article } from "@/components/blog/data"
@@ -5,6 +6,7 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 import { ArticleSectionRenderer } from "./article-blocks"
 import { FAQAccordion } from "./faq-accordion"
 import { CTABlock } from "./cta-block"
+import { ConverterInlineLink } from "./converter-inline-link"
 import { getAuthorByName } from "@/lib/authors"
 
 interface WritingTipsTemplateProps {
@@ -17,8 +19,11 @@ export function WritingTipsTemplate({ data, article }: WritingTipsTemplateProps)
 
   return (
     <>
-      {data.sections.map((section) => (
-        <ArticleSectionRenderer key={section.id} section={section} />
+      {data.sections.map((section, index) => (
+        <React.Fragment key={section.id}>
+          <ArticleSectionRenderer section={section} />
+          {index === 0 ? <ConverterInlineLink link={data.converterLink} /> : null}
+        </React.Fragment>
       ))}
 
       <FAQAccordion items={data.faqItems} />

@@ -7,6 +7,7 @@ import { StyleGuideTable } from "./style-guide-table"
 import { DoDoNot } from "./do-do-not"
 import { FAQAccordion } from "./faq-accordion"
 import { CTABlock } from "./cta-block"
+import { ConverterInlineLink } from "./converter-inline-link"
 import { IS_X_SECTION_IDS } from "@/lib/article-content"
 
 interface IsXTemplateProps {
@@ -20,6 +21,8 @@ export function IsXTemplate({ data, article }: IsXTemplateProps) {
       <section id={IS_X_SECTION_IDS.quickAnswer} className="scroll-mt-24">
         <AnswerBox>{data.answerBox}</AnswerBox>
       </section>
+
+      <ConverterInlineLink link={data.converterLink} />
 
       <section id={IS_X_SECTION_IDS.whySection} className="scroll-mt-24 space-y-3">
         <h2 className="text-2xl font-black leading-tight text-slate-950 dark:text-zinc-100 md:text-3xl">

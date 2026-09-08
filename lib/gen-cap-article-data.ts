@@ -1,4 +1,5 @@
 import type { DoNotExample, FAQItem } from "@/lib/article-content"
+import type { ConverterLink } from "@/lib/converter-anchors"
 
 export interface GenCapRuleBlock {
   capitalizeRules: string[]
@@ -34,11 +35,18 @@ export interface GenCapArticle {
   ctaText?: string
 
   relatedSlugs: string[]
+  /** One contextual in-body link to the converter. Anchor must come from CONVERTER_ANCHORS. */
+  converterLink: ConverterLink
 }
 
 export const GEN_CAP_ARTICLES: GenCapArticle[] = [
   {
     slug: "is-president-capitalized",
+    converterLink: {
+      anchor: "title case converter",
+      before: "Job titles follow different rules in running text and in headlines. For the headline half, the ",
+      after: " capitalizes \"President\" in every style, so the sentence-case question is the only one left to decide.",
+    },
     word: "President",
     answerVariant: "it-depends",
     answerBox: `It depends on how you use it. Capitalize "president" when it appears as a formal title directly before a person's name – President Lincoln – or when it replaces a specific person's name in a formal context. Keep it lowercase when you're talking about the role in general terms – the president spoke to reporters.`,
@@ -128,6 +136,11 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
 
   {
     slug: "do-you-capitalize-seasons",
+    converterLink: {
+      anchor: "capitalization tool",
+      before: "Season names stay lowercase in prose but are capitalized in title case. If you are formatting a headline like \"best winter recipes,\" the ",
+      after: " applies the title rule for you.",
+    },
     word: "Seasons",
     answerVariant: "quick-answer",
     answerBox: `No – seasons are not capitalized in standard English. Write "spring," "summer," "fall" (or "autumn"), and "winter" in lowercase. Seasons are common nouns, not proper nouns. Capitalize them only when they're part of a proper noun, start a sentence, or appear in a title.`,
@@ -217,6 +230,11 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
 
   {
     slug: "is-earth-capitalized",
+    converterLink: {
+      anchor: "free title case converter",
+      before: "In a headline the proper-noun debate does not matter: nouns are always capitalized in title case, so \"Earth\" is capitalized in every style. The ",
+      after: " does that automatically.",
+    },
     word: "Earth",
     answerVariant: "it-depends",
     answerBox: `Usually yes – when you mean the planet. Capitalize "Earth" when referring to the planet, especially when it appears alongside other planet names or without the article "the." Keep it lowercase when it means soil, ground, or dirt – the earth beneath our feet. The article "the" is a helpful signal: the earth (often lowercase, informal) vs. Earth (capitalized, scientific).`,
@@ -306,6 +324,11 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
 
   {
     slug: "is-high-school-capitalized",
+    converterLink: {
+      anchor: "capitalization checker",
+      before: "Headline capitalization sidesteps the proper-noun question: both words are capitalized in every style. Paste the title into the ",
+      after: " to see the full result.",
+    },
     word: "High School",
     answerVariant: "it-depends",
     answerBox: `Only when it's part of a school's name. Capitalize "High School" when it appears in the official name of a specific institution – Lincoln High School, Tokyo Metropolitan High School. Keep it lowercase when you're talking about high school as a general concept or stage of education – she's in high school, he teaches high school math.`,
@@ -392,6 +415,11 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
 
   {
     slug: "do-you-capitalize-after-a-colon",
+    converterLink: {
+      anchor: "title case converter",
+      before: "Every major guide capitalizes the first word after a colon in a title. The ",
+      after: " applies that rule and lowercases the rest according to the style you choose.",
+    },
     word: "After a Colon",
     answerVariant: "it-depends",
     answerBox: `It depends on your style guide. AP style capitalizes the first word after a colon if it begins a complete sentence. Chicago style capitalizes only when two or more complete sentences follow the colon. APA always capitalizes after a colon if a complete sentence follows. In all styles, keep it lowercase when a colon introduces a fragment, list, or single word.`,
@@ -482,6 +510,11 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
 
   {
     slug: "is-professor-capitalized",
+    converterLink: {
+      anchor: "titlecase converter",
+      before: "Whether the word is capitalized in running text depends on placement; in a headline it is always capitalized. Run the headline through the ",
+      after: " to check the words around it too.",
+    },
     word: "Professor",
     answerVariant: "it-depends",
     answerBox: `Only when it's a title before a name. Capitalize "Professor" when it appears directly before a person's name as a formal title – Professor Martinez lectured on Thursday. Keep it lowercase when describing the role generally – she's a professor of chemistry – or when it follows a name: David Kim, professor of economics.`,
@@ -572,6 +605,11 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
 
   {
     slug: "do-you-capitalize-majors",
+    converterLink: {
+      anchor: "title capitalizer",
+      before: "In title case the major is capitalized whatever the running-text rule says. The ",
+      after: " handles the headline; this article covers the sentence.",
+    },
     word: "Majors",
     answerVariant: "it-depends",
     answerBox: `Usually no – with one important exception. College majors are lowercase when they're general fields of study – biology, history, political science. Capitalize them only when the major includes a proper noun – English, French, American studies – or when you're referring to a specific course or program by its official name: Bachelor of Science in Mechanical Engineering.`,
@@ -662,6 +700,11 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
 
   {
     slug: "is-bachelors-degree-capitalized",
+    converterLink: {
+      anchor: "convert to title case",
+      before: "Degree names in a headline are capitalized as ordinary nouns. If you are writing the title of a page about degrees, ",
+      after: " with the free tool before you publish.",
+    },
     word: "Bachelor's Degree",
     answerVariant: "it-depends",
     answerBox: `Not usually – unless you're writing the full formal name. Keep "bachelor's degree" lowercase and with an apostrophe when using it as a general term: She earned her bachelor's degree in 2024. Capitalize when writing the complete formal name of the degree: Bachelor of Science in Biology. The same pattern applies to master's degree, associate's degree, and doctoral degree.`,
@@ -751,6 +794,11 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
 
   {
     slug: "is-math-capitalized",
+    converterLink: {
+      anchor: "title capitalization generator",
+      before: "Subject names are lowercase in a sentence and capitalized in a title. For the headline version, the ",
+      after: " applies the rule in AP, APA, Chicago, or MLA.",
+    },
     word: "Math",
     answerVariant: "quick-answer",
     answerBox: `No – "math" is a common noun. Unlike "English" or "French," the word "math" doesn't derive from a proper noun, so it stays lowercase in regular writing: She's good at math. Capitalize it only when it's part of a specific course name – Math 201: Linear Algebra – or at the start of a sentence.`,
@@ -841,6 +889,11 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
 
   {
     slug: "is-english-capitalized",
+    converterLink: {
+      anchor: "capitalization tool",
+      before: "Language names are capitalized everywhere, so the interesting cases are the words around them. The ",
+      after: " checks the whole title at once.",
+    },
     word: "English",
     answerVariant: "quick-answer",
     answerBox: `Yes – always. "English" is a proper noun in virtually every context. Whether you're referring to the language (She speaks English), the school subject (He got an A in English), or the nationality (English literature), it keeps its capital letter. This applies to all languages derived from proper nouns – French, Spanish, Japanese, Arabic – not just English.`,
@@ -929,6 +982,11 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
   },
   {
     slug: "is-god-capitalized",
+    converterLink: {
+      anchor: "capitalization checker",
+      before: "In a headline, capitalization follows the title rules rather than the religious convention: \"god\" as a common noun is still capitalized as a noun. The ",
+      after: " shows exactly what changes.",
+    },
     word: "God",
     answerVariant: "it-depends",
     answerBox: `It depends on which god you mean. Capitalize "God" when it refers to the deity of a monotheistic religion – Christianity, Judaism, or Islam – because it functions as a proper name. Keep it lowercase when the word works as a category: the Greek gods, a sun god, gods and goddesses.`,
@@ -1017,6 +1075,11 @@ export const GEN_CAP_ARTICLES: GenCapArticle[] = [
   },
   {
     slug: "is-constitution-capitalized",
+    converterLink: {
+      anchor: "title case converter",
+      before: "Headlines capitalize \"Constitution\" as a noun in every style, so only the running-text question remains. Paste your title into the ",
+      after: " to confirm the rest.",
+    },
     word: "Constitution",
     answerVariant: "it-depends",
     answerBox: `It depends on which constitution. Capitalize "Constitution" when referring to the U.S. Constitution – with or without the "U.S." – and when naming another nation's or state's constitution directly: the French Constitution, the Massachusetts Constitution. Lowercase generic references: the state constitution, the club's constitution, constitutional rights.`,

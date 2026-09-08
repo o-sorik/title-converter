@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const HOW_MANY_WORDS_AVERAGE_PERSON_KNOWS_ARTICLE: WritingTipsArticle = {
   slug: "how-many-words-average-person-knows",
+  converterLink: {
+    anchor: "online title case converter",
+    before: "Knowing the words is one thing; capitalizing them correctly in a title is another. The ",
+    after: " applies the style-guide rules for you.",
+  },
   tags: ["Writing Statistics", "Vocabulary", "Language"],
   ctaWord: "how many words does the average person know",
   ctaText:
