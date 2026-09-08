@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const COMMONLY_MISSPELLED_WORDS_ARTICLE: WritingTipsArticle = {
   slug: "commonly-misspelled-words",
+  converterLink: {
+    anchor: "title case converter",
+    before: "Spelling is one half of a clean headline; capitalization is the other. The ",
+    after: " handles the second half in AP, APA, Chicago, or MLA.",
+  },
   tags: ["Writing Statistics", "Spelling", "Grammar 101"],
   ctaWord: "commonly misspelled words",
   ctaText:

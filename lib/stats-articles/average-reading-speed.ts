@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const AVERAGE_READING_SPEED_ARTICLE: WritingTipsArticle = {
   slug: "average-reading-speed",
+  converterLink: {
+    anchor: "headline capitalization tool",
+    before: "Readers skim headlines before they commit, and inconsistent capitalization slows that first glance. A ",
+    after: " fixes it in one paste.",
+  },
   tags: ["Writing Statistics", "Reading", "Research"],
   ctaWord: "average reading speed",
   ctaText:

@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const APA_HEADING_LEVELS_ARTICLE: WritingTipsArticle = {
   slug: "apa-heading-levels",
+  converterLink: {
+    anchor: "APA title capitalizer",
+    before: "Level 1 and Level 2 headings take APA title case. The ",
+    after: " applies the four-letter rule to a heading so you can paste it straight into the paper.",
+  },
   tags: ["APA Style", "Academic Writing", "Formatting"],
   ctaWord: "apa heading",
   ctaText:

@@ -1,4 +1,5 @@
 import type { ArticleSection, FAQItem } from "@/lib/article-content"
+import type { ConverterLink } from "@/lib/converter-anchors"
 import { STATS_ARTICLES } from "@/lib/stats-articles"
 import { STYLE_GUIDE_ARTICLES } from "@/lib/style-guide-articles"
 
@@ -8,6 +9,8 @@ export interface WritingTipsArticle {
   ctaWord: string
   ctaText?: string
   relatedSlugs: string[]
+  /** One contextual in-body link to the converter, rendered after the intro section. */
+  converterLink: ConverterLink
   tags: string[]
   sections: ArticleSection[]
 }
@@ -15,6 +18,11 @@ export interface WritingTipsArticle {
 export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
   {
     slug: "what-words-are-not-capitalized-in-a-title",
+    converterLink: {
+      anchor: "title case converter",
+      before: "The list above is the rule; the ",
+      after: " is the shortcut. Paste any title and it lowercases the small words by style and shows each change.",
+    },
     tags: ["Title Case", "Grammar 101", "Style Guides"],
     ctaWord: "what words are not capitalized in a title",
     ctaText: "Not sure which words to capitalize? Paste your title into our free Title Case Converter – it applies AP, APA, Chicago, or MLA rules automatically.",
@@ -390,6 +398,11 @@ export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
   },
   {
     slug: "sentence-vs-title-case",
+    converterLink: {
+      anchor: "online title case converter",
+      before: "Once you have picked a case, apply it everywhere. Paste a headline into the ",
+      after: " and switch between Title Case and Sentence case to compare both versions.",
+    },
     tags: ["Title Case", "Sentence Case", "Writing Tips"],
     ctaWord: "how to choose between title case and sentence case",
     ctaText: "Try both styles on your own headline – our free converter switches between title case (AP, APA, Chicago, MLA) and sentence case instantly.",

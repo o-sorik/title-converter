@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const HOW_LONG_SHOULD_A_BLOG_POST_BE_ARTICLE: WritingTipsArticle = {
   slug: "how-long-should-a-blog-post-be",
+  converterLink: {
+    anchor: "title case generator",
+    before: "Whatever the length, the title is what gets read first. Format it with the ",
+    after: " so it matches the rest of your blog.",
+  },
   tags: ["Writing Statistics", "Blogging", "SEO"],
   ctaWord: "how long should a blog post be",
   ctaText:

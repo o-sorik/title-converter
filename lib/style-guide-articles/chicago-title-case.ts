@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const CHICAGO_TITLE_CASE_ARTICLE: WritingTipsArticle = {
   slug: "chicago-title-case",
+  converterLink: {
+    anchor: "Chicago title case converter",
+    before: "The ",
+    after: " applies the 18th-edition five-letter threshold and marks every changed word.",
+  },
   tags: ["Chicago Style", "Capitalization", "Editorial"],
   ctaWord: "chicago title case",
   ctaText:

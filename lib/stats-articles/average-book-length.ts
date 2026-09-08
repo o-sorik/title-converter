@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const AVERAGE_BOOK_LENGTH_ARTICLE: WritingTipsArticle = {
   slug: "average-book-length",
+  converterLink: {
+    anchor: "title case converter",
+    before: "Book titles are the classic title-case example. Test yours in the ",
+    after: " and compare how AP, APA, Chicago, and MLA treat the small words.",
+  },
   tags: ["Writing Statistics", "Publishing", "Books"],
   ctaWord: "average book length",
   ctaText:

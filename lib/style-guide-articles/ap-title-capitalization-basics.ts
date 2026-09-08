@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const AP_TITLE_CAPITALIZATION_BASICS_ARTICLE: WritingTipsArticle = {
   slug: "ap-title-capitalization-basics",
+  converterLink: {
+    anchor: "AP title case converter",
+    before: "The ",
+    after: " applies the four-letter rule and the AP exceptions above, and shows which words it changed.",
+  },
   tags: ["AP Style", "Journalism", "Capitalization"],
   ctaWord: "ap title case",
   ctaText:

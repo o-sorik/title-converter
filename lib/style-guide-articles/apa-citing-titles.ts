@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const APA_CITING_TITLES_ARTICLE: WritingTipsArticle = {
   slug: "apa-citing-titles",
+  converterLink: {
+    anchor: "title case converter",
+    before: "Reference-list titles use sentence case while in-text titles use title case, so you need both modes. The ",
+    after: " has an APA option for the in-text version and a Sentence case mode for the reference list.",
+  },
   tags: ["APA Style", "Citations", "Academic Writing"],
   ctaWord: "apa reference title",
   ctaText:

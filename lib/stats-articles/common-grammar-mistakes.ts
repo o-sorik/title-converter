@@ -21,6 +21,11 @@ const NICHOLLS_2003 = "https://ucrel.lancs.ac.uk/publications/CL2003/papers/nich
 
 export const COMMON_GRAMMAR_MISTAKES_ARTICLE: WritingTipsArticle = {
   slug: "common-grammar-mistakes",
+  converterLink: {
+    anchor: "title capitalizer",
+    before: "Capitalization mistakes in titles are a category of their own. The ",
+    after: " catches lowercase verbs and capitalized articles before an editor does.",
+  },
   tags: ["Writing Statistics", "Grammar 101", "Editing"],
   ctaWord: "common grammar mistakes",
   ctaText:

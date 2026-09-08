@@ -2,6 +2,11 @@ import type { WritingTipsArticle } from "@/lib/writing-tips-article-data"
 
 export const MLA_VS_APA_HEADLINES_ARTICLE: WritingTipsArticle = {
   slug: "mla-vs-apa-headlines",
+  converterLink: {
+    anchor: "MLA title case converter",
+    before: "To see the two styles side by side, paste the same headline into the ",
+    after: " and switch the style to APA.",
+  },
   tags: ["MLA Style", "APA Style", "Capitalization"],
   ctaWord: "mla title case",
   ctaText:
