@@ -11,6 +11,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { ConversionType, TitleCaseStyle } from "@/lib/converters"
 import { TITLE_STYLES } from "@/lib/title-styles"
 import { runEditorialQaBatch, type EditorialQaResult } from "@/lib/editorial-qa"
+import { trackEvent } from "@/lib/analytics"
 
 // Only the 4 editorial-relevant modes; code case / fun modes aren't meaningful for QA
 const QA_MODES: { id: ConversionType; label: string }[] = [
@@ -46,6 +47,11 @@ export function BatchChecker() {
         const result = runEditorialQaBatch(batchInput, mode, titleStyle)
         setRunId(id => id + 1)
         setQaResult(result)
+        trackEvent("batch_check", {
+            mode,
+            style: titleStyle,
+            lines: batchInput.split(/\r?\n/).filter((line) => line.trim()).length,
+        })
     }
 
     return (

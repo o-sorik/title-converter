@@ -3,6 +3,9 @@ import { Space_Grotesk } from "next/font/google"
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import { SITE_URL } from "@/lib/constants"
+import { GA_MEASUREMENT_ID, buildConsentDefaultScript } from "@/lib/analytics"
+import { GoogleAnalytics } from "@/components/analytics/google-analytics"
+import { ConsentBanner } from "@/components/analytics/consent-banner"
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -59,6 +62,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={spaceGrotesk.variable} suppressHydrationWarning>
+      {GA_MEASUREMENT_ID ? (
+        <head>
+          {/* Consent Mode v2 defaults: must run before gtag.js loads. */}
+          <script dangerouslySetInnerHTML={{ __html: buildConsentDefaultScript() }} />
+        </head>
+      ) : null}
       <body
         suppressHydrationWarning
         className="antialiased min-h-screen bg-background text-foreground"
@@ -70,6 +79,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          {GA_MEASUREMENT_ID ? (
+            <>
+              <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
+              <ConsentBanner />
+            </>
+          ) : null}
         </ThemeProvider>
       </body>
     </html>
