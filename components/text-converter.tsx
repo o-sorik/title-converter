@@ -156,6 +156,8 @@ export function TextConverter({
     const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>(initialTitleStyle)
     const [reveal, setReveal] = React.useState(false)
     const hadOutputRef = React.useRef(false)
+    // True once the visitor typed or pasted; restored/prefilled input must not count as a conversion.
+    const userInteractedRef = React.useRef(false)
     const buttonRefs = React.useRef<Partial<Record<ConversionType, HTMLButtonElement>>>({})
     const [pillStyles, setPillStyles] = React.useState<Record<string, React.CSSProperties>>({})
     const feedbackEmail = process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ?? "support@titlecaseconverter.online"
@@ -319,11 +321,14 @@ export function TextConverter({
         const hasOutput = output.length > 0
         if (hasOutput && !hadOutputRef.current) {
             setReveal(true)
+            if (userInteractedRef.current) {
+                trackEvent("convert_text", { mode: activeType, style: titleStyle, chars: output.length })
+            }
         }
         hadOutputRef.current = hasOutput
         setCopied((prev) => (prev ? false : prev))
         setCopyFeedbackState((prev) => (prev === "idle" ? prev : "idle"))
-    }, [output])
+    }, [output, activeType, titleStyle])
 
     React.useEffect(() => {
         try {
@@ -370,7 +375,7 @@ export function TextConverter({
         try {
             await navigator.clipboard.writeText(output)
             setCopied(true)
-            trackEvent("copy_output", { mode: activeType, style: titleStyle, chars: output.length })
+            trackEvent("copy_output", { mode: activeType, style: titleStyle, chars: output.length, method: "button" })
             setCopyFeedbackState("success")
             setCopyFeedbackTick((prev) => nextCopyFeedbackTick(prev))
         } catch {
@@ -384,6 +389,7 @@ export function TextConverter({
     const handlePaste = async () => {
         try {
             const text = await navigator.clipboard.readText()
+            userInteractedRef.current = true
             setInput(text)
             trackEvent("paste_input", { mode: activeType })
             toast.success("Pasted from clipboard")
@@ -603,7 +609,7 @@ export function TextConverter({
                                     placeholder="Type or paste your text here..."
                                     className="min-h-[140px] sm:min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-zinc-500 dark:placeholder:text-zinc-400"
                                     value={input}
-                                    onChange={(e) => setInput(e.target.value)}
+                                    onChange={(e) => { userInteractedRef.current = true; setInput(e.target.value) }}
                                     aria-describedby="converter-input-helper"
                                     aria-label="Input text"
                                 />
@@ -618,7 +624,14 @@ export function TextConverter({
                         </div>
 
                         {/* Output Area */}
-                        <div className="space-y-2 group" data-testid="output-zone">
+                        <div
+                            className="space-y-2 group"
+                            data-testid="output-zone"
+                            onCopy={() => {
+                                if (!output) return
+                                trackEvent("copy_output", { mode: activeType, style: titleStyle, chars: output.length, method: "select" })
+                            }}
+                        >
                             <div className="flex items-center justify-between px-1">
                                 <span id="converter-output-label" className="text-sm font-medium text-muted-foreground group-focus-within:text-primary transition-colors">
                                     {CONVERSION_TYPES.find(t => t.id === activeType)?.label} output
