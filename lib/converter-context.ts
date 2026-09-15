@@ -53,20 +53,30 @@ function normalizeContextRef(value?: string): string | undefined {
   return CONTEXT_REF_PATTERN.test(value) ? value : DEFAULT_CONVERTER_CONTEXT_REF
 }
 
+/**
+ * Carry the converter's *shape* - mode, style, and the storage ref - through a link.
+ *
+ * Deliberately omits the visitor's input. `<Link>` prefetches every href it
+ * renders, so text in the query would be sent to the server on each keystroke
+ * and recorded in access logs, while the privacy policy promises it never
+ * leaves the browser. Dropping it costs nothing: the text rides in
+ * sessionStorage under `ctx_ref`, and the storage read already took precedence
+ * over the query when restoring state on arrival.
+ */
 export function appendConverterContextToHref(href: string, context: ConverterContext): string {
   const url = new URL(href, SITE_URL)
   url.searchParams.set("ctx_ref", DEFAULT_CONVERTER_CONTEXT_REF)
   url.searchParams.set("ctx_mode", context.mode)
   url.searchParams.set("ctx_style", context.titleStyle)
-  url.searchParams.set("ctx_input", context.input.slice(0, MAX_CONTEXT_INPUT_LENGTH))
   const query = url.searchParams.toString()
   return `${url.pathname}${query ? `?${query}` : ""}${url.hash}`
 }
 
 /**
- * ctx_input carries arbitrary user text through the URL. Cap it so a long paste
- * can't produce an unusable link, and so the read side never accepts more than
- * the write side should ever have produced.
+ * `ctx_input` is written only by editorial CTAs, which seed the converter with a
+ * word chosen by the article - never with anything a visitor typed. The clamp
+ * lives on the read side so a legacy or hand-edited link cannot push an
+ * unbounded string into state.
  */
 export const MAX_CONTEXT_INPUT_LENGTH = 280
 
@@ -106,6 +116,27 @@ export function toConverterContext(state: ConverterInitialState): ConverterConte
 export function getConverterContextStorageKey(contextRef = DEFAULT_CONVERTER_CONTEXT_REF): string {
   const safeRef = normalizeContextRef(contextRef) ?? DEFAULT_CONVERTER_CONTEXT_REF
   return `${STORAGE_PREFIX}${safeRef}`
+}
+
+/**
+ * Persist the live converter context for same-tab navigation.
+ *
+ * This is the only channel for a visitor's own text: see
+ * `appendConverterContextToHref` for why it must never travel in a URL.
+ */
+export function writeConverterContext(context: ConverterContext): void {
+  try {
+    window.sessionStorage.setItem(
+      getConverterContextStorageKey(),
+      JSON.stringify({
+        input: context.input,
+        mode: context.mode,
+        titleStyle: context.titleStyle,
+      })
+    )
+  } catch {
+    // no-op: persistence is best-effort
+  }
 }
 
 export function parseConverterContextPayload(raw: string): ConverterContext | null {

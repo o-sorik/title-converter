@@ -93,8 +93,13 @@ export function getHighIntentConverterHref(
 
   const hrefWithContext = appendConverterContextToHref("/", effectiveContext)
 
+  // A reader who arrived with their own context carries it in sessionStorage.
+  // Only the editorial seed - a word the article chose, not one anybody typed -
+  // is safe to spell out in the query.
+  if (converterContext) return hrefWithContext
+
   const url = new URL(hrefWithContext, SITE_URL)
-  url.searchParams.set("ctx_input", effectiveContext.input || converterInput)
+  url.searchParams.set("ctx_input", converterInput)
   const query = url.searchParams.toString()
   return `${url.pathname}${query ? `?${query}` : ""}${url.hash}`
 }
@@ -127,9 +132,7 @@ export function getHighIntentBlogHref(
   entry: HighIntentGuidanceEntry,
   converterContext: ConverterContext
 ): string {
-  const hrefWithContext = appendConverterContextToHref(`/blog/${entry.slug}`, converterContext)
-  const url = new URL(hrefWithContext, SITE_URL)
-  url.searchParams.set("ctx_input", converterContext.input)
-  const query = url.searchParams.toString()
-  return `${url.pathname}${query ? `?${query}` : ""}${url.hash}`
+  // The converter state that reaches this link is whatever the visitor typed,
+  // so it stays in sessionStorage; the href only names the storage ref.
+  return appendConverterContextToHref(`/blog/${entry.slug}`, converterContext)
 }

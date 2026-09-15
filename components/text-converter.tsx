@@ -16,7 +16,12 @@ import { convertWithExplanations, convertWithSegments, type ConversionType, type
 import { TITLE_STYLES, STYLE_RULE_SUMMARY } from "@/lib/title-styles"
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
-import { getConverterContextStorageKey, parseConverterContextPayload, parseConverterInitialStateFromQuery } from "@/lib/converter-context"
+import {
+    getConverterContextStorageKey,
+    parseConverterContextPayload,
+    parseConverterInitialStateFromQuery,
+    writeConverterContext,
+} from "@/lib/converter-context"
 import { getHighIntentBlogHref, getHighIntentEntryFromInput } from "@/lib/high-intent-guidance"
 import { cn } from "@/lib/utils"
 import { trackEvent } from "@/lib/analytics"
@@ -326,18 +331,7 @@ export function TextConverter({
     }, [output])
 
     React.useEffect(() => {
-        try {
-            window.sessionStorage.setItem(
-                getConverterContextStorageKey(),
-                JSON.stringify({
-                    input: deferredInput,
-                    mode: activeType,
-                    titleStyle,
-                })
-            )
-        } catch {
-            // no-op: persistence is best-effort
-        }
+        writeConverterContext({ input: deferredInput, mode: activeType, titleStyle })
     }, [deferredInput, activeType, titleStyle])
 
     React.useEffect(() => {

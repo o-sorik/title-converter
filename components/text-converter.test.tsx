@@ -259,7 +259,9 @@ test("shows matched Grammar 101 continuity link for high-intent capitalization q
   expect(html).toContain('href="/blog/and-capitalized-in-title-case?')
   expect(html).toContain("ctx_mode=title")
   expect(html).toContain("ctx_style=ap")
-  expect(html).toContain("ctx_input=is+and+capitalized")
+  // Whatever sits in the converter box must not reach the server through a
+  // prefetched href; sessionStorage carries it across the navigation.
+  expect(html).not.toContain("ctx_input")
 })
 
 test("shows Grammar 101 browse link when converter input does not match high-intent pattern", () => {

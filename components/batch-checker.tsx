@@ -12,6 +12,7 @@ import type { ConversionType, TitleCaseStyle } from "@/lib/converters"
 import { TITLE_STYLES } from "@/lib/title-styles"
 import { runEditorialQaBatch, type EditorialQaResult } from "@/lib/editorial-qa"
 import { trackEvent } from "@/lib/analytics"
+import { DEFAULT_CONVERTER_CONTEXT_REF, writeConverterContext } from "@/lib/converter-context"
 
 // Only the 4 editorial-relevant modes; code case / fun modes aren't meaningful for QA
 const QA_MODES: { id: ConversionType; label: string }[] = [
@@ -22,9 +23,12 @@ const QA_MODES: { id: ConversionType; label: string }[] = [
 ]
 
 
-function buildReviewHref(text: string, mode: ConversionType, titleStyle: TitleCaseStyle): string {
+// The href names only the storage ref; the headline itself is handed over in
+// sessionStorage on click. Spelling it out in the query would ship every result
+// row to the server via <Link> prefetch, which the privacy policy rules out.
+function buildReviewHref(mode: ConversionType, titleStyle: TitleCaseStyle): string {
     const params = new URLSearchParams({
-        ctx_input: text,
+        ctx_ref: DEFAULT_CONVERTER_CONTEXT_REF,
         ctx_mode: mode,
         ctx_style: titleStyle,
     })
@@ -170,7 +174,17 @@ export function BatchChecker() {
                                         asChild
                                         aria-label={`Review item ${index + 1} in converter`}
                                     >
-                                        <Link href={buildReviewHref(item.source, mode, titleStyle)} data-testid="review-link">
+                                        <Link
+                                            href={buildReviewHref(mode, titleStyle)}
+                                            data-testid="review-link"
+                                            onClick={() =>
+                                                writeConverterContext({
+                                                    input: item.source,
+                                                    mode,
+                                                    titleStyle,
+                                                })
+                                            }
+                                        >
                                             Review in converter →
                                         </Link>
                                     </Button>
