@@ -161,6 +161,7 @@ export function TextConverter({
     const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>(initialTitleStyle)
     const [reveal, setReveal] = React.useState(false)
     const hadOutputRef = React.useRef(false)
+    const convertTrackedRef = React.useRef(false)
     const buttonRefs = React.useRef<Partial<Record<ConversionType, HTMLButtonElement>>>({})
     const [pillStyles, setPillStyles] = React.useState<Record<string, React.CSSProperties>>({})
     const feedbackEmail = process.env.NEXT_PUBLIC_FEEDBACK_EMAIL ?? "support@titlecaseconverter.online"
@@ -354,6 +355,26 @@ export function TextConverter({
         trackEvent("mode_change", { mode })
     }
 
+    /**
+     * Report that this visitor actually used the converter, once per mount.
+     *
+     * Deliberately called from the interaction handlers rather than from an
+     * effect on `input`: the box also gets filled without anyone converting
+     * anything - an article CTA seeds it through `ctx_input`, and returning from
+     * the rules guide restores it from sessionStorage. Counting those would make
+     * the metric agree with itself by construction, and the whole reason this
+     * event exists is to separate "landed on the page" from "actually used it".
+     *
+     * GA4 already counts the key event ONCE_PER_SESSION, so a remount after
+     * in-tab navigation costs an extra raw event but not a double conversion.
+     */
+    const markConverterUsed = (text: string) => {
+        if (convertTrackedRef.current) return
+        if (!text.trim()) return
+        convertTrackedRef.current = true
+        trackEvent("convert_text", { mode: activeType, style: titleStyle })
+    }
+
     const selectStyle = (style: TitleCaseStyle) => {
         setTitleStyle(style)
         trackEvent("style_change", { style })
@@ -364,6 +385,10 @@ export function TextConverter({
         try {
             await navigator.clipboard.writeText(output)
             setCopied(true)
+            // Someone who arrived on a seeded link and copied the result used the
+            // converter without typing a character; marking here keeps the funnel
+            // monotonic (convert_text >= copy_output).
+            markConverterUsed(output)
             trackEvent("copy_output", { mode: activeType, style: titleStyle, chars: output.length })
             setCopyFeedbackState("success")
             setCopyFeedbackTick((prev) => nextCopyFeedbackTick(prev))
@@ -379,6 +404,7 @@ export function TextConverter({
         try {
             const text = await navigator.clipboard.readText()
             setInput(text)
+            markConverterUsed(text)
             trackEvent("paste_input", { mode: activeType })
             toast.success("Pasted from clipboard")
         } catch {
@@ -597,7 +623,10 @@ export function TextConverter({
                                     placeholder="Type or paste your text here..."
                                     className="min-h-[140px] sm:min-h-[160px] md:min-h-[200px] resize-none text-lg p-6 rounded-xl border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black focus:ring-2 focus:ring-primary/20 transition-all font-medium placeholder:text-zinc-500 dark:placeholder:text-zinc-400"
                                     value={input}
-                                    onChange={(e) => setInput(e.target.value)}
+                                    onChange={(e) => {
+                                        setInput(e.target.value)
+                                        markConverterUsed(e.target.value)
+                                    }}
                                     aria-describedby="converter-input-helper"
                                     aria-label="Input text"
                                 />
