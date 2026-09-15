@@ -60,5 +60,8 @@ test("keeps converter context in return link for round-trip continuity", async (
   expect(html).toContain('href="/?ctx_ref=latest')
   expect(html).toContain("ctx_mode=title")
   expect(html).toContain("ctx_style=ap")
-  expect(html).toContain("ctx_input=walking+during+the+light")
+  // The return link names the storage ref; the text itself is restored from
+  // sessionStorage, so it is never echoed back into the markup or the URL.
+  expect(html).not.toContain("ctx_input=walking")
+  expect(html).not.toContain("walking+during+the+light")
 })

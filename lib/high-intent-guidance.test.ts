@@ -71,7 +71,25 @@ describe("high-intent guidance catalog", () => {
     expect(href).toContain(`/blog/${entry.slug}?`)
     expect(href).toContain("ctx_mode=title")
     expect(href).toContain("ctx_style=ap")
-    expect(href).toContain("ctx_input=is+this+production-ready")
+    // What the visitor typed rides in sessionStorage, never in the query.
+    expect(href).not.toContain("ctx_input")
+    expect(href).not.toContain("production-ready")
+  })
+
+  test("seeds the converter from the article but never from visitor text", () => {
+    // No reader context: the word comes from the article, so it may be spelled out.
+    const seeded = getHighIntentConverterHref("math", null)
+    expect(seeded).toContain("ctx_input=math")
+
+    // Reader context present: that is their own text, so it must stay out of the URL.
+    const carried = getHighIntentConverterHref("math", {
+      input: "my unpublished headline",
+      mode: "title",
+      titleStyle: "ap",
+    })
+    expect(carried).not.toContain("ctx_input")
+    expect(carried).not.toContain("unpublished")
+    expect(carried).toContain("ctx_style=ap")
   })
 
   test("keeps template-required fields complete for all high-intent entries", () => {

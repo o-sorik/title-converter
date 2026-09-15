@@ -25,6 +25,8 @@ describe("converter context helpers", () => {
     expect(href).toContain("ctx_mode=title")
     expect(href).toContain("ctx_style=ap")
     expect(href).not.toContain("ctx_output_mode")
+    expect(href).not.toContain("ctx_input")
+    expect(href).not.toContain("walking")
   })
 
   test("preserves hash fragments when appending context", () => {
@@ -159,13 +161,27 @@ test("caps ctx_input length on read so a long paste cannot bloat the URL", () =>
   )
 })
 
-test("caps ctx_input length on write too", () => {
-  const long = "y".repeat(MAX_CONTEXT_INPUT_LENGTH + 500)
-  const href = appendConverterContextToHref("/capitalization-rules-guide", {
-    input: long,
-    mode: "title",
-    titleStyle: "ap",
-  })
-  const value = new URL(href, "https://titlecaseconverter.online").searchParams.get("ctx_input")
-  expect(value).toHaveLength(MAX_CONTEXT_INPUT_LENGTH)
+// Regression guard for the leak fixed on 2026-09-15: <Link> prefetches every
+// href it renders, so anything spelled out here reached the server (and the
+// access log) on every keystroke - while the privacy policy promises the
+// visitor's text never leaves the browser. The text belongs in sessionStorage.
+test("never writes the visitor's text into a href", () => {
+  const secret = "my unpublished headline"
+  const targets = ["/capitalization-rules-guide?mode=title&style=ap", "/", "/blog/is-math-capitalized"]
+
+  for (const target of targets) {
+    const href = appendConverterContextToHref(target, {
+      input: secret,
+      mode: "title",
+      titleStyle: "ap",
+    })
+
+    expect(href).not.toContain("ctx_input")
+    expect(href).not.toContain("unpublished")
+    expect(href).not.toContain(encodeURIComponent(secret))
+    // the shape still travels, so the destination restores mode and style
+    expect(href).toContain(`ctx_ref=${DEFAULT_CONVERTER_CONTEXT_REF}`)
+    expect(href).toContain("ctx_mode=title")
+    expect(href).toContain("ctx_style=ap")
+  }
 })
