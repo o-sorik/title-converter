@@ -7,9 +7,19 @@ import { ModeContentSection, getRelatedLinksForMode } from "@/components/mode-co
 import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
 import { WebApplicationJsonLd, FAQPageJsonLd } from "@/components/json-ld"
+import { SentenceCaseGuide } from "@/components/sentence-case-guide"
 import type { Metadata } from "next"
 
 export const revalidate = 604800
+
+/**
+ * Converter pages that have a written guide of their own replace the generic
+ * features/example/FAQ blocks with it. The guide renders its own FAQ, which
+ * must match `config.faqs` so the FAQPage structured data mirrors the page.
+ */
+const MODE_GUIDES: Partial<Record<string, () => React.JSX.Element>> = {
+    "sentence-case-converter": SentenceCaseGuide,
+}
 export const dynamicParams = false
 
 // 1. Generate Static Params for all known slugs
@@ -67,6 +77,7 @@ export default async function ConverterPage({ params }: Props) {
 
     const pageUrl = `${SITE_URL}/${slug}`
     const relatedLinks = getRelatedLinksForMode(config.mode)
+    const Guide = MODE_GUIDES[slug]
 
     return (
         <div className="relative min-h-screen bg-zinc-50 dark:bg-zinc-950">
@@ -99,6 +110,8 @@ export default async function ConverterPage({ params }: Props) {
                     {/* Converter Section */}
                     <TextConverter defaultMode={config.mode} />
 
+                    {Guide ? <Guide /> : (
+                        <>
                     {/* SEO Content Section */}
                     <article className="prose prose-zinc dark:prose-invert max-w-none w-full">
                         <p className="lead text-lg text-muted-foreground mb-8">
@@ -150,6 +163,8 @@ export default async function ConverterPage({ params }: Props) {
                                 ))}
                             </div>
                         </section>
+                    )}
+                        </>
                     )}
 
                     <section className="mt-16 w-full">

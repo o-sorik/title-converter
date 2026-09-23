@@ -1,4 +1,5 @@
 import { ConversionType } from "./converters";
+import { SENTENCE_CASE_FAQS } from "./sentence-case-content";
 
 export interface SeoPageConfig {
     slug: string;
@@ -96,37 +97,21 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
     "sentence-case-converter": {
         slug: "sentence-case-converter",
         mode: "sentence",
-        title: "Sentence Case Converter - Free Online Tool",
-        description: "Convert text to Sentence case instantly. Automatically capitalizes the first letter of each sentence and lowercases the rest.",
+        title: "Sentence Case Converter – Keeps Acronyms and Brand Names",
+        description: "Convert text to sentence case: the first letter of each sentence capitalized, the rest lowercase, with acronyms and brands like iPhone kept as typed.",
         h1: "Sentence Case Converter",
+        // The page body is rendered by <SentenceCaseGuide />; this block stays accurate for any other consumer.
         content: {
-            intro: "The Sentence Case Converter automatically standardizes your text into proper sentence format. It capitalizes the very first letter of every sentence and transforms the rest of the text into lowercase. This is perfect for cleaning up rough drafts, fixing accidental caps lock usage, or standardizing list items.",
+            intro: "The Sentence Case Converter capitalizes the first letter of each sentence and lowercases the rest, while keeping acronyms such as NASA and brand names such as iPhone as typed. Names of people and places are lowercased and need a manual check.",
             features: [
-                "Capitalizes the first letter of sentences.",
-                "Lowercases all other letters.",
-                "Respects basic punctuation like periods, question marks, and exclamation points.",
+                "Capitalizes the first letter of each sentence and the pronoun \"I\".",
+                "Keeps known acronyms and brand casing like iPhone.",
+                "Marks every changed word with the rule behind it.",
             ],
             exampleInput: "THIS IS an EXAMPLE. of SENTENCE CASE.",
             exampleOutput: "This is an example. Of sentence case.",
         },
-        faqs: [
-            {
-                question: "What does a sentence case converter do?",
-                answer: "It converts text so each sentence starts with a capital letter while the remaining words are lowercased, except where manual edits are needed."
-            },
-            {
-                question: "When should I use sentence case instead of title case?",
-                answer: "Use sentence case for body copy, UI text, and descriptions. Use title case mostly for headings and titles."
-            },
-            {
-                question: "Will sentence case fix random ALL CAPS text?",
-                answer: "Yes. It is useful for normalizing text that was typed in caps lock or pasted with inconsistent capitalization."
-            },
-            {
-                question: "Does sentence case preserve punctuation?",
-                answer: "Yes. The converter focuses on letter casing and keeps punctuation in place."
-            }
-        ],
+        faqs: SENTENCE_CASE_FAQS,
     },
     "lower-case-converter": {
         slug: "lower-case-converter",
