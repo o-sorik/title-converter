@@ -1,8 +1,20 @@
 import type { ConversionType, TitleCaseStyle } from "./converters"
 import { appendConverterContextToHref, type ConverterContext } from "./converter-context"
-import { SITE_URL } from "@/lib/constants"
 
 export type GuidanceStyle = Exclude<TitleCaseStyle, "standard"> | "standard"
+
+/** The four published style guides the page compares. "Standard" is the converter's own default. */
+export type PublishedStyle = Exclude<GuidanceStyle, "standard">
+
+export const PUBLISHED_STYLES: PublishedStyle[] = ["ap", "apa", "mla", "chicago"]
+
+export const STYLE_LABELS: Record<GuidanceStyle, string> = {
+  standard: "Standard",
+  ap: "AP",
+  apa: "APA",
+  mla: "MLA",
+  chicago: "Chicago",
+}
 
 export interface GuidanceExample {
   caseLabel: string
@@ -11,27 +23,11 @@ export interface GuidanceExample {
   whyItMatters: string
 }
 
-export interface StyleGuideSection {
-  id: GuidanceStyle
-  name: string
-  fullName: string
-  description: string
-  keyRules: string[]
-  sourceUrl: string
-  sourceName: string
-  editionNote: string
-}
-
-export interface ComparisonScenario {
-  scenario: string
-  example: string
-  results: Record<GuidanceStyle, string>
-  notes: string
-}
-
 export interface RulesPageFAQ {
   question: string
   answer: string
+  /** Where the full answer lives. Rendered under the answer, left out of the FAQ structured data. */
+  link?: { href: string; label: string }
 }
 
 export interface RulesGuideViewModel {
@@ -47,8 +43,8 @@ export interface RulesGuideViewModel {
 }
 
 export interface RulesGuideHubViewModel extends RulesGuideViewModel {
-  styleGuides: StyleGuideSection[]
-  comparisonScenarios: ComparisonScenario[]
+  /** True when the visitor arrived with a style of their own, e.g. from the converter. */
+  hasStyleFocus: boolean
   faqs: RulesPageFAQ[]
 }
 
@@ -56,301 +52,411 @@ const STYLE_META: Record<GuidanceStyle, { title: string; summary: string }> = {
   standard: {
     title: "Standard title-case guidance",
     summary:
-      "Balanced defaults: capitalize major words, lowercase most short connectors in middle positions, always capitalize first/last word.",
+      "The converter's default: capitalize major words, lowercase articles, coordinating conjunctions and every preposition inside the title – the same preposition rule as MLA.",
   },
   ap: {
     title: "AP style guidance",
     summary:
-      "AP capitalizes prepositions and conjunctions with four or more letters in titles; shorter connectors are lowercased in the middle.",
+      "AP capitalizes prepositions and conjunctions of four or more letters in composition titles. AP news headlines use sentence case instead.",
   },
   chicago: {
     title: "Chicago style guidance",
     summary:
-      "Chicago (18th edition, 2024) capitalizes prepositions of five or more letters and keeps shorter prepositions and conjunctions lowercase in middle positions.",
+      "Chicago (18th edition) capitalizes prepositions of five or more letters and keeps shorter prepositions and coordinating conjunctions lowercase inside the title.",
   },
   mla: {
     title: "MLA style guidance",
     summary:
-      "MLA lowercases all prepositions regardless of length – the strictest of the major guides – while capitalizing every other principal word.",
+      "MLA lowercases every preposition inside a title, however long it is, and capitalizes every other principal word.",
   },
   apa: {
     title: "APA style guidance",
     summary:
-      "APA typically capitalizes prepositions and conjunctions with four or more letters; shorter ones are lowercased in middle positions.",
+      "APA capitalizes every word of four or more letters in title case, and uses sentence case for article and book titles in the reference list.",
   },
 }
 
-export const STYLE_GUIDE_SECTIONS: StyleGuideSection[] = [
-  {
-    id: "ap",
-    name: "AP",
-    fullName: "Associated Press Stylebook",
-    description:
-      "The AP Stylebook is the primary reference for journalists, newsrooms, and digital media. It favors readability and consistency in headline casing, capitalizing longer prepositions while keeping short function words lowercase.",
-    keyRules: [
-      "Capitalize words with 4 or more letters, including prepositions and conjunctions",
-      "Lowercase articles (a, an, the) in middle positions",
-      "Always capitalize the first and last word of the title",
-      "Capitalize both parts of hyphenated compounds in most cases",
-    ],
-    sourceUrl: "https://www.apstylebook.com/",
-    sourceName: "AP Stylebook",
-    editionNote: "56th Edition (2024)",
+/**
+ * Where each guide states its title-case rule. Section numbers are only given
+ * where the publisher itself cites them; MLA's is omitted on purpose.
+ */
+export const STYLE_SOURCES: Record<PublishedStyle, { name: string; url: string; edition: string }> = {
+  ap: {
+    name: "AP Stylebook",
+    url: "https://www.apstylebook.com/",
+    edition: "entries \"composition titles\" and \"headlines\"",
   },
-  {
-    id: "apa",
-    name: "APA",
-    fullName: "APA Publication Manual",
-    description:
-      "The APA Publication Manual is the standard for academic and scientific writing. Its title case rules capitalize words of four or more letters, creating a slightly more capitalized look than AP style.",
-    keyRules: [
-      "Capitalize words with 4 or more letters, including prepositions and conjunctions",
-      "Lowercase short conjunctions (and, but, or, nor, yet, so, for) under 4 letters",
-      "Lowercase short prepositions (at, by, in, of, on, to, up) under 4 letters",
-      "Always capitalize the first word after a colon, dash, or end punctuation",
-    ],
-    sourceUrl: "https://apastyle.apa.org/",
-    sourceName: "APA Style",
-    editionNote: "7th Edition (2019)",
+  apa: {
+    name: "APA Style: title case",
+    url: "https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case",
+    edition: "Publication Manual, 7th ed., section 6.17",
   },
-  {
-    id: "mla",
-    name: "MLA",
-    fullName: "MLA Handbook",
-    description:
-      "The MLA Handbook serves humanities scholars and literature students. Its title case conventions are the strictest of the major guides: all prepositions stay lowercase in middle positions regardless of length.",
-    keyRules: [
-      "Capitalize the first and last word of the title and subtitle",
-      "Lowercase articles, prepositions, and coordinating conjunctions in middle positions",
-      "Lowercase all prepositions regardless of length, even long ones like \"between\" or \"through\"",
-      "Capitalize the first word after a colon",
-    ],
-    sourceUrl: "https://www.mla.org/",
-    sourceName: "MLA Handbook",
-    editionNote: "9th Edition (2021)",
+  mla: {
+    name: "MLA Style Center",
+    url: "https://style.mla.org/two-word-prepositions-in-titles/",
+    edition: "MLA Handbook, 9th ed.",
   },
-  {
-    id: "chicago",
-    name: "Chicago",
-    fullName: "The Chicago Manual of Style",
-    description:
-      "The Chicago Manual of Style is the gold standard for book publishing and formal editorial work. The 18th edition (2024) capitalizes prepositions of five or more letters, while shorter prepositions and conjunctions stay lowercase in middle positions.",
-    keyRules: [
-      "Lowercase articles (a, an, the) in middle positions",
-      "Lowercase coordinating conjunctions (and, but, or, nor, yet, so, for)",
-      "Lowercase prepositions of four or fewer letters; capitalize prepositions of five or more letters (18th ed.)",
-      "Always capitalize the first and last word of title and subtitle",
-    ],
-    sourceUrl: "https://www.chicagomanualofstyle.org/",
-    sourceName: "Chicago Manual of Style",
-    editionNote: "18th Edition (2024)",
+  chicago: {
+    name: "The Chicago Manual of Style",
+    url: "https://www.chicagomanualofstyle.org/qanda/data/faq/topics/CapitalizationTitles.html",
+    edition: "18th ed., section 8.158",
   },
-  {
-    id: "standard",
-    name: "Standard",
-    fullName: "Standard Title Case",
-    description:
-      "Standard title case is a balanced default used when no specific style guide is required. It follows broadly accepted conventions: capitalizing major words while lowercasing most short function words in middle positions.",
-    keyRules: [
-      "Capitalize major words (nouns, verbs, adjectives, adverbs)",
-      "Lowercase articles, short prepositions, and short conjunctions in middle positions",
-      "Always capitalize the first and last word",
-      "Capitalize words after colons and major punctuation",
-    ],
-    sourceUrl: `${SITE_URL}/capitalization-rules-guide`,
-    sourceName: "Title Case Converter",
-    editionNote: "General convention",
-  },
+}
+
+/** Rules every one of the four guides shares. Each sentence keeps the word or position as its subject. */
+export const UNIVERSAL_RULES: string[] = [
+  "The first word of a title is capitalized.",
+  "The last word of a title is capitalized.",
+  "The first word after a colon in a title is capitalized.",
+  "Nouns, pronouns, verbs, adjectives and adverbs are capitalized at any length.",
+  "Short verbs such as \"is\", \"are\" and \"be\" are capitalized, because part of speech outranks length.",
+  "Articles (\"a\", \"an\", \"the\") stay lowercase inside a title.",
+  "Proper nouns and acronyms keep their own form.",
 ]
 
-export const COMPARISON_SCENARIOS: ComparisonScenario[] = [
+export type Verdict = "Capitalize" | "Lowercase"
+
+export interface DisagreementRow {
+  wordType: string
+  /** The word the row is about. Must appear exactly once in `probe`. */
+  word: string
+  /** A title that puts `word` in the position the row describes. */
+  probe: string
+  verdicts: Record<PublishedStyle, Verdict>
+}
+
+const ALL_CAPITALIZE: Record<PublishedStyle, Verdict> = { ap: "Capitalize", apa: "Capitalize", mla: "Capitalize", chicago: "Capitalize" }
+const ALL_LOWERCASE: Record<PublishedStyle, Verdict> = { ap: "Lowercase", apa: "Lowercase", mla: "Lowercase", chicago: "Lowercase" }
+
+/** The word-by-word comparison table. Each verdict is asserted against the engine. */
+export const DISAGREEMENT_ROWS: DisagreementRow[] = [
+  { wordType: "Preposition of 2–3 letters", word: "of", probe: "the art of war", verdicts: ALL_LOWERCASE },
   {
-    scenario: "Long preposition: \"across\" (6 letters)",
-    example: "running across the bridge at night",
-    results: {
-      standard: "Running across the Bridge at Night",
-      ap: "Running Across the Bridge at Night",
-      apa: "Running Across the Bridge at Night",
-      mla: "Running across the Bridge at Night",
-      chicago: "Running Across the Bridge at Night",
-    },
-    notes: "AP, APA, and Chicago (18th ed.) capitalize \"across\" – it clears every length threshold. Standard and MLA keep it lowercase.",
+    wordType: "Preposition of 4 letters",
+    word: "with",
+    probe: "gone with the wind",
+    verdicts: { ap: "Capitalize", apa: "Capitalize", mla: "Lowercase", chicago: "Lowercase" },
   },
   {
-    scenario: "Long preposition: \"between\" (7 letters)",
-    example: "the cat is between the boxes",
-    results: {
-      standard: "The Cat Is between the Boxes",
-      ap: "The Cat Is Between the Boxes",
-      apa: "The Cat Is Between the Boxes",
-      mla: "The Cat Is between the Boxes",
-      chicago: "The Cat Is Between the Boxes",
-    },
-    notes: "AP, APA, and Chicago (18th ed.) capitalize \"between\" (7 letters). MLA keeps all prepositions lowercase regardless of length.",
+    wordType: "Preposition of 5+ letters",
+    word: "between",
+    probe: "the space between us",
+    verdicts: { ap: "Capitalize", apa: "Capitalize", mla: "Lowercase", chicago: "Capitalize" },
   },
-  {
-    scenario: "Short preposition: \"with\" (4 letters)",
-    example: "writing with confidence and purpose",
-    results: {
-      standard: "Writing with Confidence and Purpose",
-      ap: "Writing With Confidence and Purpose",
-      apa: "Writing With Confidence and Purpose",
-      mla: "Writing with Confidence and Purpose",
-      chicago: "Writing with Confidence and Purpose",
+  { wordType: "Coordinating conjunction", word: "and", probe: "pride and prejudice", verdicts: ALL_LOWERCASE },
+  { wordType: "Subordinating conjunction", word: "if", probe: "what if we tried", verdicts: ALL_CAPITALIZE },
+  { wordType: "\"To\" before a verb", word: "to", probe: "how to write a headline", verdicts: ALL_LOWERCASE },
+  { wordType: "Second part of a hyphenated compound", word: "report", probe: "self-report measures in clinical research", verdicts: ALL_CAPITALIZE },
+  { wordType: "Word after a colon", word: "a", probe: "title case rules: a practical guide", verdicts: ALL_CAPITALIZE },
+  { wordType: "Last word", word: "in", probe: "something to believe in", verdicts: ALL_CAPITALIZE },
+]
+
+export type ExampleId =
+  | "fourStyles"
+  | "anatomy"
+  | "article"
+  | "conjunction"
+  | "phrasalVerb"
+  | "infinitive"
+  | "firstWord"
+  | "subtitle"
+  | "lastWord"
+  | "hyphenated"
+  | "stepByStep"
+  | "irregular"
+  | "acronyms"
+  | "apComposition"
+  | "mlaLength"
+  | "chicagoEdition"
+  | "allCaps"
+  | "mixedCaps"
+
+/**
+ * Every title the page shows, with the output of each style. Kept as literals so
+ * a reader of this file sees what the page claims; `rules-guide-content.test.ts`
+ * and the style-guidance alignment QA assert each one against the engine.
+ */
+export const RULES_GUIDE_EXAMPLES: Record<ExampleId, GuidanceExample> = {
+  fourStyles: {
+    caseLabel: "One title, four style guides",
+    input: "walking with ghosts through the old city",
+    outputs: {
+      standard: "Walking with Ghosts through the Old City",
+      ap: "Walking With Ghosts Through the Old City",
+      apa: "Walking With Ghosts Through the Old City",
+      mla: "Walking with Ghosts through the Old City",
+      chicago: "Walking with Ghosts Through the Old City",
     },
-    notes: "AP and APA capitalize \"with\" (4-letter threshold). Standard, MLA, and Chicago (5+ letters) keep it lowercase.",
+    whyItMatters: "A 4-letter and a 7-letter preposition in one title separate all three thresholds.",
   },
-  {
-    scenario: "Short preposition: \"from\" (4 letters)",
-    example: "ideas from around the world",
-    results: {
-      standard: "Ideas from around the World",
-      ap: "Ideas From Around the World",
-      apa: "Ideas From Around the World",
-      mla: "Ideas from around the World",
-      chicago: "Ideas from Around the World",
+  anatomy: {
+    caseLabel: "Title with a subtitle",
+    input: "walking with ghosts through the old city: a guide to getting lost",
+    outputs: {
+      standard: "Walking with Ghosts through the Old City: A Guide to Getting Lost",
+      ap: "Walking With Ghosts Through the Old City: A Guide to Getting Lost",
+      apa: "Walking With Ghosts Through the Old City: A Guide to Getting Lost",
+      mla: "Walking with Ghosts through the Old City: A Guide to Getting Lost",
+      chicago: "Walking with Ghosts Through the Old City: A Guide to Getting Lost",
     },
-    notes: "AP and APA capitalize both \"from\" (4 letters) and \"around\" (6 letters). Chicago capitalizes only \"around\" (5+ letters), so \"from\" stays lowercase.",
+    whyItMatters: "Every rule on the page in one title.",
   },
-  {
-    scenario: "Subtitle after colon",
-    example: "title case rules: a practical guide",
-    results: {
+  article: {
+    caseLabel: "Articles inside and at the start",
+    input: "a room for the night",
+    outputs: {
+      standard: "A Room for the Night",
+      ap: "A Room for the Night",
+      apa: "A Room for the Night",
+      mla: "A Room for the Night",
+      chicago: "A Room for the Night",
+    },
+    whyItMatters: "The same article is capitalized first and lowercased inside.",
+  },
+  conjunction: {
+    caseLabel: "Subordinating conjunction",
+    input: "if you build it",
+    outputs: {
+      standard: "If You Build It",
+      ap: "If You Build It",
+      apa: "If You Build It",
+      mla: "If You Build It",
+      chicago: "If You Build It",
+    },
+    whyItMatters: "Subordinating conjunctions are major words in every guide.",
+  },
+  phrasalVerb: {
+    caseLabel: "Preposition inside a phrasal verb",
+    input: "log in to your account",
+    outputs: {
+      standard: "Log In to Your Account",
+      ap: "Log In to Your Account",
+      apa: "Log In to Your Account",
+      mla: "Log In to Your Account",
+      chicago: "Log In to Your Account",
+    },
+    whyItMatters: "\"In\" belongs to the verb, so no length threshold applies.",
+  },
+  infinitive: {
+    caseLabel: "Infinitive \"to\"",
+    input: "how to write a headline",
+    outputs: {
+      standard: "How to Write a Headline",
+      ap: "How to Write a Headline",
+      apa: "How to Write a Headline",
+      mla: "How to Write a Headline",
+      chicago: "How to Write a Headline",
+    },
+    whyItMatters: "\"To\" stays lowercase inside the title in every guide.",
+  },
+  firstWord: {
+    caseLabel: "Small word in first position",
+    input: "to kill a mockingbird",
+    outputs: {
+      standard: "To Kill a Mockingbird",
+      ap: "To Kill a Mockingbird",
+      apa: "To Kill a Mockingbird",
+      mla: "To Kill a Mockingbird",
+      chicago: "To Kill a Mockingbird",
+    },
+    whyItMatters: "Position outranks part of speech.",
+  },
+  subtitle: {
+    caseLabel: "Subtitle after a colon",
+    input: "title case rules: a practical guide",
+    outputs: {
       standard: "Title Case Rules: A Practical Guide",
       ap: "Title Case Rules: A Practical Guide",
       apa: "Title Case Rules: A Practical Guide",
       mla: "Title Case Rules: A Practical Guide",
       chicago: "Title Case Rules: A Practical Guide",
     },
-    notes: "All styles agree: the first word after a colon is always capitalized, even articles like \"a\".",
+    whyItMatters: "The subtitle starts its own rule.",
   },
-  {
-    scenario: "Preposition \"about\" (5 letters)",
-    example: "the rules about writing and thinking",
-    results: {
-      standard: "The Rules about Writing and Thinking",
-      ap: "The Rules About Writing and Thinking",
-      apa: "The Rules About Writing and Thinking",
-      mla: "The Rules about Writing and Thinking",
-      chicago: "The Rules About Writing and Thinking",
+  lastWord: {
+    caseLabel: "Preposition in last position",
+    input: "something to believe in",
+    outputs: {
+      standard: "Something to Believe In",
+      ap: "Something to Believe In",
+      apa: "Something to Believe In",
+      mla: "Something to Believe In",
+      chicago: "Something to Believe In",
     },
-    notes: "\"About\" hits Chicago's 5-letter threshold exactly, so AP (4+), APA (4+), and Chicago (5+) all capitalize it. Standard and MLA do not.",
+    whyItMatters: "The last word is capitalized whatever it is.",
   },
-  {
-    scenario: "Preposition \"after\" (5 letters)",
-    example: "she walked along the river after lunch",
-    results: {
-      standard: "She Walked Along the River after Lunch",
-      ap: "She Walked Along the River After Lunch",
-      apa: "She Walked Along the River After Lunch",
-      mla: "She Walked Along the River after Lunch",
-      chicago: "She Walked Along the River After Lunch",
+  hyphenated: {
+    caseLabel: "Hyphenated compound of two major words",
+    input: "self-report measures in clinical research",
+    outputs: {
+      standard: "Self-Report Measures in Clinical Research",
+      ap: "Self-Report Measures in Clinical Research",
+      apa: "Self-Report Measures in Clinical Research",
+      mla: "Self-Report Measures in Clinical Research",
+      chicago: "Self-Report Measures in Clinical Research",
     },
-    notes: "\"Along\" reads as part of the verb here, so every style capitalizes it. \"After\" (5 letters) splits AP, APA, and Chicago from standard and MLA.",
+    whyItMatters: "Both parts are major words, so both are capitalized.",
   },
+  stepByStep: {
+    caseLabel: "Hyphenated compound with a small word",
+    input: "a step-by-step guide to editing",
+    outputs: {
+      standard: "A Step-by-Step Guide to Editing",
+      ap: "A Step-by-Step Guide to Editing",
+      apa: "A Step-by-Step Guide to Editing",
+      mla: "A Step-by-Step Guide to Editing",
+      chicago: "A Step-by-Step Guide to Editing",
+    },
+    whyItMatters: "The short preposition inside the compound stays lowercase.",
+  },
+  irregular: {
+    caseLabel: "Brand names with irregular casing",
+    input: "iPhone tips for eBay sellers",
+    outputs: {
+      standard: "iPhone Tips for eBay Sellers",
+      ap: "iPhone Tips for eBay Sellers",
+      apa: "iPhone Tips for eBay Sellers",
+      mla: "iPhone Tips for eBay Sellers",
+      chicago: "iPhone Tips for eBay Sellers",
+    },
+    whyItMatters: "A capital letter after the first position marks deliberate casing.",
+  },
+  acronyms: {
+    caseLabel: "Acronyms",
+    input: "NASA grants for PhD students",
+    outputs: {
+      standard: "NASA Grants for PhD Students",
+      ap: "NASA Grants for PhD Students",
+      apa: "NASA Grants for PhD Students",
+      mla: "NASA Grants for PhD Students",
+      chicago: "NASA Grants for PhD Students",
+    },
+    whyItMatters: "Acronyms keep their form in every guide.",
+  },
+  apComposition: {
+    caseLabel: "AP composition title",
+    input: "gone with the wind",
+    outputs: {
+      standard: "Gone with the Wind",
+      ap: "Gone With the Wind",
+      apa: "Gone With the Wind",
+      mla: "Gone with the Wind",
+      chicago: "Gone with the Wind",
+    },
+    whyItMatters: "\"With\" sits exactly on AP's four-letter line.",
+  },
+  mlaLength: {
+    caseLabel: "Long preposition under MLA",
+    input: "the space between us",
+    outputs: {
+      standard: "The Space between Us",
+      ap: "The Space Between Us",
+      apa: "The Space Between Us",
+      mla: "The Space between Us",
+      chicago: "The Space Between Us",
+    },
+    whyItMatters: "MLA ignores length, so a 7-letter preposition stays lowercase.",
+  },
+  chicagoEdition: {
+    caseLabel: "Chicago 18th edition threshold",
+    input: "much ado about nothing",
+    outputs: {
+      standard: "Much Ado about Nothing",
+      ap: "Much Ado About Nothing",
+      apa: "Much Ado About Nothing",
+      mla: "Much Ado about Nothing",
+      chicago: "Much Ado About Nothing",
+    },
+    whyItMatters: "Before the 18th edition Chicago wrote \"about\" in lowercase.",
+  },
+  allCaps: {
+    caseLabel: "Text pasted in all caps",
+    input: "THE MAN WHO SOLD THE WORLD",
+    outputs: {
+      standard: "The Man Who Sold the World",
+      ap: "The Man Who Sold the World",
+      apa: "The Man Who Sold the World",
+      mla: "The Man Who Sold the World",
+      chicago: "The Man Who Sold the World",
+    },
+    whyItMatters: "In all-caps input the casing carries no information.",
+  },
+  mixedCaps: {
+    caseLabel: "Acronym in mixed-case input",
+    input: "the NBA finals explained",
+    outputs: {
+      standard: "The NBA Finals Explained",
+      ap: "The NBA Finals Explained",
+      apa: "The NBA Finals Explained",
+      mla: "The NBA Finals Explained",
+      chicago: "The NBA Finals Explained",
+    },
+    whyItMatters: "In mixed-case input an all-caps word is a deliberate signal.",
+  },
+}
+
+/**
+ * The rule that decides each word of the anatomy example, in order. The page
+ * pairs these with the words of its MLA output, so the counts must match.
+ */
+export const ANATOMY_RULES: { rule: string; differsByStyle: boolean }[] = [
+  { rule: "First word", differsByStyle: false },
+  { rule: "4-letter preposition", differsByStyle: true },
+  { rule: "Noun", differsByStyle: false },
+  { rule: "7-letter preposition", differsByStyle: true },
+  { rule: "Article", differsByStyle: false },
+  { rule: "Adjective", differsByStyle: false },
+  { rule: "Noun", differsByStyle: false },
+  { rule: "After a colon", differsByStyle: false },
+  { rule: "Noun", differsByStyle: false },
+  { rule: "Infinitive \"to\"", differsByStyle: false },
+  { rule: "Verb", differsByStyle: false },
+  { rule: "Last word", differsByStyle: false },
+]
+
+/** APA reference entries: the one sentence-case conversion the page shows. */
+export const SENTENCE_CASE_EXAMPLE = {
+  input: "Self-Report Measures in Clinical Research",
+  output: "Self-report measures in clinical research",
+}
+
+/** Rule labels the converter prints next to each changed word, quoted verbatim on the page. */
+export const ENGINE_REASON_SAMPLES: string[] = [
+  "Preposition (MLA style)",
+  "AP style: preposition with 4+ letters",
+  "Chicago style (18th ed.): preposition with 5+ letters",
+  "Infinitive marker stays lowercase",
+  "First word after colon is capitalized",
+  "Last word is always capitalized",
 ]
 
 export const RULES_PAGE_FAQS: RulesPageFAQ[] = [
   {
-    question: "Which capitalization style should I use?",
-    answer: "Use the style required by your publication or institution. AP style is standard for journalism and news, APA for academic and scientific papers, MLA for humanities essays, and Chicago for book publishing and formal editorial work.",
+    question: "What words are not capitalized in a title?",
+    answer:
+      "Articles (a, an, the), coordinating conjunctions (and, but, or, nor, for, yet, so) and short prepositions stay lowercase inside a title in every major style guide. Longer prepositions depend on the guide: AP and APA capitalize them from four letters, Chicago from five, and MLA never does.",
+    link: { href: "/blog/what-words-are-not-capitalized-in-a-title", label: "What Words Are Not Capitalized in a Title?" },
   },
   {
-    question: "What is the main difference between AP and Chicago title case?",
-    answer: "The key difference is the length threshold for prepositions. AP capitalizes prepositions with 4 or more letters, so \"With\" and \"From\" are capitalized. Chicago's 18th edition raised its threshold to 5 or more letters, so \"About\" and \"Through\" are capitalized while \"with\" and \"from\" stay lowercase.",
+    question: "Do I capitalize both parts of a hyphenated word in a title?",
+    answer:
+      "Yes, when both parts are major words, as in \"Self-Report\". A short preposition, article or conjunction inside the compound stays lowercase, as in \"Step-by-Step\".",
   },
   {
-    question: "Should I capitalize \"is\" in a title?",
-    answer: "Yes. \"Is\" is a verb (a form of \"to be\"), and all major styles agree that verbs should always be capitalized in titles, even short ones.",
+    question: "Which capitalization style guide should I use?",
+    answer:
+      "Use the one your publication or institution requires. Journalism uses AP, psychology and the social sciences use APA, the humanities use MLA, and book publishing uses Chicago.",
   },
   {
-    question: "Are there words that are always lowercase in titles?",
-    answer: "No word is always lowercase. Even articles like \"a\", \"an\", and \"the\" are capitalized when they appear as the first or last word of a title. In middle positions, articles, short prepositions, and short conjunctions are typically lowercase across all styles.",
+    question: "Should \"is\" be capitalized in a title?",
+    answer:
+      "Yes. \"Is\" is a verb, and every major style guide capitalizes verbs in a title regardless of their length.",
   },
   {
-    question: "How do I capitalize a hyphenated word in a title?",
-    answer: "Most styles capitalize the first element of a hyphenated compound. For subsequent elements, capitalize them if they are major words (nouns, verbs, adjectives). Keep small function words lowercase, such as \"State-of-the-Art\" where \"of\" and \"the\" stay lowercase.",
-  },
-]
-
-const EDGE_CASE_EXAMPLES: GuidanceExample[] = [
-  {
-    caseLabel: "Short connectors and prepositions",
-    input: "walking during the light",
-    outputs: {
-      standard: "Walking during the Light",
-      ap: "Walking During the Light",
-      chicago: "Walking During the Light",
-      mla: "Walking during the Light",
-      apa: "Walking During the Light",
-    },
-    whyItMatters:
-      "The word 'during' changes across styles and is a common source of editorial inconsistency. Chicago's 18th edition (2024) now capitalizes it too.",
-  },
-  {
-    caseLabel: "Subtitle after colon",
-    input: "title case rules: a practical guide for editors",
-    outputs: {
-      standard: "Title Case Rules: A Practical Guide for Editors",
-      ap: "Title Case Rules: A Practical Guide for Editors",
-      chicago: "Title Case Rules: A Practical Guide for Editors",
-      mla: "Title Case Rules: A Practical Guide for Editors",
-      apa: "Title Case Rules: A Practical Guide for Editors",
-    },
-    whyItMatters:
-      "Subtitles should start clearly after punctuation so the user has a reliable next edit decision.",
-  },
-  {
-    caseLabel: "Hyphenated and branded wording",
-    input: "state-of-the-art workflows for iPhone launches",
-    outputs: {
-      standard: "State-of-the-Art Workflows for iPhone Launches",
-      ap: "State-of-the-Art Workflows for iPhone Launches",
-      chicago: "State-of-the-Art Workflows for iPhone Launches",
-      mla: "State-of-the-Art Workflows for iPhone Launches",
-      apa: "State-of-the-Art Workflows for iPhone Launches",
-    },
-    whyItMatters:
-      "Hyphenation and brand casing are frequent edge cases where users should verify output quickly before publishing.",
-  },
-  {
-    caseLabel: "Infinitive \"to\" vs preposition \"to\"",
-    input: "to be or not to be",
-    outputs: {
-      standard: "To Be or Not to Be",
-      ap: "To Be or Not to Be",
-      chicago: "To Be or Not to Be",
-      mla: "To Be or Not to Be",
-      apa: "To Be or Not to Be",
-    },
-    whyItMatters:
-      "\"To\" as the first word is always capitalized. In middle positions, all styles lowercase it whether used as an infinitive marker or preposition.",
-  },
-  {
-    caseLabel: "Short verb \"is\" in the middle",
-    input: "she is an editor-in-chief",
-    outputs: {
-      standard: "She Is an Editor-in-Chief",
-      ap: "She Is an Editor-in-Chief",
-      chicago: "She Is an Editor-in-Chief",
-      mla: "She Is an Editor-in-Chief",
-      apa: "She Is an Editor-in-Chief",
-    },
-    whyItMatters:
-      "\"Is\" is a verb, not a preposition or conjunction, so all styles capitalize it. Many writers mistakenly lowercase short verbs.",
-  },
-  {
-    caseLabel: "4-letter preposition \"with\"",
-    input: "writing with confidence and purpose",
-    outputs: {
-      standard: "Writing with Confidence and Purpose",
-      ap: "Writing With Confidence and Purpose",
-      chicago: "Writing with Confidence and Purpose",
-      mla: "Writing with Confidence and Purpose",
-      apa: "Writing With Confidence and Purpose",
-    },
-    whyItMatters:
-      "The 4-letter threshold in AP and APA capitalizes \"with,\" while Chicago (5+ letters) and MLA (all prepositions lowercase) keep it lowercase. It is the most common boundary word.",
+    question: "Should I use title case or sentence case?",
+    answer:
+      "Follow your style guide first: APA, for example, uses title case for headings and sentence case for titles in the reference list. Outside a style guide, title case reads as formal and sentence case as conversational.",
+    link: { href: "/blog/sentence-vs-title-case", label: "Title Case vs Sentence Case: Which to Use and When" },
   },
 ]
 
@@ -402,7 +508,7 @@ export function getRulesGuideViewModel(styleParam?: string, modeParam?: string):
     didFallbackToStandard: normalizedStyle.didFallbackToStandard,
     styleTitle: styleMeta.title,
     styleSummary: styleMeta.summary,
-    examples: EDGE_CASE_EXAMPLES,
+    examples: Object.values(RULES_GUIDE_EXAMPLES),
     returnHref,
     returnLabel,
   }
@@ -433,8 +539,7 @@ export function getRulesGuideHubViewModel(
 
   return {
     ...base,
-    styleGuides: STYLE_GUIDE_SECTIONS,
-    comparisonScenarios: COMPARISON_SCENARIOS,
+    hasStyleFocus: styleParam !== undefined,
     faqs: RULES_PAGE_FAQS,
   }
 }
