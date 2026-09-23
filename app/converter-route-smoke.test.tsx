@@ -18,5 +18,5 @@ test("converter slug route renders known mode page", async () => {
   )
 
   expect(html).toContain("Sentence Case Converter")
-  expect(html).toContain("Frequently Asked Questions")
+  expect(html).toContain("Questions about sentence case")
 })
