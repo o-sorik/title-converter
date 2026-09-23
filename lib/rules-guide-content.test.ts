@@ -1,31 +1,31 @@
 import { describe, expect, test } from "vitest"
 
-import { convert } from "./converters"
+import { convert, convertWithExplanations } from "./converters"
 import {
+  ANATOMY_RULES,
+  DISAGREEMENT_ROWS,
+  ENGINE_REASON_SAMPLES,
   getRulesGuideViewModel,
   getRulesGuideViewModelWithContext,
   getRulesGuideHubViewModel,
-  STYLE_GUIDE_SECTIONS,
-  COMPARISON_SCENARIOS,
+  PUBLISHED_STYLES,
+  RULES_GUIDE_EXAMPLES,
   RULES_PAGE_FAQS,
+  SENTENCE_CASE_EXAMPLE,
+  STYLE_SOURCES,
+  UNIVERSAL_RULES,
 } from "./rules-guide-content"
 
+const ALL_STYLES = ["standard", "ap", "apa", "mla", "chicago"] as const
+
 describe("getRulesGuideViewModel", () => {
-  test("returns style-relevant AP metadata and all ambiguity classes", () => {
+  test("returns style-relevant AP metadata and every page example", () => {
     const model = getRulesGuideViewModel("ap", "title")
 
     expect(model.activeStyle).toBe("ap")
     expect(model.styleTitle).toContain("AP")
     expect(model.didFallbackToStandard).toBe(false)
-    expect(model.examples.length).toBeGreaterThanOrEqual(3)
-    expect(model.examples.map((example) => example.caseLabel)).toEqual(
-      expect.arrayContaining([
-        "Short connectors and prepositions",
-        "Subtitle after colon",
-        "Hyphenated and branded wording",
-      ])
-    )
-    expect(model.examples[0]?.outputs.ap).toBe("Walking During the Light")
+    expect(model.examples).toHaveLength(Object.keys(RULES_GUIDE_EXAMPLES).length)
   })
 
   test("falls back to standard style for unknown style params with explicit signal", () => {
@@ -52,85 +52,103 @@ describe("getRulesGuideViewModel", () => {
   })
 
   test("preserves converter context in return href when available", () => {
-    const model = getRulesGuideViewModelWithContext(
-      "ap",
-      "title",
-      {
-        input: "hello world",
-        mode: "title",
-        titleStyle: "ap",
-      }
-    )
+    const model = getRulesGuideViewModelWithContext("ap", "title", {
+      input: "hello world",
+      mode: "title",
+      titleStyle: "ap",
+    })
 
     expect(model.returnHref).toContain("ctx_ref=latest")
     expect(model.returnHref).toContain("ctx_mode=title")
   })
 })
 
-describe("STYLE_GUIDE_SECTIONS", () => {
-  test("covers all 5 style guides", () => {
-    const ids = STYLE_GUIDE_SECTIONS.map((s) => s.id)
-    expect(ids).toContain("standard")
-    expect(ids).toContain("ap")
-    expect(ids).toContain("apa")
-    expect(ids).toContain("mla")
-    expect(ids).toContain("chicago")
-    expect(STYLE_GUIDE_SECTIONS).toHaveLength(5)
+describe("RULES_GUIDE_EXAMPLES", () => {
+  test("every documented output matches the engine in every style", () => {
+    for (const [id, example] of Object.entries(RULES_GUIDE_EXAMPLES)) {
+      for (const style of ALL_STYLES) {
+        expect(convert(example.input, "title", { titleStyle: style }), `${id} / ${style}`).toBe(example.outputs[style])
+      }
+    }
   })
 
-  test("each section has required fields", () => {
-    for (const section of STYLE_GUIDE_SECTIONS) {
-      expect(section.name.length).toBeGreaterThan(0)
-      expect(section.fullName.length).toBeGreaterThan(0)
-      expect(section.description.length).toBeGreaterThan(20)
-      expect(section.keyRules.length).toBeGreaterThanOrEqual(3)
-      expect(section.sourceUrl).toMatch(/^https?:\/\//)
-      expect(section.sourceName.length).toBeGreaterThan(0)
-      expect(section.editionNote.length).toBeGreaterThan(0)
+  // <Example> on the page prints a single output, so it may only be used for
+  // titles all four published guides agree on.
+  test("single-output examples read the same in all four guides", () => {
+    const singleOutput = [
+      "article", "conjunction", "phrasalVerb", "infinitive", "firstWord", "subtitle", "lastWord",
+      "hyphenated", "stepByStep", "irregular", "acronyms", "allCaps", "mixedCaps",
+    ] as const
+    for (const id of singleOutput) {
+      const outputs = PUBLISHED_STYLES.map((style) => RULES_GUIDE_EXAMPLES[id].outputs[style])
+      expect(new Set(outputs).size, id).toBe(1)
     }
+  })
+
+  test("the four-style example actually separates the thresholds", () => {
+    const outputs = PUBLISHED_STYLES.map((style) => RULES_GUIDE_EXAMPLES.fourStyles.outputs[style])
+    expect(new Set(outputs).size).toBe(3)
+  })
+
+  test("the anatomy diagram labels every word of its title", () => {
+    expect(RULES_GUIDE_EXAMPLES.anatomy.outputs.mla.split(" ")).toHaveLength(ANATOMY_RULES.length)
+  })
+
+  test("the sentence-case example matches the engine", () => {
+    expect(convert(SENTENCE_CASE_EXAMPLE.input, "sentence")).toBe(SENTENCE_CASE_EXAMPLE.output)
   })
 })
 
-describe("COMPARISON_SCENARIOS", () => {
-  test("has at least 6 scenarios", () => {
-    expect(COMPARISON_SCENARIOS.length).toBeGreaterThanOrEqual(6)
-  })
-
-  test("each scenario has results for all 5 styles", () => {
-    for (const scenario of COMPARISON_SCENARIOS) {
-      expect(scenario.results.standard).toBeTruthy()
-      expect(scenario.results.ap).toBeTruthy()
-      expect(scenario.results.apa).toBeTruthy()
-      expect(scenario.results.mla).toBeTruthy()
-      expect(scenario.results.chicago).toBeTruthy()
-    }
-  })
-
-  test("each scenario has non-empty notes", () => {
-    for (const scenario of COMPARISON_SCENARIOS) {
-      expect(scenario.notes.length).toBeGreaterThan(0)
-    }
-  })
-
-  test("every documented result matches actual converter output", () => {
-    const styles = ["standard", "ap", "apa", "mla", "chicago"] as const
-    for (const scenario of COMPARISON_SCENARIOS) {
-      for (const style of styles) {
-        expect(
-          convert(scenario.example, "title", { titleStyle: style }),
-          `"${scenario.scenario}" / ${style}`,
-        ).toBe(scenario.results[style])
+describe("DISAGREEMENT_ROWS", () => {
+  test("every verdict matches how the engine treats the word in its probe title", () => {
+    for (const row of DISAGREEMENT_ROWS) {
+      for (const style of PUBLISHED_STYLES) {
+        const words = convert(row.probe, "title", { titleStyle: style }).split(/[^\p{L}]+/u)
+        const matches = words.filter((word) => word.toLowerCase() === row.word)
+        expect(matches, `${row.wordType}: "${row.word}" must appear once in "${row.probe}"`).toHaveLength(1)
+        const actual = matches[0][0] === matches[0][0].toUpperCase() ? "Capitalize" : "Lowercase"
+        expect(actual, `${row.wordType} / ${style}`).toBe(row.verdicts[style])
       }
     }
   })
 })
 
-describe("RULES_PAGE_FAQS", () => {
-  test("has at least 4 FAQ items", () => {
-    expect(RULES_PAGE_FAQS.length).toBeGreaterThanOrEqual(4)
+describe("ENGINE_REASON_SAMPLES", () => {
+  test("every quoted label is one the engine actually prints", () => {
+    // The engine only labels words it changes, so also feed it titles already
+    // converted in another style – the way a writer pastes a finished headline.
+    const probes = [
+      ...Object.values(RULES_GUIDE_EXAMPLES).flatMap((example) => [example.input, ...Object.values(example.outputs)]),
+      ...DISAGREEMENT_ROWS.map((row) => row.probe),
+      "How To Write a Headline",
+    ]
+    const reasons = new Set<string>()
+    for (const probe of probes) {
+      for (const style of ALL_STYLES) {
+        for (const explanation of convertWithExplanations(probe, "title", { titleStyle: style }).explanations) {
+          reasons.add(explanation.reason)
+        }
+      }
+    }
+    for (const sample of ENGINE_REASON_SAMPLES) {
+      expect(reasons, sample).toContain(sample)
+    }
+  })
+})
+
+describe("page copy", () => {
+  test("lists the seven shared rules", () => {
+    expect(UNIVERSAL_RULES).toHaveLength(7)
   })
 
-  test("each FAQ has question and answer", () => {
+  test("cites a source for each published guide", () => {
+    for (const style of PUBLISHED_STYLES) {
+      expect(STYLE_SOURCES[style].url).toMatch(/^https:\/\//)
+    }
+  })
+
+  test("each FAQ has a question and a real answer", () => {
+    expect(RULES_PAGE_FAQS).toHaveLength(5)
     for (const faq of RULES_PAGE_FAQS) {
       expect(faq.question.endsWith("?")).toBe(true)
       expect(faq.answer.length).toBeGreaterThan(20)
@@ -143,10 +161,12 @@ describe("getRulesGuideHubViewModel", () => {
     const model = getRulesGuideHubViewModel("ap", "title")
 
     expect(model.activeStyle).toBe("ap")
-    expect(model.styleGuides).toHaveLength(5)
-    expect(model.comparisonScenarios.length).toBeGreaterThanOrEqual(6)
-    expect(model.faqs.length).toBeGreaterThanOrEqual(4)
-    expect(model.examples.length).toBeGreaterThanOrEqual(3)
+    expect(model.hasStyleFocus).toBe(true)
+    expect(model.faqs).toBe(RULES_PAGE_FAQS)
+  })
+
+  test("has no style focus when the visitor did not bring one", () => {
+    expect(getRulesGuideHubViewModel(undefined, undefined).hasStyleFocus).toBe(false)
   })
 
   test("preserves converter context when provided", () => {
