@@ -1,6 +1,6 @@
-import type { ReactNode } from "react"
+import { Fragment, type ReactNode } from "react"
 import Link from "next/link"
-import type { ArticleBlock, ArticleSection, StyleGuideName } from "@/lib/article-content"
+import type { ArticleBlock, ArticleSection, CaseDiagramTone, StyleGuideName } from "@/lib/article-content"
 import { cn } from "@/lib/utils"
 import { CapitalizationBadge } from "./capitalization-badge"
 
@@ -18,6 +18,12 @@ const thClass = "px-4 py-3 text-left font-semibold text-slate-700 dark:text-zinc
 const tdClass = "px-4 py-3 text-slate-700 dark:text-zinc-300"
 const trBorder = "border-t border-slate-100 dark:border-zinc-700/50"
 const theadBg = "bg-slate-50 dark:bg-zinc-800/60"
+
+const DIAGRAM_TONE_CLASS: Record<CaseDiagramTone, string> = {
+  differs: "bg-emerald-100 text-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-200",
+  same: "bg-sky-100 text-sky-900 dark:bg-sky-950/50 dark:text-sky-200",
+  check: "bg-rose-100 text-rose-900 dark:bg-rose-950/50 dark:text-rose-200",
+}
 
 const GUIDE_COLUMNS: { key: StyleGuideName; label: string }[] = [
   { key: "ap", label: "AP" },
@@ -107,16 +113,76 @@ export function ArticleBlockRenderer({ block }: { block: ArticleBlock }) {
       }
       return <p className={p}>{renderInline(block.text)}</p>
     }
-    case "list":
+    case "heading": {
+      const Heading = block.level === 3 ? "h3" : "h4"
       return (
-        <ul className="list-disc space-y-2 pl-5">
+        <Heading
+          className={cn(
+            "leading-snug text-slate-950 dark:text-zinc-100",
+            block.level === 3 ? "pt-3 text-xl font-bold" : "pt-1 text-lg font-semibold",
+            block.grouping && "italic"
+          )}
+        >
+          {block.text}
+        </Heading>
+      )
+    }
+    case "caseDiagram":
+      return (
+        <figure className="space-y-4 rounded-xl border border-slate-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900/60">
+          {block.rows.map((row) => {
+            const marks = new Map((row.marks ?? []).map((mark) => [mark.index, mark]))
+            return (
+              <div key={row.label} className="space-y-1">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-zinc-400">
+                  {row.label}
+                </p>
+                <p className="font-mono text-base leading-9 text-slate-900 dark:text-zinc-100">
+                  {row.text.split(" ").map((word, index) => {
+                    const mark = marks.get(index)
+                    return (
+                      <Fragment key={index}>
+                        {index > 0 && " "}
+                        {mark ? (
+                          <span className={cn("rounded px-1", DIAGRAM_TONE_CLASS[mark.tone])}>
+                            {word}
+                            {mark.note !== undefined && <sup className="ml-0.5 font-sans font-bold">{mark.note}</sup>}
+                          </span>
+                        ) : (
+                          word
+                        )}
+                      </Fragment>
+                    )
+                  })}
+                </p>
+              </div>
+            )
+          })}
+          <figcaption className="space-y-2 border-t border-slate-100 pt-3 text-sm leading-6 text-slate-600 dark:border-zinc-700/50 dark:text-zinc-400">
+            <ol className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
+              {block.notes.map((note, index) => (
+                <li key={index}>
+                  <sup className="mr-1 font-bold">{index + 1}</sup>
+                  {note}
+                </li>
+              ))}
+            </ol>
+            {block.caption && <p>{renderInline(block.caption)}</p>}
+          </figcaption>
+        </figure>
+      )
+    case "list": {
+      const List = block.ordered ? "ol" : "ul"
+      return (
+        <List className={cn("space-y-2 pl-5", block.ordered ? "list-decimal" : "list-disc")}>
           {block.items.map((item, index) => (
             <li key={index} className={li}>
               {renderInline(item)}
             </li>
           ))}
-        </ul>
+        </List>
       )
+    }
     case "table":
       return (
         <div className={tableWrap}>
