@@ -62,6 +62,9 @@ export interface DoNotExample {
 
 export type StyleGuideName = Exclude<TitleCaseStyle, "standard">
 
+/** differs – the word changes between cases; same – identical in both; check – a converter gets it wrong. */
+export type CaseDiagramTone = "differs" | "same" | "check"
+
 export type ArticleBlock =
   | {
       type: "paragraph"
@@ -72,7 +75,34 @@ export type ArticleBlock =
        */
       variant?: "default" | "subheading" | "note"
     }
-  | { type: "list"; items: string[] }
+  | { type: "list"; items: string[]; /** Numbered list, for listings the text refers back to by number. */ ordered?: boolean }
+  | {
+      /**
+       * A real H3/H4 inside a section (the section heading is the H2). Plain
+       * text, no inline markup. `grouping` marks a question that groups the
+       * headings under it; it renders in italics.
+       */
+      type: "heading"
+      level: 3 | 4
+      text: string
+      grouping?: boolean
+    }
+  | {
+      /**
+       * One headline in several cases, one row per case. `marks` pick words
+       * by their index in `text.split(" ")`: `note` adds a numbered marker
+       * that points into `notes`, `tone` colors the word. `caption` supports
+       * the inline markdown subset.
+       */
+      type: "caseDiagram"
+      rows: {
+        label: string
+        text: string
+        marks?: { index: number; note?: number; tone: CaseDiagramTone }[]
+      }[]
+      notes: string[]
+      caption?: string
+    }
   | {
       /** Generic two-plus column table; first column renders bold. */
       type: "table"

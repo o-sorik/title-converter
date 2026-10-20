@@ -397,13 +397,13 @@ export const blogArticles: Article[] = [
   },
   {
     slug: "sentence-vs-title-case",
-    title: "Title Case vs Sentence Case: When to Use Each",
+    title: "Title Case vs Sentence Case: Which to Use and When",
     excerpt:
-      "Title case capitalizes major words; sentence case only the first. Side-by-side examples plus which style fits news, academic, and UX writing.",
+      "Title case or sentence case? What AP, APA, Chicago and MLA require, what newsrooms and product teams use, and how to convert a headline between the two.",
     categoryId: "writing-tips",
     author: "Sophia Stewart",
-    updatedAt: "2026-07-10",
-    readTime: "6 min",
+    updatedAt: "2026-10-20",
+    readTime: "8 min",
     image: "/images/blog/generated/laptop-workflow-cover.webp",
     verifiedFor: "AP, APA, Chicago, MLA",
   },

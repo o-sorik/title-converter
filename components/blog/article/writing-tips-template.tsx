@@ -26,7 +26,7 @@ export function WritingTipsTemplate({ data, article }: WritingTipsTemplateProps)
         </React.Fragment>
       ))}
 
-      <FAQAccordion items={data.faqItems} />
+      <FAQAccordion items={data.faqItems} heading={data.faqHeading} />
 
       <CTABlock word={data.ctaWord} text={data.ctaText} />
 

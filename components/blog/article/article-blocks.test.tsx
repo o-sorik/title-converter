@@ -40,6 +40,46 @@ describe("renderInline", () => {
 })
 
 describe("ArticleBlockRenderer", () => {
+  test("renders heading blocks as real h3/h4, grouping questions in italics", () => {
+    const h3 = renderToStaticMarkup(
+      <ArticleBlockRenderer block={{ type: "heading", level: 3, text: "Which case do news headlines use?", grouping: true }} />
+    )
+    expect(h3).toMatch(/^<h3 class="[^"]*italic[^"]*">Which case do news headlines use\?<\/h3>$/)
+
+    const h4 = renderToStaticMarkup(<ArticleBlockRenderer block={{ type: "heading", level: 4, text: "APA uses both" }} />)
+    expect(h4).toMatch(/^<h4 class="[^"]*">APA uses both<\/h4>$/)
+    expect(h4).not.toContain("italic")
+  })
+
+  test("renders ordered lists as ol", () => {
+    const html = renderToStaticMarkup(<ArticleBlockRenderer block={{ type: "list", ordered: true, items: ["One", "Two"] }} />)
+    expect(html).toMatch(/^<ol class="[^"]*list-decimal[^"]*"><li/)
+    const plain = renderToStaticMarkup(<ArticleBlockRenderer block={{ type: "list", items: ["One"] }} />)
+    expect(plain).toMatch(/^<ul class="[^"]*list-disc/)
+  })
+
+  test("renders caseDiagram rows with numbered marks and a notes legend", () => {
+    const html = renderToStaticMarkup(
+      <ArticleBlockRenderer
+        block={{
+          type: "caseDiagram",
+          rows: [
+            { label: "Title case", text: "The Art of Saying No", marks: [{ index: 2, note: 2, tone: "same" }] },
+            { label: "Sentence case", text: "The art of saying no", marks: [{ index: 1, note: 1, tone: "differs" }] },
+          ],
+          notes: ["Capitals", "Small words"],
+          caption: "Green marks a **difference**.",
+        }}
+      />
+    )
+    expect(html).toContain("Title case")
+    expect(html).toContain("Sentence case")
+    expect(html).toMatch(/>of<sup[^>]*>2<\/sup><\/span>/)
+    expect(html).toMatch(/>art<sup[^>]*>1<\/sup><\/span>/)
+    expect(html).toContain("Small words")
+    expect(html).toContain("<strong>difference</strong>")
+  })
+
   test("renders styleGuideMatrix with capitalize/lowercase badges in guide order", () => {
     const html = renderToStaticMarkup(
       <ArticleBlockRenderer
