@@ -434,7 +434,7 @@ export const RULES_PAGE_FAQS: RulesPageFAQ[] = [
   {
     question: "What words are not capitalized in a title?",
     answer:
-      "Articles (a, an, the), coordinating conjunctions (and, but, or, nor, for, yet, so) and short prepositions stay lowercase inside a title in every major style guide. Longer prepositions depend on the guide: AP and APA capitalize them from four letters, Chicago from five, and MLA never does.",
+      "Articles (a, an, the), the coordinating conjunctions and, but, or, nor and for, and short prepositions stay lowercase inside a title in every major style guide. Yet and so are lowercase in AP, APA and MLA, but Chicago capitalizes them. Longer prepositions depend on the guide: AP and APA capitalize them from four letters, Chicago from five, and MLA never does.",
     link: { href: "/blog/what-words-are-not-capitalized-in-a-title", label: "What Words Are Not Capitalized in a Title?" },
   },
   {

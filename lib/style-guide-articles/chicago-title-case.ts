@@ -36,7 +36,7 @@ export const CHICAGO_TITLE_CASE_ARTICLE: WritingTipsArticle = {
     {
       question: "Which conjunctions does Chicago lowercase?",
       answer:
-        "Only the coordinating ones: and, but, for, or, nor, so, and yet. Subordinating conjunctions such as \"Although\", \"Because\", \"If\", \"When\" and \"That\" count as major words and are capitalized.",
+        "Only five: and, but, for, or and nor (CMOS 8.160). \"So\" and \"yet\" are not on that list, so Chicago capitalizes them, unlike AP and APA. \"As\" stays lowercase in any role. Subordinating conjunctions such as \"Although\", \"Because\", \"If\", \"When\" and \"That\" count as major words and are capitalized.",
     },
   ],
   sections: [
@@ -118,7 +118,7 @@ export const CHICAGO_TITLE_CASE_ARTICLE: WritingTipsArticle = {
             "Capitalize the **first and last word** of the title and of any subtitle, whatever they are.",
             "Capitalize **nouns, pronouns, verbs, adjectives and adverbs** at any length – including *Is*, *Be*, *It* and *Do*.",
             "Lowercase the articles *a*, *an*, *the* in middle positions.",
-            "Lowercase the **coordinating conjunctions** *and*, *but*, *for*, *or*, *nor*, *so*, *yet*.",
+            "Lowercase the **coordinating conjunctions** *and*, *but*, *for*, *or*, *nor* – only these five, so *So* and *Yet* are capitalized – and *as* in any role.",
             "Capitalize **subordinating conjunctions** – *Although*, *Because*, *If*, *When*, *That* – as major words.",
             "Lowercase **to** in an infinitive: *How to Cook Everything*.",
             "Capitalize the first word after a **colon**.",

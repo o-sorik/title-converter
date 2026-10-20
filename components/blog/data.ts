@@ -82,7 +82,7 @@ export const blogArticles: Article[] = [
       "Chicago now capitalizes prepositions of five letters or more - a real break from every earlier edition.",
     categoryId: "chicago",
     author: "Sarah Klein",
-    updatedAt: "2026-08-24",
+    updatedAt: "2026-10-20",
     readTime: "6 min read",
     image: "/images/blog/generated/style-guides-stack-cover.webp",
     verifiedFor: "Chicago 18th Edition",
