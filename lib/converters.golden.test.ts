@@ -140,3 +140,36 @@ describe('style thresholds still hold after the refactor', () => {
         }
     })
 })
+
+describe('rules checked against the style manuals (2026-10-20)', () => {
+    test.each([
+        // AP Ask the Editor: "Use the lowercase vs."; MLA prints it lowercase.
+        ['title case vs sentence case', 'standard', 'Title Case vs Sentence Case'],
+        ['man vs. machine', 'ap', 'Man vs. Machine'],
+        // Legal "v." is lowercase; a bare V is a Roman numeral.
+        ['brown v. board of education', 'apa', 'Brown v. Board of Education'],
+        ['henry v and the battle of agincourt', 'standard', 'Henry V and the Battle of Agincourt'],
+        // "So" is an adverb unless it joins clauses after a comma.
+        ['why so many titles fail', 'apa', 'Why So Many Titles Fail'],
+        ['not so fast', 'mla', 'Not So Fast'],
+        ['i was tired, so i left early', 'mla', 'I Was Tired, so I Left Early'],
+        // CMOS 8.160 lowercases only and, but, for, or, nor, plus "as" in any role.
+        ['small yet powerful tools', 'chicago', 'Small Yet Powerful Tools'],
+        ['small yet powerful tools', 'apa', 'Small yet Powerful Tools'],
+        ['the artist as critic', 'chicago', 'The Artist as Critic'],
+        // A preposition that opens a clause is a subordinating conjunction.
+        ['wait until we meet again', 'mla', 'Wait Until We Meet Again'],
+        ['coming after you again', 'mla', 'Coming after You Again'],
+        ['life as i find it', 'mla', 'Life As I Find It'],
+        ['the artist as critic', 'mla', 'The Artist as Critic'],
+        ['life as i find it', 'chicago', 'Life as I Find It'],
+        // A preposition with no object is an adverb.
+        ['freedom from, freedom to', 'mla', 'Freedom From, Freedom To'],
+        ['where are you from, really', 'chicago', 'Where Are You From, Really'],
+        // MLA lowercases multiword prepositions; Chicago caps the participle.
+        ['the world according to garp', 'mla', 'The World according to Garp'],
+        ['the world according to garp', 'chicago', 'The World According to Garp'],
+    ] as const)('%s (%s)', (input, style, expected) => {
+        expect(title(input, style)).toBe(expected)
+    })
+})
