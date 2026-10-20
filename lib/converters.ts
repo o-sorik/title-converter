@@ -118,7 +118,46 @@ const PREPOSITIONS = new Set([
     "unlike",
     "unto",
     "versus",
+    // The abbreviation behaves like the word: lowercase in every style.
+    // "Title Case vs Sentence Case" came out as "Vs" before this.
+    "vs",
     "worth",
+]);
+
+// CMOS 18 (8.160) lowercases only and, but, for, or, nor – plus "as" in any
+// function. "So" and "yet" are therefore major words in Chicago.
+const CHICAGO_MAJOR_CONJUNCTIONS = new Set([
+    "so",
+    "yet",
+]);
+
+// Prepositions that double as subordinating conjunctions. Followed by a
+// subject pronoun they open a clause and become major words in every style.
+const CLAUSE_OPENING_PREPOSITIONS = new Set([
+    "after",
+    "before",
+    "since",
+    "than",
+    "till",
+    "until",
+]);
+
+// "You" and "it" are left out on purpose: they also follow real prepositions
+// ("Coming After You"), so they prove nothing about the word before them.
+const SUBJECT_PRONOUNS = new Set([
+    "i",
+    "he",
+    "she",
+    "we",
+    "they",
+]);
+
+// MLA lowercases a preposition "no matter how many words compose it"
+// (MLA Handbook 2.90; MLA Style Center, two-word prepositions). Only pairs MLA
+// itself names: "other than" is left out because MLA prints it both ways.
+const MLA_MULTIWORD_PREPOSITIONS = new Set([
+    "according to",
+    "as regards",
 ]);
 
 const PHRASAL_VERB_PAIRS = new Set([
@@ -295,6 +334,9 @@ function getTitleCaseDecision(word: string, style: TitleCaseStyle): { convertToL
     if (CONJUNCTIONS.has(word)) {
         if (style === "apa" && word.length >= 4) {
             return { convertToLower: false, reason: "APA style: conjunction with 4+ letters" };
+        }
+        if (style === "chicago" && CHICAGO_MAJOR_CONJUNCTIONS.has(word)) {
+            return { convertToLower: false, reason: "Chicago style: only and, but, for, or, nor are lowercase" };
         }
         return { convertToLower: true, reason: "Coordinating conjunction" };
     }
@@ -508,6 +550,38 @@ function buildTitleTransforms(text: string, style: TitleCaseStyle): TitleWordTra
 
         if (followsColon) {
             return { word: token.word, converted: capitalize(lower), reason: "First word after colon is capitalized", type: "capitalized", start: token.start, end: token.end };
+        }
+
+        // Legal "v." (Brown v. Board of Education) abbreviates versus. Only the
+        // dotted form: a bare "V" is far more often a Roman numeral (Henry V).
+        if (lower === "v" && text.charAt(token.end) === ".") {
+            return { word: token.word, converted: "v", reason: '"v." (versus) stays lowercase', type: "lowercased", start: token.start, end: token.end };
+        }
+
+        // "So" is lowercased only as a coordinating conjunction, which in a title
+        // follows a comma ("Tired, so I Left"). Everywhere else it is an adverb
+        // ("Why So Many", "Not So Fast") and therefore a major word.
+        if (lower === "so" && style !== "chicago" && !/[,;]\s*$/.test(betweenPrevAndCurrent)) {
+            return { word: token.word, converted: capitalize(lower), reason: '"So" as an adverb is capitalized', type: "capitalized", start: token.start, end: token.end };
+        }
+
+        // CMOS 8.160 rule 1 and MLA both capitalize a subordinating conjunction:
+        // "More Than I Bargained For", "Wait Until We Meet". MLA treats "as" the
+        // same way ("Life As I Find It"); Chicago keeps "as" lowercase in any role,
+        // and AP and APA lowercase it by length.
+        const opensClause = CLAUSE_OPENING_PREPOSITIONS.has(lower) || (lower === "as" && (style === "mla" || style === "standard"));
+        if (!inHyphenCompound && opensClause && nextToken && SUBJECT_PRONOUNS.has(lowerWords[i + 1])) {
+            return { word: token.word, converted: capitalize(lower), reason: "Subordinating conjunction (opens a clause)", type: "capitalized", start: token.start, end: token.end };
+        }
+
+        // A preposition with no object is an adverb: "Freedom From, Freedom To",
+        // "Turn On, Tune In" (CMOS 8.160 rule 3; MLA prints the same).
+        if (PREPOSITIONS.has(lower) && /^\s*[,;:?!]/.test(betweenCurrentAndNext)) {
+            return { word: token.word, converted: capitalize(lower), reason: "Preposition used without an object is capitalized", type: "capitalized", start: token.start, end: token.end };
+        }
+
+        if (style === "mla" && ((nextToken && MLA_MULTIWORD_PREPOSITIONS.has(`${lower} ${lowerWords[i + 1]}`)) || (prevToken && MLA_MULTIWORD_PREPOSITIONS.has(`${lowerWords[i - 1]} ${lower}`)))) {
+            return { word: token.word, converted: lower, reason: "Multiword preposition (MLA style)", type: "lowercased", start: token.start, end: token.end };
         }
 
         if (lower === "to" && nextToken) {
