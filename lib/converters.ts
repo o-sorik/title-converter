@@ -398,12 +398,27 @@ type InputShape = "all-caps" | "all-lower" | "mixed";
 function detectInputShape(tokens: WordToken[]): InputShape {
     let hasUpper = false;
     let hasLower = false;
+    let words = 0;
+    let capsWords = 0;
+    let shouting = false;
     for (const token of tokens) {
-        if (/[a-z]/.test(token.word)) hasLower = true;
-        if (/[A-Z]/.test(token.word)) hasUpper = true;
-        if (hasUpper && hasLower) return "mixed";
+        const upper = /[A-Z]/.test(token.word);
+        const lower = /[a-z]/.test(token.word);
+        if (upper) hasUpper = true;
+        if (lower) hasLower = true;
+        if (token.word.replace(/[^A-Za-z]/g, "").length < 2) continue;
+        words++;
+        if (upper && !lower) {
+            capsWords++;
+            // A shouted function word or a long all-caps word cannot be an acronym.
+            if (!isDeliberateAcronym(token.word)) shouting = true;
+        }
     }
-    return hasUpper ? "all-caps" : "all-lower";
+    if (!hasUpper) return "all-lower";
+    // A stray lowercase token does not make shouted text deliberate:
+    // "MEETING WITH THE NASA TEAM. i THINK…" is all caps, and TEAM is no acronym.
+    if (!hasLower || (shouting && capsWords * 2 > words)) return "all-caps";
+    return "mixed";
 }
 
 // Short all-caps runs are structurally acronym-shaped (NBA, IBM, DIY, FAQ,
@@ -668,18 +683,81 @@ function convertTitleCase(text: string, style: TitleCaseStyle): string {
     return applyTransforms(text, buildTitleTransforms(text, style));
 }
 
+// Calibrated on the style-manual examples (2026-10-20): in title case every
+// content word is capitalized, in sentence case at most 75% are (short
+// headlines full of names). Below this share, capitals mark names.
+const SENTENCE_CASE_MAX_CAPITALIZED_SHARE = 0.8;
+
+/**
+ * Share of capitalized content words, skipping words whose capital the casing
+ * style decides anyway: sentence and subtitle starts, function words, "I",
+ * acronyms, numbers and brands. Null when nothing is left to judge.
+ */
+function capitalizedShare(text: string, tokens: WordToken[]): number | null {
+    let counted = 0;
+    let capitalized = 0;
+    tokens.forEach((token, i) => {
+        if (i === 0 || /[:.!?—/|]/.test(text.slice(tokens[i - 1].end, token.start))) return;
+        const lower = token.word.toLowerCase();
+        if (token.word === "I" || ARTICLES.has(lower) || CONJUNCTIONS.has(lower) || PREPOSITIONS.has(lower)) return;
+        if (!/^\p{L}+(?:['’]\p{L}+)*$/u.test(token.word) || !/\p{Ll}/u.test(token.word) || hasIrregularCasing(token.word)) return;
+        counted++;
+        if (/^\p{Lu}/u.test(token.word)) capitalized++;
+    });
+    return counted ? capitalized / counted : null;
+}
+
+/** What sentence case may trust in one line. Each line of a pasted list is its own title. */
+interface SentenceLine {
+    /** Short all-caps words are acronyms the writer typed (BBC, NFL), as in title case. */
+    keepsAcronyms: boolean;
+    /** The line is already in sentence case, so its remaining capitals are names. */
+    keepsCapitals: boolean;
+    /** No closing period: a title, where the word after a colon starts a subtitle. */
+    isTitle: boolean;
+}
+
+function analyzeSentenceLines(text: string, tokens: WordToken[]): SentenceLine[] {
+    // Tokens arrive in order, so one pass over the newlines assigns each its line.
+    let line = 0;
+    let cursor = 0;
+    const lineOf = tokens.map((token) => {
+        for (let newline = text.indexOf("\n", cursor); newline !== -1 && newline < token.start; newline = text.indexOf("\n", cursor)) {
+            line++;
+            cursor = newline + 1;
+        }
+        return line;
+    });
+
+    const lineTexts = text.split("\n");
+    const analysis = lineTexts.map((lineText, index): SentenceLine => {
+        const lineTokens = tokens.filter((_, i) => lineOf[i] === index);
+        const mixed = lineTokens.length > 0 && detectInputShape(lineTokens) === "mixed";
+        const share = capitalizedShare(text, lineTokens);
+        return {
+            keepsAcronyms: mixed,
+            keepsCapitals: mixed && share !== null && share < SENTENCE_CASE_MAX_CAPITALIZED_SHARE,
+            isTitle: !/\.\s*$/.test(lineText),
+        };
+    });
+    return lineOf.map((index) => analysis[index]);
+}
+
 function buildSentenceTransforms(text: string): TitleWordTransform[] {
     const tokens = tokenizeWords(text);
     if (!tokens.length) return [];
+    const lines = analyzeSentenceLines(text, tokens);
 
     return tokens.map((token, i) => {
+        const line = lines[i];
         const prevToken = i > 0 ? tokens[i - 1] : null;
         const betweenPrevAndCurrent = prevToken ? text.slice(prevToken.end, token.start) : "";
-        const sentenceStart = i === 0 || /[.!?]/.test(betweenPrevAndCurrent);
-        // Sentence case deliberately de-shouts: "he said HELLO" -> "he said hello".
-        // So it never treats a bare all-caps token as a deliberate acronym, and
-        // relies on the dictionary instead.
-        const canonicalAcronym = getCanonicalAcronym(token.word, false);
+        // AP headlines, APA and Chicago titles capitalize the first word of a subtitle.
+        const afterColon = line.isTitle && /:/.test(betweenPrevAndCurrent);
+        const sentenceStart = i === 0 || /[.!?]/.test(betweenPrevAndCurrent) || afterColon;
+        // Long shouted words are always lowercased ("he said HELLO"); short all-caps
+        // words in mixed-case text are kept as acronyms, the same as in title case.
+        const canonicalAcronym = getCanonicalAcronym(token.word, line.keepsAcronyms);
 
         if (hasIrregularCasing(token.word) || canonicalAcronym) {
             return {
@@ -710,11 +788,15 @@ function buildSentenceTransforms(text: string): TitleWordTransform[] {
             return {
                 word: token.word,
                 converted,
-                reason: "First word of sentence",
+                reason: afterColon ? "First word after a colon in a title" : "First word of sentence",
                 type: converted === token.word ? "unchanged" : "capitalized",
                 start: token.start,
                 end: token.end,
             };
+        }
+
+        if (line.keepsCapitals && /^\p{Lu}\P{Lu}*$/u.test(token.word)) {
+            return { word: token.word, converted: token.word, reason: "Capitalized word kept: the text is already in sentence case", type: "unchanged", start: token.start, end: token.end };
         }
 
         const converted = token.word.toLowerCase();

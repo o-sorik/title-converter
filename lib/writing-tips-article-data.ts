@@ -3,7 +3,7 @@ import type { ConverterLink } from "@/lib/converter-anchors"
 import { STATS_ARTICLES } from "@/lib/stats-articles"
 import { STYLE_GUIDE_ARTICLES } from "@/lib/style-guide-articles"
 import {
-  COLON_FIX,
+  COLON,
   DIAGRAM_HEADLINE,
   DIAGRAM_MARKS,
   DIAGRAM_NOTES,
@@ -500,15 +500,12 @@ export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
               {
                 label: "What a converter returns in sentence case",
                 text: DIAGRAM_HEADLINE.converter,
-                marks: [
-                  { index: DIAGRAM_WORDS.mars, tone: "check" },
-                  { index: DIAGRAM_WORDS.what, tone: "check" },
-                ],
+                marks: [{ index: DIAGRAM_WORDS.mars, tone: "check" }],
               },
             ],
             notes: DIAGRAM_NOTES,
             caption:
-              "Green marks a word that changes between the cases, blue a word that stays the same, red a word the converter gets wrong: a name it lowercased and the capital it dropped after the colon.",
+              "Green marks a word that changes between the cases, blue a word that stays the same, red the word the converter gets wrong: a name it lowercased.",
           },
         ],
       },
@@ -615,7 +612,7 @@ export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
           },
           {
             type: "paragraph",
-            text: `What it cannot see is which ordinary-looking words are names. *${TO_SENTENCE.names.input}* comes out as *${TO_SENTENCE.names.output}*, and *Agreement* and *Brazil* need their capitals back. The [Sentence Case Converter](/sentence-case-converter) shows every word it changed when you press Explain, so the names are quick to find.`,
+            text: `What it cannot see is which ordinary-looking words are names. *${TO_SENTENCE.names.input}* comes out as *${TO_SENTENCE.names.output}*, and *Agreement* and *Brazil* need their capitals back. Text that is already in sentence case keeps the capitals it has, because there they can only be names. The [Sentence Case Converter](/sentence-case-converter) shows every word it changed when you press Explain, so the names are quick to find.`,
           },
           { type: "heading", level: 3, text: "Sentence case to title case follows one style guide's small-word list" },
           {
@@ -626,9 +623,9 @@ export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
           {
             type: "list",
             items: [
-              "**Names.** People, places and organizations spelled like ordinary words lose their capitals in sentence case. Check every proper noun after converting.",
-              `**The word after a colon.** A converter lowercases it in sentence case, but AP headlines and APA titles capitalize it: *${COLON_FIX.output}* becomes *${COLON_FIX.fixed}* by hand.`,
-              `**Acronyms it does not know.** Common ones such as NASA, API and UK are kept; others are lowercased, so *${TO_SENTENCE.unknownAcronym.input}* comes out as *${TO_SENTENCE.unknownAcronym.output}*.`,
+              "**Names.** People, places and organizations spelled like ordinary words lose their capitals when you convert from title case or all caps. Check every proper noun after converting.",
+              `**The word after a colon in a sentence.** In a title the converter capitalizes it, as AP headlines and APA titles ask: *${COLON.title.input}* becomes *${COLON.title.output}*. In a sentence that ends with a period it stays lowercase – *${COLON.sentence.output}* – so capitalize it by hand when a full sentence follows.`,
+              `**Acronyms in all-caps text.** Acronyms typed in capitals are kept, but text typed entirely in capitals hides them, and only common ones such as NASA, API and UK are recognized: *${TO_SENTENCE.unknownAcronym.input}* comes out as *${TO_SENTENCE.unknownAcronym.output}*.`,
               "**Which style guide to follow.** In title case the converter applies the guide you pick. It cannot pick the guide for you.",
               "**One case per heading level.** A converter fixes one headline at a time. Keeping every section heading on a site in the same case is an editorial decision.",
             ],

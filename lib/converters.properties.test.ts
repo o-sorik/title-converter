@@ -92,4 +92,13 @@ describe('sentence case', () => {
             expect(sentence(text).toLowerCase()).toBe(text.toLowerCase())
         }), RUNS)
     })
+
+    // Sentence case keeps the capitals of text that is already in sentence case.
+    // Real title case, in any style, must never be mistaken for it, or the
+    // converter would hand the title back unchanged.
+    test.each(STYLES)('converts %s title case like lowercase input', (style) => {
+        fc.assert(fc.property(titleArb, (text) => {
+            expect(sentence(convert(text, 'title', { titleStyle: style }))).toBe(sentence(text.toLowerCase()))
+        }), RUNS)
+    })
 })

@@ -102,7 +102,7 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
         h1: "Sentence Case Converter",
         // The page body is rendered by <SentenceCaseGuide />; this block stays accurate for any other consumer.
         content: {
-            intro: "The Sentence Case Converter capitalizes the first letter of each sentence and lowercases the rest, while keeping acronyms such as NASA and brand names such as iPhone as typed. Names of people and places are lowercased and need a manual check.",
+            intro: "The Sentence Case Converter capitalizes the first letter of each sentence and lowercases the rest, while keeping acronyms such as NASA and brand names such as iPhone as typed. Names you already capitalized are kept; text pasted in title case needs a check for names.",
             features: [
                 "Capitalizes the first letter of each sentence and the pronoun \"I\".",
                 "Keeps known acronyms and brand casing like iPhone.",

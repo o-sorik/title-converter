@@ -14,9 +14,9 @@ export interface CaseExample {
 export const SENTENCE_CASE_CHANGES: string[] = [
   "The first letter of each sentence is capitalized.",
   "Every other letter is lowercased.",
-  "A new sentence starts after a period, question mark or exclamation point.",
+  "A new sentence starts after a period, question mark or exclamation point, and in a title the word after a colon is capitalized too.",
   "The pronoun \"I\" is capitalized wherever it appears.",
-  "Acronyms such as NASA, API and UI keep their capitals, even in text typed in all caps.",
+  "Acronyms keep their capitals: any short acronym typed in capitals, such as BBC, and known ones such as NASA and API even in text typed in all caps.",
   "Brand names with a capital inside the word, such as iPhone, macOS and eBay, are kept as typed.",
   "Punctuation, spacing and line breaks stay exactly where they were.",
 ]
@@ -26,12 +26,11 @@ export const SENTENCE_CASE_EXAMPLES = {
   pronoun: { input: "i think i can. can i?", output: "I think I can. Can I?" },
   acronymsAndBrands: { input: "How To Use The NASA API With Your iPhone", output: "How to use the NASA API with your iPhone" },
   names: { input: "Meeting With John Smith In Paris On Monday", output: "Meeting with john smith in paris on monday" },
-  colon: { input: "Title Case Rules: A Practical Guide", output: "Title case rules: a practical guide" },
+  namesKept: { input: "we met John Smith in Paris last Monday", output: "We met John Smith in Paris last Monday" },
+  colon: { input: "Title Case Rules: A Practical Guide", output: "Title case rules: A practical guide" },
+  colonInSentence: { input: "We Need Three Things: Time, Money And Luck.", output: "We need three things: time, money and luck." },
   apaReference: { input: "Self-Report Measures in Clinical Research", output: "Self-report measures in clinical research" },
 } satisfies Record<string, CaseExample>
-
-/** The APA fix a writer applies by hand after converting `SENTENCE_CASE_EXAMPLES.colon`. */
-export const APA_COLON_FIX = "Title case rules: A practical guide"
 
 /** One headline in both styles, for the side-by-side comparison. */
 export const SIDE_BY_SIDE = {
@@ -79,12 +78,12 @@ export const SENTENCE_CASE_FAQS: { question: string; answer: string }[] = [
   {
     question: "Does sentence case keep proper nouns?",
     answer:
-      "The style does: names of people, places, days and months keep their capitals. The converter cannot tell a name from an ordinary word, so it lowercases them and you restore them by hand.",
+      "The style does: names of people, places, days and months keep their capitals. The converter keeps every capital in text that is already in sentence case, because there it can only mark a name. From title case or all caps it cannot tell a name from an ordinary word, so it lowercases them and you restore them by hand.",
   },
   {
     question: "Should the word after a colon be capitalized in sentence case?",
     answer:
-      "It depends on the style guide. APA capitalizes the first word after a colon in titles; in running text, most guides capitalize it only when a full sentence follows.",
+      "It depends on the style guide. APA and AP capitalize the first word after a colon in titles and headlines; in running text, most guides capitalize it only when a full sentence follows. The converter capitalizes it in a title – a line without a closing period – and leaves it lowercase in a sentence.",
   },
   {
     question: "When should I use sentence case instead of title case?",

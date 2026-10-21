@@ -43,7 +43,6 @@ export const SAME_HEADLINES: HeadlinePair[] = [
   {
     title: "Remote Work: A Guide for Small Teams",
     sentence: "Remote work: A guide for small teams",
-    converter: "Remote work: a guide for small teams",
     shows: "3 – AP and APA capitalize after a colon in both",
   },
 ]
@@ -53,7 +52,7 @@ export const DIAGRAM_HEADLINE = {
   input: "why NASA is sending a robot to Mars: what scientists hope to find",
   title: "Why NASA Is Sending a Robot to Mars: What Scientists Hope to Find",
   sentence: "Why NASA is sending a robot to Mars: What scientists hope to find",
-  converter: "Why NASA is sending a robot to mars: what scientists hope to find",
+  converter: "Why NASA is sending a robot to mars: What scientists hope to find",
 }
 
 /** Word indexes in `DIAGRAM_HEADLINE.*.split(" ")`. */
@@ -84,7 +83,7 @@ export const TO_SENTENCE = {
     output: "Paris agreement talks stall as leaders meet in brazil",
     fixed: "Paris Agreement talks stall as leaders meet in Brazil",
   },
-  unknownAcronym: { input: "How the BBC Covers Elections in the UK", output: "How the bbc covers elections in the UK" },
+  unknownAcronym: { input: "HOW THE BBC COVERS ELECTIONS IN THE UK", output: "How the bbc covers elections in the UK" },
 }
 
 /** A15: sentence case to title case, one input under two style guides. */
@@ -94,9 +93,8 @@ export const TO_TITLE = {
   chicago: "A Look into the History of the Web",
 }
 
-/** A16: the colon fix a writer applies by hand. */
-export const COLON_FIX = {
-  input: "Remote Work: A Guide for Small Teams",
-  output: "Remote work: a guide for small teams",
-  fixed: "Remote work: A guide for small teams",
+/** A16: the converter capitalizes after a colon in a title, not in a sentence ending with a period. */
+export const COLON = {
+  title: { input: "Remote Work: A Guide for Small Teams", output: "Remote work: A guide for small teams" },
+  sentence: { input: "We Tested Three Tools: None Of Them Handled Names.", output: "We tested three tools: none of them handled names." },
 }

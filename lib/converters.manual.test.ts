@@ -1,15 +1,17 @@
 import { describe, expect, test } from 'vitest'
 import { convert } from './converters'
 import type { TitleCaseStyle } from './converters'
-import { STYLE_MANUAL_TITLES } from './style-manual-titles'
+import { STYLE_MANUAL_SENTENCES, STYLE_MANUAL_TITLES } from './style-manual-titles'
 
 /**
  * The engine against titles the style guides print themselves.
  *
- * Two checks per title: a correctly styled title must come back unchanged, and
- * the same title typed in lowercase must be rebuilt exactly. Every failure is
- * either fixed or listed below with its reason, and a listed title must still
- * fail, so an accidental fix forces the list to shrink.
+ * Title case: a correctly styled title must come back unchanged, and the same
+ * title typed in lowercase must be rebuilt exactly. Sentence case: a correct
+ * title or headline must come back unchanged (names cannot be rebuilt from
+ * lowercase). Every failure is either fixed or listed below with its reason,
+ * and a listed title must still fail, so an accidental fix forces the list to
+ * shrink.
  */
 
 const LIMIT_AS_PRINTED: Record<string, string> = {
@@ -34,6 +36,15 @@ const LIMIT_FROM_LOWERCASE: Record<string, string> = {
     'LOL I Don’t Think So': 'Acronym outside ACRONYM_CANONICAL.',
 }
 
+// Sentence case as printed that the engine still changes.
+const LIMIT_SENTENCE_AS_PRINTED: Record<string, string> = {
+    'Q&A: Brian Eno on relaunching Opal Records, ‘Music for Airports,’ AI and Palestine': 'So many names that the headline looks like title case.',
+    'What to Stream: ‘Moana,’ ‘Modern Warfare 4,’ Dolly Parton tribute, ‘Lupin’ and John Legend': 'AP feature label in title case plus a run of names: looks like title case.',
+    'FACT FOCUS: Trump says tariffs have brought more US auto factories. His numbers are off.': 'AP all-caps label; FOCUS is too long to read as an acronym.',
+    'RFK Jr.\'s embrace of AI confounds some MAHA allies and medical experts': 'The abbreviation period in "Jr." is read as a sentence end, so the possessive s is capitalized.',
+    'When Covid-19 hit, he turned his newspaper route into a lifeline for senior citizens': 'The dictionary normalizes Covid to COVID; APA kept the source newspaper\'s styling.',
+}
+
 const title = (text: string, style: TitleCaseStyle) => convert(text, 'title', { titleStyle: style })
 
 const cases = (skip: Record<string, string>[]) =>
@@ -51,6 +62,12 @@ describe('style-manual titles are rebuilt from lowercase', () => {
     })
 })
 
+describe('style-manual sentence case comes back unchanged', () => {
+    test.each(STYLE_MANUAL_SENTENCES.filter((e) => !(e.title in LIMIT_SENTENCE_AS_PRINTED)).map((e) => [e.style, e.title] as const))('[%s] %s', (_style, text) => {
+        expect(convert(text, 'sentence')).toBe(text)
+    })
+})
+
 describe('documented limits are still limits', () => {
     const styleOf = (text: string) => {
         const example = STYLE_MANUAL_TITLES.find((e) => e.title === text)
@@ -64,5 +81,10 @@ describe('documented limits are still limits', () => {
 
     test.each(Object.keys(LIMIT_FROM_LOWERCASE))('from lowercase: %s', (text) => {
         expect(title(text.toLowerCase(), styleOf(text))).not.toBe(text)
+    })
+
+    test.each(Object.keys(LIMIT_SENTENCE_AS_PRINTED))('sentence case as printed: %s', (text) => {
+        expect(STYLE_MANUAL_SENTENCES.some((e) => e.title === text)).toBe(true)
+        expect(convert(text, 'sentence')).not.toBe(text)
     })
 })
