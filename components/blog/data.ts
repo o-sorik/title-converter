@@ -270,7 +270,7 @@ export const blogArticles: Article[] = [
       "A side-by-side comparison to choose the right convention based on discipline and citation context.",
     categoryId: "mla-style",
     author: "Noah Brooks",
-    updatedAt: "2026-08-24",
+    updatedAt: "2026-10-22",
     readTime: "6 min read",
     image: "/images/blog/generated/laptop-workflow-cover.webp",
   },

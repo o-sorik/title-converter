@@ -230,8 +230,8 @@ export default async function CapitalizationRulesGuidePage({ searchParams }: Rul
                 <section className="space-y-5">
                     <H2 id="where-they-disagree">Where the style guides disagree, word by word</H2>
                     <P>
-                        The four guides agree on position and on most parts of speech. They disagree on one question: how long a
-                        preposition has to be before it earns a capital. The table shows each decision on a real word.
+                        The four guides agree on position and on most parts of speech. They disagree mainly on one question: how
+                        long a small word has to be before it earns a capital. The table shows each decision on a real word.
                     </P>
                     <div className="overflow-x-auto rounded-xl border">
                         <table className="w-full text-sm">
@@ -282,7 +282,7 @@ export default async function CapitalizationRulesGuidePage({ searchParams }: Rul
                     <H3 grouping>Which small words does each style lowercase?</H3>
                     <P>
                         Three classes of small words stay lowercase inside a title: articles, coordinating conjunctions and
-                        prepositions, plus &ldquo;to&rdquo;. Prepositions are the only class where the guides disagree. The full
+                        prepositions, plus &ldquo;to&rdquo;. Prepositions are where the guides disagree most. The full
                         word list lives in{" "}
                         <InlineLink href="/blog/what-words-are-not-capitalized-in-a-title">What Words Are Not Capitalized in a Title?</InlineLink>
                     </P>
@@ -298,10 +298,11 @@ export default async function CapitalizationRulesGuidePage({ searchParams }: Rul
                     <H4>Coordinating conjunctions stay lowercase</H4>
                     <P>
                         The seven coordinating conjunctions are and, but, or, nor, for, yet and so. APA&apos;s four-letter rule never
-                        reaches them, because all seven are shorter than four letters. Subordinating conjunctions such as because,
-                        if and while are capitalized in every guide.
+                        reaches them, because all seven are shorter than four letters. Chicago is the exception for yet and so, which
+                        it capitalizes. Subordinating conjunctions such as because and while are capitalized in every guide. The short
+                        &ldquo;if&rdquo; splits them: Chicago and MLA capitalize it, while AP and APA lowercase it by length.
                     </P>
-                    <Example id="conjunction" />
+                    <StyleOutputs id="conjunction" focus={focus} />
 
                     <H4>Prepositions cross a length threshold</H4>
                     <P>

@@ -197,6 +197,19 @@ describe('rules checked against the style manuals (2026-10-20)', () => {
         // MLA lowercases multiword prepositions; Chicago caps the participle.
         ['the world according to garp', 'mla', 'The World according to Garp'],
         ['the world according to garp', 'chicago', 'The World According to Garp'],
+        // APA lowercases "short conjunctions (e.g., ... if ...)"; AP capitalizes
+        // conjunctions of four or more letters. Chicago and MLA cap every
+        // subordinating conjunction.
+        ['what to do if it rains', 'ap', 'What to Do if It Rains'],
+        ['what to do if it rains', 'apa', 'What to Do if It Rains'],
+        ['what to do if it rains', 'chicago', 'What to Do If It Rains'],
+        ['what to do if it rains', 'mla', 'What to Do If It Rains'],
+        ['what to do if it rains', 'standard', 'What to Do If It Rains'],
+        ['if you asked me to', 'apa', 'If You Asked Me To'],
+        ['as if', 'ap', 'As If'],
+        ['life: if only', 'apa', 'Life: If Only'],
+        // Inside a compound "if" is a noun, not a conjunction.
+        ['the what-if scenario', 'ap', 'The What-If Scenario'],
     ] as const)('%s (%s)', (input, style, expected) => {
         expect(title(input, style)).toBe(expected)
     })
