@@ -304,3 +304,13 @@ test("continuity context and output always follow the current selected mode", ()
   expect(extractOutputText(html)).toBe("Is and capitalized")
   expect(html).not.toContain("Settings changed")
 })
+
+test("AP points news headlines to sentence case, other styles do not", () => {
+  const ap = renderToStaticMarkup(<TextConverter defaultMode="title" initialTitleStyle="ap" />)
+  const hint = (ap.match(/data-testid="ap-headline-hint"[\s\S]*?<\/p>/)?.[0] ?? "").replace(/<[^>]+>/g, "")
+  expect(hint).toContain("AP news headlines use")
+  expect(hint).toContain("sentence case")
+
+  const chicago = renderToStaticMarkup(<TextConverter defaultMode="title" initialTitleStyle="chicago" />)
+  expect(chicago).not.toContain('data-testid="ap-headline-hint"')
+})
