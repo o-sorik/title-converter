@@ -11,8 +11,6 @@ interface ContentSectionProps {
 }
 
 export function ContentSection({ faqs }: ContentSectionProps) {
-    const lastUpdated = "February 8, 2026"
-
     return (
         <section className="mt-16 space-y-12 max-w-4xl mx-auto px-4 text-zinc-800 dark:text-zinc-200">
             <div className="space-y-4">
@@ -148,7 +146,6 @@ export function ContentSection({ faqs }: ContentSectionProps) {
                     Automatic capitalization cannot always infer brand-specific casing, unusual proper nouns, or niche editorial exceptions.
                     For final publishing, do a quick manual check against your target style guide.
                 </p>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">Last updated: {lastUpdated}</p>
             </div>
 
             {faqs && faqs.length > 0 && (
