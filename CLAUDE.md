@@ -109,6 +109,7 @@ data/seo/ahrefs/                # Ahrefs keyword data imports
 - Server Components by default. Only add `"use client"` when the component needs browser APIs, event handlers, or hooks
 - Use `cn()` from `@/lib/utils` for conditional className merging — never raw template literals
 - shadcn/ui components in `components/ui/` are auto-generated — do not edit them manually
+- Icons come from `@tabler/icons-react`. `components.json` still says `"iconLibrary": "lucide"`, so `npx shadcn add` writes `lucide-react` imports, which is not installed: swap them for tabler icons before committing
 
 ### Styling
 - Tailwind CSS v4 utility classes. No custom CSS files except `app/globals.css`

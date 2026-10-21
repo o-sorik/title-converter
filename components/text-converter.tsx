@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip"
 
-import { convertWithExplanations, convertWithSegments, type ConversionType, type OutputSegment, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
+import { convert, convertWithExplanations, convertWithSegments, type ConversionType, type OutputSegment, type WordExplanation, type TitleCaseStyle } from "@/lib/converters"
 import { TITLE_STYLES, STYLE_RULE_SUMMARY } from "@/lib/title-styles"
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
@@ -74,6 +74,8 @@ interface TextConverterProps {
 }
 
 // Text Statistics Component
+const OUTPUT_PLACEHOLDER = "Result will appear here..."
+
 function TextStats({ text }: { text: string }) {
     const stats = React.useMemo(() => {
         const trimmed = text.trim()
@@ -751,7 +753,8 @@ export function TextConverter({
                                                 </mark>
                                             )
                                     ))
-                                    : <span className="text-zinc-500 dark:text-zinc-400">Result Will Appear Here...</span>}
+                                    // The placeholder is itself converted, so it previews the active mode.
+                                    : <span className="text-zinc-500 dark:text-zinc-400">{convert(OUTPUT_PLACEHOLDER, activeType, { titleStyle })}</span>}
                             </div>
                             {changeCount > 0 && (
                                 <p className="px-1 text-xs text-muted-foreground" data-testid="diff-legend">

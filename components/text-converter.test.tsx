@@ -96,6 +96,14 @@ test("preserves whitespace-only output for modes whose engine preserves whitespa
   expect(outputRegion).not.toContain("Result Will Appear Here")
 })
 
+test("the empty-output placeholder previews the active mode", () => {
+  const placeholder = (mode: "title" | "sentence" | "kebab") =>
+    extractOutputText(renderToStaticMarkup(<TextConverter defaultMode={mode} />)).trim()
+  expect(placeholder("title")).toBe("Result Will Appear Here...")
+  expect(placeholder("sentence")).toBe("Result will appear here...")
+  expect(placeholder("kebab")).toBe("result-will-appear-here")
+})
+
 test("marks changed words inline in the output with the rule that moved them", () => {
   const html = renderToStaticMarkup(
     <TextConverter defaultMode="title" initialInput="A Guide To Better Writing" />
