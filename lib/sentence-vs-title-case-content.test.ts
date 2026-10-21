@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest"
 
 import { convert, type TitleCaseStyle } from "./converters"
 import {
-  COLON_FIX,
+  COLON,
   DIAGRAM_HEADLINE,
   DIAGRAM_NOTES,
   DIAGRAM_WORDS,
@@ -50,11 +50,8 @@ describe("diagram", () => {
     expect(convert(DIAGRAM_HEADLINE.title, "sentence")).toBe(DIAGRAM_HEADLINE.converter)
   })
 
-  test("converter and correct sentence case differ exactly at the words marked for checking", () => {
-    expect(differOnlyAt(DIAGRAM_HEADLINE.converter, DIAGRAM_HEADLINE.sentence)).toEqual([
-      DIAGRAM_WORDS.mars,
-      DIAGRAM_WORDS.what,
-    ])
+  test("converter and correct sentence case differ exactly at the word marked for checking", () => {
+    expect(differOnlyAt(DIAGRAM_HEADLINE.converter, DIAGRAM_HEADLINE.sentence)).toEqual([DIAGRAM_WORDS.mars])
   })
 
   test("marked words point at the words they describe", () => {
@@ -83,8 +80,8 @@ describe("conversion examples", () => {
     expect(convert(TO_TITLE.input, "title", { titleStyle: "mla" })).toBe(TO_TITLE.chicago)
   })
 
-  test("the colon fix is one capital", () => {
-    expect(convert(COLON_FIX.input, "sentence")).toBe(COLON_FIX.output)
-    expect(differOnlyAt(COLON_FIX.output, COLON_FIX.fixed)).toEqual([2])
+  test("a colon starts a subtitle in a title, not in a sentence ending with a period", () => {
+    expect(convert(COLON.title.input, "sentence")).toBe(COLON.title.output)
+    expect(convert(COLON.sentence.input, "sentence")).toBe(COLON.sentence.output)
   })
 })

@@ -541,6 +541,20 @@ export function TextConverter({
                                 <p className="text-xs text-muted-foreground">
                                     {TITLE_STYLES.find((style) => style.id === titleStyle)?.hint}
                                 </p>
+                                {titleStyle === "ap" && (
+                                    // AP's 4+ letter rule is for titles of works; AP news
+                                    // headlines are written in sentence case.
+                                    <p className="text-xs text-muted-foreground" data-testid="ap-headline-hint">
+                                        For titles of works. AP news headlines use{" "}
+                                        <button
+                                            type="button"
+                                            onClick={() => selectMode("sentence")}
+                                            className="underline underline-offset-2 hover:text-foreground cursor-pointer"
+                                        >
+                                            sentence case
+                                        </button>
+                                    </p>
+                                )}
                             </div>
                         )}
                     </div>

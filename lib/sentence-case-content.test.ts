@@ -35,11 +35,12 @@ describe("sentence case examples", () => {
     }
   })
 
-  // The page states these limits outright. If the engine learns to keep names or
-  // to capitalize after a colon, these fail and the copy must be rewritten.
+  // The page states these limits outright. If the engine learns to recover names
+  // from title case or to judge a colon in running text, these fail and the copy
+  // must be rewritten.
   test("the documented limits are still true", () => {
     expect(convert("Meeting With John Smith In Paris", "sentence")).toBe("Meeting with john smith in paris")
-    expect(convert("Title Case Rules: A Practical Guide", "sentence")).toContain(": a practical")
+    expect(convert("We Need Three Things: Time, Money And Luck.", "sentence")).toContain(": time")
   })
 
   test("the pronoun rule the page quotes is one the engine applies", () => {

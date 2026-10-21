@@ -1,7 +1,6 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
 import {
-    APA_COLON_FIX,
     DIAGRAM_CALLOUTS,
     DIAGRAM_INPUT,
     DIAGRAM_OUTPUT,
@@ -108,7 +107,8 @@ export function SentenceCaseGuide() {
                 </p>
                 <p className="text-muted-foreground leading-relaxed">
                     The pronoun &ldquo;I&rdquo; is always capitalized, and every word the converter changes is marked in the
-                    result with the rule behind it. Names of people and places need a second look – see{" "}
+                    result with the rule behind it. Names you already capitalized are kept; text pasted in title case or all
+                    caps needs a second look for names – see{" "}
                     <a href="#what-to-check" className={LINK_CLASS}>what the converter leaves for you to check</a>.
                 </p>
             </div>
@@ -133,45 +133,46 @@ export function SentenceCaseGuide() {
             <section className="space-y-4">
                 <H2 id="what-to-check">What the converter leaves for you to check</H2>
                 <P>
-                    The converter cannot tell which words are proper nouns, so it lowercases every one of them except a
-                    sentence&apos;s first word and known acronyms. Whether &ldquo;Paris&rdquo; is a city or &ldquo;March&rdquo;
-                    is a month depends on meaning, and the converter works from the shape of each word.
+                    In text that is already in sentence case, every capital past the first word can only mark a name, so the
+                    converter keeps it. In title case or all caps every word is capitalized, and the converter cannot tell
+                    which ones are proper nouns: whether &ldquo;Paris&rdquo; is a city or &ldquo;March&rdquo; is a month
+                    depends on meaning, and the converter works from the shape of each word.
                 </P>
+                <Example example={SENTENCE_CASE_EXAMPLES.namesKept} />
 
                 <H3 grouping>Which capitals does sentence case need to keep?</H3>
-                <P>Three groups of capitals belong in sentence case that the converter does not keep.</P>
+                <P>
+                    Three groups of capitals belong in sentence case. The converter cannot recover the first two from title
+                    case or all caps, and it handles the third only in titles.
+                </P>
 
                 <H4>Names of people and places lose their capitals</H4>
                 <Example example={SENTENCE_CASE_EXAMPLES.names} />
                 <P>
-                    After converting, scan for names of people, companies, cities and countries, and restore their capitals.
+                    After converting title case, scan for names of people, companies, cities and countries, and restore their
+                    capitals.
                 </P>
 
                 <H4>Days, months and proper adjectives follow names</H4>
                 <P>
                     Days of the week, months, holidays, languages and nationalities such as English and French, and adjectives
-                    formed from names such as Victorian are all proper nouns. Sentence case keeps them capitalized; the
-                    converter does not.
+                    formed from names such as Victorian are all proper nouns. Sentence case keeps them capitalized; from title
+                    case or all caps, the converter does not.
                 </P>
 
                 <H4>APA keeps a capital after a colon in titles</H4>
                 <P>
                     In APA sentence case, the first word of a subtitle after a colon is capitalized, along with proper nouns (
-                    <SourceLink href={SENTENCE_CASE_SOURCES.apaSentenceCase}>APA Style</SourceLink>). The converter lowercases
-                    it, so fix that word by hand:
+                    <SourceLink href={SENTENCE_CASE_SOURCES.apaSentenceCase}>APA Style</SourceLink>), and AP headlines do the
+                    same. The converter capitalizes it when the line has no closing period, which is the shape of a title:
                 </P>
-                <p className="text-sm text-muted-foreground">
-                    <code className={CODE_CLASS}>{SENTENCE_CASE_EXAMPLES.colon.input}</code>
-                    <span aria-hidden="true"> → </span>
-                    <code className={CODE_CLASS}>{SENTENCE_CASE_EXAMPLES.colon.output}</code>
-                    <span aria-hidden="true"> → </span>
-                    <span className="sr-only"> corrected to </span>
-                    <code className={cn(CODE_CLASS, "text-foreground")}>{APA_COLON_FIX}</code>
-                </p>
+                <Example example={SENTENCE_CASE_EXAMPLES.colon} />
                 <P>
-                    How the rule changes in ordinary sentences is covered in{" "}
+                    In a sentence that ends with a period it leaves the word after the colon lowercase. Capitalize it by hand
+                    when a full sentence follows; the rules for running text are in{" "}
                     <InlineLink href="/blog/do-you-capitalize-after-a-colon">Do You Capitalize After a Colon?</InlineLink>
                 </P>
+                <Example example={SENTENCE_CASE_EXAMPLES.colonInSentence} />
             </section>
 
             {/* A8 – where required */}

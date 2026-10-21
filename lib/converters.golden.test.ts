@@ -114,9 +114,37 @@ describe('sentence case', () => {
         expect(convert("he and i went home. i'm tired.", 'sentence')).toBe("He and I went home. I'm tired.")
     })
 
-    test('sentence case still de-shouts, unlike title case', () => {
-        expect(convert('he said "HELLO." then LEFT.', 'sentence')).toBe('He said "hello." Then left.')
+    test('long shouted words are lowercased; short all-caps words in mixed text are acronyms, as in title case', () => {
+        expect(convert('he said "HELLO." then left.', 'sentence')).toBe('He said "hello." Then left.')
+        expect(convert('the BBC report on the NHS', 'sentence')).toBe('The BBC report on the NHS')
+        expect(convert('NFL Suspends Texans Receiver After FBI Probe', 'sentence')).toBe('NFL suspends texans receiver after FBI probe')
+        // All-caps text carries no signal, so only dictionary acronyms survive.
         expect(convert('THE NBA FINALS WERE GREAT', 'sentence')).toBe('The nba finals were great')
+        // A stray lowercase word does not make shouted text deliberate.
+        expect(convert('THE BEST iPhone APPS FOR 2026', 'sentence')).toBe('The best iPhone apps for 2026')
+        // The accepted cost (decision 2026-10-21): a short shouted word reads as an acronym.
+        expect(convert('he said "HELLO." then LEFT.', 'sentence')).toBe('He said "hello." Then LEFT.')
+    })
+
+    test('capitals in text already in sentence case are names and are kept', () => {
+        expect(convert('we met John Smith in Paris last Monday', 'sentence')).toBe('We met John Smith in Paris last Monday')
+        // A line made only of names looks exactly like Title Case and is treated as such.
+        expect(convert('meeting with John Smith in Paris on Monday', 'sentence')).toBe('Meeting with john smith in paris on monday')
+        expect(convert('Here’s what voters make of President Trump’s COVID-19 diagnosis', 'sentence')).toBe('Here’s what voters make of President Trump’s COVID-19 diagnosis')
+        // From Title Case every word is capitalized, so names cannot be told apart.
+        expect(convert('Meeting With John Smith In Paris On Monday', 'sentence')).toBe('Meeting with john smith in paris on monday')
+        expect(convert('How to Use the NASA API With Your iPhone', 'sentence')).toBe('How to use the NASA API with your iPhone')
+    })
+
+    test('a colon starts a subtitle in a title, not in a sentence that ends with a period', () => {
+        expect(convert('Title Case Rules: A Practical Guide', 'sentence')).toBe('Title case rules: A practical guide')
+        expect(convert('Late-onset unexplained epilepsy: what are we missing?', 'sentence')).toBe('Late-onset unexplained epilepsy: What are we missing?')
+        expect(convert('We need three things: time, money and luck.', 'sentence')).toBe('We need three things: time, money and luck.')
+    })
+
+    test('each line of a pasted list is judged on its own', () => {
+        expect(convert('Remote Work: A Guide for Small Teams\nwe moved to Berlin: here is why.', 'sentence'))
+            .toBe('Remote work: A guide for small teams\nwe moved to Berlin: here is why.')
     })
 
     test('dictionary acronyms are still preserved', () => {

@@ -149,8 +149,8 @@ test('preserves dotted acronyms', () => {
 })
 
 test('handles sentence boundaries with quotes and parentheses', () => {
-    expect(convert('he said "HELLO." then LEFT.', 'sentence')).toBe('He said "hello." Then left.')
-    expect(convert('(what IS this?) YES it is.', 'sentence')).toBe('(What is this?) Yes it is.')
+    expect(convert('he said "hello." then left.', 'sentence')).toBe('He said "hello." Then left.')
+    expect(convert('(what is this?) yes it is.', 'sentence')).toBe('(What is this?) Yes it is.')
 })
 
 // --- Contractions ---

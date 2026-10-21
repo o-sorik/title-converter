@@ -402,7 +402,7 @@ export const blogArticles: Article[] = [
       "Title case or sentence case? What AP, APA, Chicago and MLA require, what newsrooms and product teams use, and how to convert a headline between the two.",
     categoryId: "writing-tips",
     author: "Sophia Stewart",
-    updatedAt: "2026-10-20",
+    updatedAt: "2026-10-21",
     readTime: "8 min",
     image: "/images/blog/generated/laptop-workflow-cover.webp",
     verifiedFor: "AP, APA, Chicago, MLA",
