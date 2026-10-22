@@ -96,6 +96,19 @@ describe("ArticleBlockRenderer", () => {
     expect(html).toContain("with (4 letters)")
   })
 
+  test("renders a styleGuideMatrix row note as a second line under the label", () => {
+    const html = renderToStaticMarkup(
+      <ArticleBlockRenderer
+        block={{
+          type: "styleGuideMatrix",
+          rowHeader: "Word",
+          rows: [{ label: "with", note: "preposition, 4 letters", guides: { ap: true, apa: true, chicago: false, mla: false } }],
+        }}
+      />
+    )
+    expect(html).toMatch(/with<span class="block text-xs[^"]*">preposition, 4 letters<\/span>/)
+  })
+
   test("renders generic table with bold first column", () => {
     const html = renderToStaticMarkup(
       <ArticleBlockRenderer
