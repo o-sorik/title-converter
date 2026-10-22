@@ -315,7 +315,10 @@ export function ArticleBlockRenderer({ block }: { block: ArticleBlock }) {
             <tbody>
               {block.rows.map((row) => (
                 <tr key={row.label} className={trBorder}>
-                  <td className={cn(tdClass, "font-semibold")}>{renderInline(row.label)}</td>
+                  <td className={cn(tdClass, "font-semibold")}>
+                    {renderInline(row.label)}
+                    {row.note && <span className="block text-xs font-normal text-slate-500 dark:text-zinc-400">{row.note}</span>}
+                  </td>
                   {GUIDE_COLUMNS.map((guide) => (
                     <CapitalizeBadgeCell key={guide.key} capitalize={row.guides[guide.key]} />
                   ))}

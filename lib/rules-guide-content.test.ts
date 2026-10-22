@@ -76,7 +76,7 @@ describe("RULES_GUIDE_EXAMPLES", () => {
   // titles all four published guides agree on.
   test("single-output examples read the same in all four guides", () => {
     const singleOutput = [
-      "article", "conjunction", "phrasalVerb", "infinitive", "firstWord", "subtitle", "lastWord",
+      "article", "phrasalVerb", "infinitive", "firstWord", "subtitle", "lastWord",
       "hyphenated", "stepByStep", "irregular", "acronyms", "allCaps", "mixedCaps",
     ] as const
     for (const id of singleOutput) {

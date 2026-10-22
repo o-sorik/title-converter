@@ -12,6 +12,7 @@ import {
   TO_SENTENCE,
   TO_TITLE,
 } from "@/lib/sentence-vs-title-case-content"
+import { CONVERTER_LIMITS, EXAMPLES, MAJOR_WORD_ROWS, REASON_SAMPLES, WORD_ROWS, majorTitle } from "@/lib/lowercase-words-content"
 
 export interface WritingTipsArticle {
   slug: string
@@ -31,43 +32,46 @@ export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
   {
     slug: "what-words-are-not-capitalized-in-a-title",
     converterLink: {
-      anchor: "title case converter",
-      before: "The list above is the rule; the ",
-      after: " is the shortcut. Paste any title and it lowercases the small words by style and shows each change.",
+      anchor: "title capitalization checker",
+      before: "To test a title of your own, paste it into the ",
+      after: ", pick AP, APA, Chicago or MLA, and press Explain to see why each small word stayed lowercase.",
     },
     tags: ["Title Case", "Grammar 101", "Style Guides"],
     ctaWord: "what words are not capitalized in a title",
-    ctaText: "Not sure which words to capitalize? Paste your title into our free Title Case Converter – it applies AP, APA, Chicago, or MLA rules automatically.",
+    ctaText: "Paste your title and pick AP, APA, Chicago or MLA – the free converter lowercases the small words that guide lowercases and explains every change.",
     relatedSlugs: [
-      "the-capitalized-in-title-case",
-      "and-capitalized-in-title-case",
-      "to-capitalized-in-title-case",
       "is-capitalized-in-title-case",
       "with-capitalized-in-title-case",
-      "in-capitalized-in-title-case",
-      "from-capitalized-in-title-case",
+      "the-capitalized-in-title-case",
       "do-you-capitalize-after-a-colon",
+      "sentence-vs-title-case",
+      "chicago-title-case",
     ],
+    faqHeading: "Questions about lowercase words in titles",
     faqItems: [
       {
         question: `Is "is" capitalized in a title?`,
-        answer: `Yes – always. "Is" is a verb, not a preposition or article. All style guides capitalize all verbs in titles, regardless of length. "What Is Title Case?" is correct. This is one of the most common mistakes in title case.`,
+        answer: `Yes, in every style guide. "Is" is a verb, and verbs are capitalized however short they are: What Is Title Case.`,
       },
       {
         question: `Is "it" capitalized in a title?`,
-        answer: `Yes. "It" is a pronoun, and pronouns are always capitalized in title case. "Make It Happen" is correct. Don't confuse "it" with articles like "a" or "the."`,
+        answer: `Yes. "It" is a pronoun, not an article, so AP, APA, Chicago and MLA all capitalize it: Make It Count.`,
       },
       {
-        question: `How many words are lowercase in title case?`,
-        answer: `Depending on the style guide, roughly 15–25 words stay lowercase. These are mainly articles (3 words), short prepositions (7–15 words depending on the guide), and coordinating conjunctions (7 words). Every other word gets capitalized.`,
+        question: `Is "for" capitalized in a title?`,
+        answer: `No, unless it is the first or last word. "For" is both a coordinating conjunction and a three-letter preposition, and every guide lowercases it: Recipes for Beginners.`,
       },
       {
-        question: `What is title case vs sentence case?`,
-        answer: `Title case capitalizes most words (The Quick Brown Fox Jumps Over the Lazy Dog). Sentence case capitalizes only the first word and proper nouns (The quick brown fox jumps over the lazy dog). Title case is used for headlines and titles; sentence case for regular sentences.`,
+        question: `Is "about" capitalized in a title?`,
+        answer: `In AP, APA and Chicago, yes – it is a preposition of five letters. MLA lowercases prepositions of any length, so it writes A Book about Grief.`,
       },
       {
-        question: `Do you capitalize "with" in a title?`,
-        answer: `It depends on your style guide. AP and APA capitalize "with" (4 letters = capitalize). Chicago and MLA keep it lowercase. See our detailed breakdown in Is "With" Capitalized in a Title?`,
+        question: `Is "as" capitalized in a title?`,
+        answer: `Usually not. AP, APA and Chicago lowercase it. MLA lowercases it as a preposition (The Artist as Critic) but capitalizes it when it opens a clause (Life As I Find It).`,
+      },
+      {
+        question: `Should "not" be capitalized in a title?`,
+        answer: `Yes. "Not" is an adverb, and adverbs are major words in every guide: Why Not Start Today.`,
       },
     ],
     sections: [
@@ -76,317 +80,216 @@ export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
         blocks: [
           {
             type: "paragraph",
-            text: "In title case, most words get capitalized – but short “function words” stay lowercase. These include articles (*a, an, the*), short prepositions (*in, on, at, to, for, of, by*), and short conjunctions (*and, but, or, nor, yet, so*). The catch: every style guide defines “short” differently, and some words change depending on how they’re used in the sentence. Here’s the full breakdown by word type and style guide.",
+            text: "Articles, coordinating conjunctions, short prepositions and the *to* of an infinitive stay lowercase in a title, unless they are the first or last word. What counts as short depends on the style guide: AP and APA lowercase prepositions of up to three letters, Chicago up to four, and MLA lowercases prepositions of any length.",
           },
           {
             type: "paragraph",
-            variant: "note",
-            text: "Still deciding between capitalization styles themselves? See [Title Case vs Sentence Case: Which to Use and When](/blog/sentence-vs-title-case).",
+            text: "Length alone does not decide, though – the role of the word does. *Is*, *It* and *Not* are as short as *in* and *of*, but they are a verb, a pronoun and an adverb, so every guide capitalizes them. And the same word can get different answers: Chicago capitalizes *so* and *yet*, which AP, APA and MLA keep lowercase.",
           },
         ],
       },
       {
-        id: "three-categories",
-        heading: "The Three Categories of Lowercase Words",
-        tocLabel: "Three categories",
+        id: "lowercase-words",
+        heading: "The words that stay lowercase in a title",
+        tocLabel: "The four groups",
         blocks: [
-          {
-            type: "paragraph",
-            text: "All major style guides agree on this basic framework: three types of words stay lowercase in titles, with exceptions for the first and last word (which are always capitalized regardless of type).",
-          },
-          {
-            type: "paragraph",
-            text: "The disagreements come down to length. AP and APA say “capitalize prepositions of four or more letters.” Chicago says “capitalize prepositions of five or more letters.” [MLA lowercases all prepositions](https://style.mla.org/capitalization-of-titles/) regardless of length. Getting the right answer depends on which style guide you’re following.",
-          },
-        ],
-      },
-      {
-        id: "articles",
-        heading: "1. Articles",
-        tocLabel: "Articles",
-        blocks: [
-          {
-            type: "paragraph",
-            text: "Articles are the simplest category – all style guides agree. Three words, always lowercase in titles (unless they’re the first or last word):",
-          },
+          { type: "paragraph", text: "Four groups of words stay lowercase when they fall inside a title:" },
           {
             type: "list",
+            ordered: true,
             items: [
-              "**a** – *A Guide to Better Writing* (first word = capitalize) vs. *Writing a Better Resume* (mid-title = lowercase)",
-              "**an** – *An Introduction to Grammar* vs. *Finding an Answer*",
-              "**the** – *The Elements of Style* (first word) vs. *Reading Between the Lines*",
+              `**Articles** – *a*, *an* and *the*, in every guide: *${EXAMPLES.articleA.ap}*, *${EXAMPLES.articleAn.ap}*.`,
+              `**Coordinating conjunctions** – *and*, *but*, *or*, *nor* and *for* in every guide, plus *so* and *yet* in AP, APA and MLA: *${EXAMPLES.pride.ap}*, *${EXAMPLES.sink.ap}*.`,
+              "**Short prepositions** – *at*, *by*, *in*, *of*, *on*, *to*, *up* and any other preposition under the guide's length limit: under four letters in AP and APA, under five in Chicago, any length in MLA.",
+              `**To before a verb** – the infinitive marker is lowercase in every guide: *${majorTitle("be")}*.`,
             ],
           },
           {
             type: "paragraph",
-            text: "That’s it. No exceptions, no style guide disagreements. If it’s an article and it’s not the first or last word of the title, it’s lowercase.",
-          },
-          {
-            type: "paragraph",
-            text: "For more detail on “the” specifically – including when it’s part of a proper noun like *The New York Times* – see [Is “The” Capitalized in a Title?](/blog/the-capitalized-in-title-case)",
+            text: "Everything else is a major word and takes a capital: nouns, verbs, pronouns, adjectives and adverbs, however short. AP and APA also lowercase the two-letter conjunctions *as* and *if*; how Chicago and MLA treat them is covered below.",
           },
         ],
       },
       {
-        id: "prepositions",
-        heading: "2. Prepositions",
-        tocLabel: "Prepositions",
+        id: "by-style-guide",
+        heading: "Lowercase words in AP, APA, Chicago and MLA",
+        tocLabel: "Word by word",
         blocks: [
           {
             type: "paragraph",
-            text: "Prepositions are where the style guides diverge. The core question: how long can a preposition be and still stay lowercase?",
+            text: "Each row shows what a guide does with the word in the middle of a title. Words that have their own page link to it.",
+          },
+          {
+            type: "styleGuideMatrix",
+            rowHeader: "Word",
+            rows: WORD_ROWS.map((row) => ({
+              label: row.slug ? `[${row.word}](/blog/${row.slug})` : row.word,
+              note: row.kind,
+              guides: row.capitalized,
+            })),
           },
           {
             type: "paragraph",
-            variant: "subheading",
-            text: "Short prepositions (all guides agree – lowercase these):",
+            text: "Read down a column and each guide's line shows. AP and APA switch to capitals at four letters, Chicago at five, and MLA never does for a preposition. Outside the prepositions, only *so*, *yet* and *if* split the guides.",
+          },
+          { type: "heading", level: 3, grouping: true, text: "Which prepositions does each style guide lowercase?" },
+          {
+            type: "paragraph",
+            text: "All four lowercase prepositions of one to three letters. Above that, each guide draws its own line. [Title Capitalization Rules by Style Guide](/capitalization-rules-guide) compares the four rule sets in full.",
+          },
+          { type: "heading", level: 4, text: "AP and APA capitalize prepositions of four letters or more" },
+          {
+            type: "paragraph",
+            text: `APA capitalizes [every word of four letters or more](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case), and the AP Stylebook capitalizes prepositions and conjunctions of four or more letters in composition titles. So *with* and *from* take capitals: *${EXAMPLES.fourLetters.ap}* in AP and APA, *${EXAMPLES.fourLetters.chicago}* in Chicago and MLA.`,
+          },
+          { type: "heading", level: 4, text: "Chicago capitalizes prepositions of five letters or more" },
+          {
+            type: "paragraph",
+            text: `The 18th edition of the Chicago Manual of Style (2024) capitalizes prepositions of five letters or more; earlier editions lowercased them at any length. Chicago writes *${EXAMPLES.fiveLetters.chicago}*, keeping four-letter words such as *with*, *from* and *into* lowercase. [Chicago Title Case: What the 18th Edition Changed](/blog/chicago-title-case) covers the edition change.`,
+          },
+          { type: "heading", level: 4, text: "MLA lowercases prepositions of any length" },
+          {
+            type: "paragraph",
+            text: `MLA lowercases [every preposition](https://style.mla.org/capitalization-of-titles/), whatever its length: *${EXAMPLES.anyLength.mla}*, where the other three guides write *Between*. The rule covers [prepositions of two words](https://style.mla.org/two-word-prepositions-in-titles/) too – MLA styles John Irving's novel *${EXAMPLES.according.mla}*.`,
+          },
+          { type: "heading", level: 4, text: "Vs. and v. stay lowercase in every style" },
+          {
+            type: "paragraph",
+            text: `*Versus* and its abbreviations are lowercase in all four guides: *${EXAMPLES.versus.ap}*, and in case names *${EXAMPLES.legalVersus.ap}*.`,
+          },
+          { type: "heading", level: 3, grouping: true, text: "Which conjunctions stay lowercase?" },
+          {
+            type: "paragraph",
+            text: "Coordinating conjunctions stay lowercase, with two exceptions in Chicago. Subordinating conjunctions are capitalized, with the short ones split by guide.",
+          },
+          { type: "heading", level: 4, text: "And, but, or, nor and for are lowercase in every style" },
+          {
+            type: "paragraph",
+            text: `These five join equal parts of a title and stay lowercase in AP, APA, Chicago and MLA: *${EXAMPLES.pride.ap}*, *${EXAMPLES.sink.ap}*. *For* is also a preposition and is lowercase in either role.`,
+          },
+          { type: "heading", level: 4, text: "Chicago capitalizes so and yet" },
+          {
+            type: "paragraph",
+            text: `Chicago lowercases only *and*, *but*, *for*, *or* and *nor* – its [Q&A](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/CapitalizationTitles/faq0098.html) calls them the "five common coordinating conjunctions." *So* and *yet* are therefore major words: *${EXAMPLES.yet.chicago}* in Chicago, *${EXAMPLES.yet.ap}* in AP, APA and MLA.`,
+          },
+          {
+            type: "paragraph",
+            text: `In those three guides *so* is lowercase only when it joins two clauses after a comma: *${EXAMPLES.soJoins.ap}*. As an adverb it is capitalized everywhere: *${EXAMPLES.soAdverb.ap}*.`,
+          },
+          { type: "heading", level: 4, text: "Chicago and MLA capitalize subordinating conjunctions, while AP and APA go by length" },
+          {
+            type: "paragraph",
+            text: `Subordinating conjunctions such as *because*, *when* and *that* are capitalized in all four guides. The short ones split them. APA lists *if* among the [short conjunctions it lowercases](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case), and AP capitalizes only conjunctions of four letters or more, so both write *${EXAMPLES.ifClause.ap}*. Chicago and MLA capitalize every subordinating conjunction: *${EXAMPLES.ifClause.chicago}*.`,
+          },
+          {
+            type: "paragraph",
+            text: `*As* is the exception in Chicago, which lowercases it in any role: *${EXAMPLES.asClause.chicago}*. MLA capitalizes it when it opens a clause; the MLA Handbook's own example is *${EXAMPLES.asClause.mla}*.`,
+          },
+        ],
+      },
+      {
+        id: "always-capitalized",
+        heading: "Short words that are always capitalized",
+        tocLabel: "Short but capitalized",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "Short is not the same as minor. A two-letter verb or pronoun is a major word, and every guide capitalizes it in any position:",
           },
           {
             type: "table",
-            headers: ["Word", "Example"],
-            rows: [
-              ["at", "*Success at Work*"],
-              ["by", "*Death by Chocolate*"],
-              ["for", "*Recipes for Beginners*"],
-              ["in", "*Adventures in Cooking*"],
-              ["of", "*Game of Thrones*"],
-              ["on", "*Hands on Approach*"],
-              ["to", "*Back to Basics*"],
-              ["up", "*What's up With Grammar?*"],
-            ],
+            headers: ["Word", "Part of speech", "Title, the same in every guide"],
+            rows: MAJOR_WORD_ROWS.map((row) => [row.slug ? `[${row.word}](/blog/${row.slug})` : row.word, row.kind, `*${row.title}*`]),
           },
+          { type: "heading", level: 3, grouping: true, text: "Which short words are major words?" },
           {
             type: "paragraph",
-            variant: "subheading",
-            text: "Where style guides disagree:",
+            text: "Any word that is not an article, a preposition or a conjunction. Four groups catch writers out most often.",
           },
-          {
-            type: "styleGuideMatrix",
-            rowHeader: "Preposition",
-            rows: [
-              { label: "with (4 letters)", guides: { ap: true, apa: true, chicago: false, mla: false } },
-              { label: "from (4 letters)", guides: { ap: true, apa: true, chicago: false, mla: false } },
-              { label: "into (4 letters)", guides: { ap: true, apa: true, chicago: false, mla: false } },
-              { label: "between (7 letters)", guides: { ap: true, apa: true, chicago: true, mla: false } },
-              { label: "through (7 letters)", guides: { ap: true, apa: true, chicago: true, mla: false } },
-              { label: "about (5 letters)", guides: { ap: true, apa: true, chicago: true, mla: false } },
-            ],
-          },
+          { type: "heading", level: 4, text: "Verbs such as is, are, be and do" },
           {
             type: "paragraph",
-            text: "The pattern: AP and [APA capitalize prepositions of four or more letters](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case). [Chicago](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/CapitalizationTitles/faq0007.html) capitalizes prepositions of five or more letters (with some flexibility). MLA lowercases all prepositions regardless of length.",
+            text: `Every form of a verb is capitalized, including *Is*, *Am*, *Are*, *Be* and *Do*: *${majorTitle("is")}*, *${majorTitle("are")}*. Lowercasing *is* is the most common title case mistake.`,
           },
+          { type: "heading", level: 4, text: "Pronouns and possessives such as it, my, your and its" },
           {
             type: "paragraph",
-            text: "**The “to” problem.** “To” is lowercase as a preposition (*Go to School*) and lowercase as part of an infinitive (*How to Write*) in most style guides. But some writers capitalize it in infinitives because it feels like part of the verb. AP, APA, Chicago, and MLA all keep “to” lowercase in both cases. See [Is “To” Capitalized?](/blog/to-capitalized-in-title-case) for the full breakdown.",
+            text: `*It* is a pronoun, not an article, and *my*, *your* and *its* are possessives: *${majorTitle("it")}*, *${majorTitle("its")}*.`,
           },
+          { type: "heading", level: 4, text: "Adverbs and negatives such as not, too and also" },
           {
             type: "paragraph",
-            text: "**Words that look like prepositions but aren’t.** “Up,” “out,” “off,” and “down” can function as adverbs or parts of phrasal verbs – and when they do, they get capitalized. *Turn Off the Lights* (phrasal verb = capitalize “Off”) vs. *Jumping off the Cliff* (preposition = lowercase “off”). Chicago is especially strict about this distinction.",
+            text: `*Not*, *too*, *also* and *so* used as an adverb are major words: *${majorTitle("not")}*, *${majorTitle("too")}*.`,
+          },
+          { type: "heading", level: 4, text: "That is always capitalized" },
+          {
+            type: "paragraph",
+            text: `*That* has four letters, so AP and APA capitalize it by length, and Chicago and MLA capitalize it as a pronoun or a subordinating conjunction: *${majorTitle("that")}*.`,
           },
         ],
       },
       {
-        id: "conjunctions",
-        heading: "3. Conjunctions",
-        tocLabel: "Conjunctions",
+        id: "exceptions",
+        heading: "When a lowercase word is capitalized",
+        tocLabel: "Exceptions",
         blocks: [
           {
             type: "paragraph",
-            text: "Coordinating conjunctions – the seven words you can remember with FANBOYS – stay lowercase:",
+            text: "Position and role override the list. Any word from the table above takes a capital in these places.",
           },
-          {
-            type: "list",
-            items: [
-              "**for** – *Blood and Guts for Glory* (also a preposition – lowercase either way)",
-              "**and** – *Pride and Prejudice*",
-              "**nor** – *Neither Here nor There*",
-              "**but** – *Nothing but the Truth*",
-              "**or** – *Sink or Swim*",
-              "**yet** – *Strange yet True*",
-              "**so** – *Say It Ain’t So*",
-            ],
-          },
+          { type: "heading", level: 3, grouping: true, text: "Which positions capitalize any word?" },
+          { type: "heading", level: 4, text: "The first and the last word" },
           {
             type: "paragraph",
-            text: "All four major style guides agree: these seven words are lowercase in titles (unless first or last word).",
+            text: `*${EXAMPLES.firstWord.ap}* opens with a preposition and *${EXAMPLES.lastWord.ap}* ends with one. Both are capitalized in every guide.`,
           },
+          { type: "heading", level: 4, text: "The first word after a colon" },
           {
             type: "paragraph",
-            text: "**What about subordinating conjunctions?** Words like “because,” “although,” “since,” “unless,” and “while” are subordinating conjunctions – and they get capitalized in title case. They’re longer words that start dependent clauses, and all style guides treat them as major words.",
+            text: `A subtitle starts like a new title, so its first word is capitalized: *${EXAMPLES.colon.ap}*. Inside a sentence the rules differ – see [Do You Capitalize After a Colon?](/blog/do-you-capitalize-after-a-colon)`,
           },
+          { type: "heading", level: 4, text: "A preposition with no object" },
           {
             type: "paragraph",
-            text: "For details on “and” specifically, see [Is “And” Capitalized?](/blog/and-capitalized-in-title-case)",
+            text: `A preposition without an object works as an adverb and is capitalized: *${EXAMPLES.noObject.mla}*, *${EXAMPLES.noObjectQuestion.chicago}*.`,
+          },
+          { type: "heading", level: 3, grouping: true, text: "When does a small word change its role?" },
+          { type: "heading", level: 4, text: "Up, on and in as part of a phrasal verb" },
+          {
+            type: "paragraph",
+            text: `In a phrasal verb the small word is an adverb, not a preposition, and is capitalized: *${EXAMPLES.phrasalVerb.ap}*, *${EXAMPLES.logIn.ap}*. Before a noun the same word is a preposition again: *${EXAMPLES.upPreposition.ap}*.`,
+          },
+          { type: "heading", level: 4, text: "Since, until and than when they start a clause" },
+          {
+            type: "paragraph",
+            text: `These words are prepositions before a noun and conjunctions before a clause. MLA writes *${EXAMPLES.sincePreposition.mla}* but *${EXAMPLES.sinceClause.mla}*. Chicago, which lowercases four-letter prepositions, writes *${EXAMPLES.thanPreposition.chicago}* but *${EXAMPLES.thanClause.chicago}* – both from its [Q&A on "than"](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/CapitalizationTitles/faq0074.html).`,
+          },
+          { type: "heading", level: 3, text: "How are small words handled in hyphenated compounds?" },
+          {
+            type: "paragraph",
+            text: `The first element is always capitalized, and each later element follows the rules for a separate word. *${EXAMPLES.selfReport.ap}* capitalizes both parts; in *${EXAMPLES.upToDate.ap}* the *to* stays lowercase and *Date* is capitalized.`,
           },
         ],
       },
       {
-        id: "first-last-word",
-        heading: "The First and Last Word Rule",
-        tocLabel: "First & last word rule",
+        id: "converter",
+        heading: "How the converter decides which words stay lowercase",
+        tocLabel: "In the converter",
         blocks: [
           {
             type: "paragraph",
-            text: "Every style guide capitalizes the first and last word of a title, regardless of what part of speech it is. No exceptions.",
+            text: `The converter applies the table above to the guide you pick. Choose AP, APA, Chicago or MLA, paste a title and press Explain: every word it changed carries the rule behind it, such as *${REASON_SAMPLES[0]}* or *${REASON_SAMPLES[2]}*.`,
+          },
+          {
+            type: "paragraph",
+            text: "It reads roles from patterns, not meaning, so check two things by hand:",
           },
           {
             type: "list",
             items: [
-              "*The Catcher in the Rye* – “The” is first, so capitalize. “Rye” is last, so capitalize. “the” mid-title stays lowercase.",
-              "*A River Runs Through It* – “A” is first, capitalize. “It” is last, capitalize.",
-              "*What to Look For* – “For” is last, capitalize (even though prepositions are normally lowercase).",
+              `**A noun that is also a verb.** Before *in*, *up* or *on*, such a noun looks like a phrasal verb: the converter writes *${CONVERTER_LIMITS.nounBeforeParticle.converter}*, where every guide wants *${CONVERTER_LIMITS.nounBeforeParticle.correct}*.`,
+              `**A phrasal verb it does not know.** It recognizes common verbs such as *set up* and *log in*. With a rarer verb, Chicago and MLA output keeps the particle lowercase: *${CONVERTER_LIMITS.unknownPhrasalVerb.converter}* instead of *${CONVERTER_LIMITS.unknownPhrasalVerb.correct}*.`,
             ],
-          },
-          {
-            type: "paragraph",
-            text: "This rule also applies after a colon or em dash in most style guides. The first word after a colon restarts the capitalization: *Writing Well: A Guide for Beginners.* See [Do You Capitalize After a Colon?](/blog/do-you-capitalize-after-a-colon) for the full rules.",
-          },
-        ],
-      },
-      {
-        id: "style-guide-comparison",
-        heading: "Complete Style Guide Comparison",
-        tocLabel: "Style guide comparison",
-        blocks: [
-          {
-            type: "paragraph",
-            text: "Here’s how all four guides handle the main categories (for a side-by-side overview, [Purdue OWL’s capitalization guide](https://owl.purdue.edu/owl/general_writing/mechanics/help_with_capitals.html) is also a solid reference):",
-          },
-          {
-            type: "styleGuideMatrix",
-            rowHeader: "Category",
-            rows: [
-              { label: "Articles (a, an, the)", guides: { ap: false, apa: false, chicago: false, mla: false } },
-              { label: "Short prepositions (≤3 letters)", guides: { ap: false, apa: false, chicago: false, mla: false } },
-              { label: "Prepositions (4 letters)", guides: { ap: true, apa: true, chicago: false, mla: false } },
-              { label: "Prepositions (5+ letters)", guides: { ap: true, apa: true, chicago: true, mla: false } },
-              { label: "Coordinating conjunctions", guides: { ap: false, apa: false, chicago: false, mla: false } },
-              { label: "Subordinating conjunctions", guides: { ap: true, apa: true, chicago: true, mla: true } },
-              { label: '"To" (infinitive)', guides: { ap: false, apa: false, chicago: false, mla: false } },
-              { label: "First/last word", guides: { ap: true, apa: true, chicago: true, mla: true } },
-              { label: "After colon", guides: { ap: true, apa: true, chicago: true, mla: true } },
-              { label: 'Verbs (all, including "is," "be")', guides: { ap: true, apa: true, chicago: true, mla: true } },
-            ],
-          },
-          {
-            type: "paragraph",
-            variant: "note",
-            text: "*APA capitalizes after a colon only when a complete sentence follows. If the text after the colon is a fragment, it stays lowercase.",
-          },
-          {
-            type: "paragraph",
-            text: "**Key takeaway:** AP and APA are the strictest – they capitalize more words. MLA is the most permissive – it lowercases all prepositions. Chicago falls in the middle.",
-          },
-        ],
-      },
-      {
-        id: "title-case-wild",
-        heading: "Title Case in the Wild",
-        tocLabel: "Real examples",
-        blocks: [
-          {
-            type: "paragraph",
-            text: "The easiest way to internalize these rules is to look at titles you already know. Published books, movies, and songs follow title case consistently – and they make the patterns obvious.",
-          },
-          {
-            type: "paragraph",
-            variant: "subheading",
-            text: "Articles and prepositions lowercase:",
-          },
-          {
-            type: "list",
-            items: [
-              "[*The Lord of the Rings*](https://en.wikipedia.org/wiki/The_Lord_of_the_Rings) – “of” and “the” lowercase mid-title; “The” capitalized as first word",
-              "[*To Kill a Mockingbird*](https://en.wikipedia.org/wiki/To_Kill_a_Mockingbird) – “a” lowercase; “To” capitalized as first word (not because it’s an infinitive)",
-              "[*The Silence of the Lambs*](https://en.wikipedia.org/wiki/The_Silence_of_the_Lambs_(novel)) – “of” and “the” lowercase between major words",
-              "[*Of Mice and Men*](https://en.wikipedia.org/wiki/Of_Mice_and_Men) – “Of” capitalized (first word), “and” lowercase",
-              "[*No Country for Old Men*](https://en.wikipedia.org/wiki/No_Country_for_Old_Men) – “for” lowercase (3-letter preposition)",
-            ],
-          },
-          {
-            type: "paragraph",
-            variant: "subheading",
-            text: "Conjunctions lowercase:",
-          },
-          {
-            type: "list",
-            items: [
-              "[*Pride and Prejudice*](https://en.wikipedia.org/wiki/Pride_and_Prejudice) – “and” lowercase between two nouns",
-              "[*War and Peace*](https://en.wikipedia.org/wiki/War_and_Peace) – same pattern",
-              "[*Sense and Sensibility*](https://en.wikipedia.org/wiki/Sense_and_Sensibility) – “and” lowercase again",
-            ],
-          },
-          {
-            type: "paragraph",
-            variant: "subheading",
-            text: "Short verbs capitalized (not lowercase!):",
-          },
-          {
-            type: "list",
-            items: [
-              "[*There Will Be Blood*](https://en.wikipedia.org/wiki/There_Will_Be_Blood) – “Will” and “Be” are verbs – capitalized even though they’re short",
-              "[*Who Is America?*](https://en.wikipedia.org/wiki/Who_Is_America%3F) – “Is” capitalized (verb, not an article)",
-              "[*As Good as It Gets*](https://en.wikipedia.org/wiki/As_Good_as_It_Gets) – “It” capitalized (pronoun), “as” lowercase (conjunction)",
-            ],
-          },
-          {
-            type: "paragraph",
-            variant: "subheading",
-            text: "Last word always capitalized:",
-          },
-          {
-            type: "list",
-            items: [
-              "[*What Dreams May Come*](https://en.wikipedia.org/wiki/What_Dreams_May_Come_(novel)) – every word capitalized because they’re all major words",
-              "[*Something to Talk About*](https://en.wikipedia.org/wiki/Something_to_Talk_About_(film)) – “to” lowercase (preposition), but “About” capitalized as last word",
-            ],
-          },
-          {
-            type: "paragraph",
-            text: "These aren’t style exceptions – they’re the rules applied consistently across decades of publishing. If your title follows the same patterns as *The Lord of the Rings* and *Pride and Prejudice*, you’re doing it right.",
-          },
-        ],
-      },
-      {
-        id: "common-mistakes",
-        heading: "Common Mistakes",
-        tocLabel: "Common mistakes",
-        blocks: [
-          {
-            type: "paragraph",
-            text: "**Lowercasing short verbs.** “Is,” “be,” “am,” “are,” “was,” “do,” “has,” and “go” are verbs, not prepositions – and verbs are always capitalized in title case. *What Is Title Case?* not *What is Title Case?* This is the single most common title case error. See [Is “Is” Capitalized?](/blog/is-capitalized-in-title-case)",
-          },
-          {
-            type: "paragraph",
-            text: "**Capitalizing every word.** Title case doesn’t mean capitalize everything. *The Art Of War* is wrong – “of” is a preposition. *The Art of War* is correct.",
-          },
-          {
-            type: "paragraph",
-            text: "**Forgetting the last-word rule.** *What Are You Waiting for* is wrong. “For” is the last word, so it gets capitalized: *What Are You Waiting For.*",
-          },
-          {
-            type: "paragraph",
-            text: "**Treating “it” as an article.** “It” is a pronoun, not an article – capitalize it: *Make It Count* not *Make it Count.*",
-          },
-        ],
-      },
-      {
-        id: "edge-cases",
-        heading: "Edge Cases",
-        tocLabel: "Edge cases",
-        blocks: [
-          {
-            type: "paragraph",
-            text: "**Hyphenated words.** All four style guides evaluate each element of a hyphenated compound separately. If the second element is a major word (noun, verb, adjective), capitalize it: *Self-Driving Cars.* If it’s a short preposition or article, keep it lowercase. APA and MLA tend to capitalize both elements. AP and Chicago are more conservative – they keep minor elements lowercase even after the hyphen: *Editor-in-Chief* (capitalize “Chief” – it’s a noun) but *run-of-the-mill* (lowercase “of” and “the”).",
-          },
-          {
-            type: "paragraph",
-            text: "**Numbers and acronyms.** Capitalize normally: *Top 10 Tips for SEO.* Numbers follow the word before them. Acronyms in all-caps stay in all-caps: *Understanding the FBI’s Role.*",
-          },
-          {
-            type: "paragraph",
-            text: "**“Between” and other long prepositions.** AP, APA, and Chicago capitalize these. Only MLA keeps them lowercase. If you’re not sure which guide to follow, capitalizing long prepositions is the safer choice – most readers expect it.",
           },
         ],
       },
@@ -398,10 +301,10 @@ export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
           {
             type: "list",
             items: [
-              "[APA Style: Title Case Capitalization](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case) – official APA 7th edition rules for major vs. minor words",
-              "[MLA Style: Capitalization of Titles](https://style.mla.org/capitalization-of-titles/) – MLA’s Q&A on headline-style capitalization",
-              "[Chicago Manual of Style: Titles FAQ](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/CapitalizationTitles/faq0007.html) – CMOS headline-style capitalization principles",
-              "[Purdue OWL: Help with Capitals](https://owl.purdue.edu/owl/general_writing/mechanics/help_with_capitals.html) – multi-style reference (AP, APA, MLA, Chicago)",
+              "[APA Style: Title Case Capitalization](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case) – words of four letters or more, and the short conjunctions APA lowercases",
+              "[The Chicago Manual of Style Online: Q&A on coordinating conjunctions](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/CapitalizationTitles/faq0098.html) and [on \"than\"](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/CapitalizationTitles/faq0074.html)",
+              "[MLA Style Center: Capitalization of Titles](https://style.mla.org/capitalization-of-titles/) and [Two-Word Prepositions in Titles](https://style.mla.org/two-word-prepositions-in-titles/); MLA Handbook, 9th ed., 2.90",
+              "The Associated Press Stylebook, entry \"composition titles\"",
             ],
           },
         ],

@@ -144,7 +144,12 @@ export const DISAGREEMENT_ROWS: DisagreementRow[] = [
     verdicts: { ap: "Capitalize", apa: "Capitalize", mla: "Lowercase", chicago: "Capitalize" },
   },
   { wordType: "Coordinating conjunction", word: "and", probe: "pride and prejudice", verdicts: ALL_LOWERCASE },
-  { wordType: "Subordinating conjunction", word: "if", probe: "what if we tried", verdicts: ALL_CAPITALIZE },
+  {
+    wordType: "Subordinating conjunction under 4 letters",
+    word: "if",
+    probe: "what if we tried",
+    verdicts: { ap: "Lowercase", apa: "Lowercase", mla: "Capitalize", chicago: "Capitalize" },
+  },
   { wordType: "\"To\" before a verb", word: "to", probe: "how to write a headline", verdicts: ALL_LOWERCASE },
   { wordType: "Second part of a hyphenated compound", word: "report", probe: "self-report measures in clinical research", verdicts: ALL_CAPITALIZE },
   { wordType: "Word after a colon", word: "a", probe: "title case rules: a practical guide", verdicts: ALL_CAPITALIZE },
@@ -215,15 +220,15 @@ export const RULES_GUIDE_EXAMPLES: Record<ExampleId, GuidanceExample> = {
   },
   conjunction: {
     caseLabel: "Subordinating conjunction",
-    input: "if you build it",
+    input: "what to do if it rains",
     outputs: {
-      standard: "If You Build It",
-      ap: "If You Build It",
-      apa: "If You Build It",
-      mla: "If You Build It",
-      chicago: "If You Build It",
+      standard: "What to Do If It Rains",
+      ap: "What to Do if It Rains",
+      apa: "What to Do if It Rains",
+      mla: "What to Do If It Rains",
+      chicago: "What to Do If It Rains",
     },
-    whyItMatters: "Subordinating conjunctions are major words in every guide.",
+    whyItMatters: "Chicago and MLA capitalize every subordinating conjunction. AP and APA go by length, so the two-letter \"if\" stays lowercase.",
   },
   phrasalVerb: {
     caseLabel: "Preposition inside a phrasal verb",
@@ -434,7 +439,7 @@ export const RULES_PAGE_FAQS: RulesPageFAQ[] = [
   {
     question: "What words are not capitalized in a title?",
     answer:
-      "Articles (a, an, the), the coordinating conjunctions and, but, or, nor and for, and short prepositions stay lowercase inside a title in every major style guide. Yet and so are lowercase in AP, APA and MLA, but Chicago capitalizes them. Longer prepositions depend on the guide: AP and APA capitalize them from four letters, Chicago from five, and MLA never does.",
+      "Articles (a, an, the), the coordinating conjunctions and, but, or, nor and for, and short prepositions stay lowercase inside a title in every major style guide. Yet and so are lowercase in AP, APA and MLA, but Chicago capitalizes them. AP and APA also lowercase the short conjunction if. Longer prepositions depend on the guide: AP and APA capitalize them from four letters, Chicago from five, and MLA never does.",
     link: { href: "/blog/what-words-are-not-capitalized-in-a-title", label: "What Words Are Not Capitalized in a Title?" },
   },
   {

@@ -16,7 +16,7 @@ export const MLA_VS_APA_HEADLINES_ARTICLE: WritingTipsArticle = {
     {
       question: "What is the main difference between MLA and APA title case?",
       answer:
-        "Preposition length. APA capitalizes any word of four letters or more, so it writes \"With\", \"From\" and \"Between\". MLA lowercases prepositions regardless of length, so the same words stay \"with\", \"from\" and \"between\" in middle positions. Everything else about the two is close to identical.",
+        "Preposition length. APA capitalizes any word of four letters or more, so it writes \"With\", \"From\" and \"Between\". MLA lowercases prepositions regardless of length, so the same words stay \"with\", \"from\" and \"between\" in middle positions. The one other split is the two-letter conjunction \"if\": APA lowercases it with the other short conjunctions, while MLA capitalizes it. Everything else about the two is close to identical.",
     },
     {
       question: "Which should I use, MLA or APA?",
@@ -36,7 +36,7 @@ export const MLA_VS_APA_HEADLINES_ARTICLE: WritingTipsArticle = {
     {
       question: "Do MLA and APA capitalize subordinating conjunctions?",
       answer:
-        "Both do. Words like \"Because\", \"Although\", \"If\", \"When\" and \"That\" count as major words in both guides and are capitalized. Only coordinating conjunctions – and, but, or, nor, for, so, yet – are lowercased, and only in middle positions.",
+        "Both do, with one exception. Words like \"Because\", \"Although\", \"When\" and \"That\" count as major words in both guides and are capitalized. The two-letter \"if\" splits them: MLA capitalizes it, while APA lowercases it with the other short conjunctions. Coordinating conjunctions – and, but, or, nor, for, so, yet – are lowercased in both, and only in middle positions.",
     },
   ],
   sections: [
@@ -118,7 +118,7 @@ export const MLA_VS_APA_HEADLINES_ARTICLE: WritingTipsArticle = {
           items: [
             "First and last word are always capitalized, whatever they are.",
             "Nouns, pronouns, verbs, adjectives and adverbs are capitalized at any length – including two-letter verbs like *Is* and *Be*.",
-            "Subordinating conjunctions (*Because*, *Although*, *If*, *When*, *That*) are major words and get capitalized.",
+            "Subordinating conjunctions of four letters or more (*Because*, *Although*, *When*, *That*) are major words and get capitalized. The two-letter *if* is the exception: MLA capitalizes it, APA keeps it lowercase.",
             "Coordinating conjunctions (*and*, *but*, *or*, *nor*, *for*, *so*, *yet*) are lowercase in middle positions.",
             "Articles *a*, *an*, *the* are lowercase unless they open or close the title.",
             "The first word after a colon is capitalized.",

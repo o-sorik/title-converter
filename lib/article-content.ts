@@ -113,7 +113,8 @@ export type ArticleBlock =
       /** Capitalize/Lowercase badge matrix across the four style guides. */
       type: "styleGuideMatrix"
       rowHeader: string
-      rows: { label: string; guides: Record<StyleGuideName, boolean> }[]
+      /** `note` is a plain-text second line under the label, e.g. the word class. */
+      rows: { label: string; note?: string; guides: Record<StyleGuideName, boolean> }[]
     }
   | {
       /**

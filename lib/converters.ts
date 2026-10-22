@@ -131,6 +131,14 @@ const CHICAGO_MAJOR_CONJUNCTIONS = new Set([
     "yet",
 ]);
 
+// Subordinating conjunctions shorter than four letters. AP capitalizes
+// "conjunctions of four or more letters" and APA lowercases "short conjunctions
+// (e.g., and, as, but, for, if, nor, or, so, yet)", so both lowercase these by
+// length. Chicago (CMOS 8.160) and MLA capitalize every subordinating conjunction.
+const SHORT_SUBORDINATING_CONJUNCTIONS = new Set([
+    "if",
+]);
+
 // Prepositions that double as subordinating conjunctions. Followed by a
 // subject pronoun they open a clause and become major words in every style.
 const CLAUSE_OPENING_PREPOSITIONS = new Set([
@@ -341,6 +349,10 @@ function getTitleCaseDecision(word: string, style: TitleCaseStyle): { convertToL
         return { convertToLower: true, reason: "Coordinating conjunction" };
     }
 
+    if (SHORT_SUBORDINATING_CONJUNCTIONS.has(word) && (style === "ap" || style === "apa")) {
+        return { convertToLower: true, reason: `${STYLE_LABELS[style]} style: conjunction with fewer than 4 letters` };
+    }
+
     if (PREPOSITIONS.has(word)) {
         if (style === "ap" && word.length >= 4) {
             return { convertToLower: false, reason: "AP style: preposition with 4+ letters" };
@@ -440,7 +452,7 @@ function isDeliberateAcronym(word: string): boolean {
     if (!/^[A-Z0-9]+$/.test(core) || !/[A-Z]/.test(core)) return false;
 
     const lower = core.toLowerCase();
-    if (ARTICLES.has(lower) || CONJUNCTIONS.has(lower) || PREPOSITIONS.has(lower)) return false;
+    if (ARTICLES.has(lower) || CONJUNCTIONS.has(lower) || SHORT_SUBORDINATING_CONJUNCTIONS.has(lower) || PREPOSITIONS.has(lower)) return false;
     return true;
 }
 
@@ -617,7 +629,8 @@ function buildTitleTransforms(text: string, style: TitleCaseStyle): TitleWordTra
             }
 
             const decision = getTitleCaseDecision(lower, style);
-            if (decision.convertToLower) {
+            // Inside a compound "if" is a noun ("The What-If Scenario"), not a conjunction.
+            if (decision.convertToLower && !SHORT_SUBORDINATING_CONJUNCTIONS.has(lower)) {
                 return { word: token.word, converted: lower, reason: `${decision.reason} in hyphenated compound`, type: "lowercased", start: token.start, end: token.end };
             }
             return { word: token.word, converted: capitalize(lower), reason: "Hyphenated compound part", type: "capitalized", start: token.start, end: token.end };
@@ -699,7 +712,7 @@ function capitalizedShare(text: string, tokens: WordToken[]): number | null {
     tokens.forEach((token, i) => {
         if (i === 0 || /[:.!?—/|]/.test(text.slice(tokens[i - 1].end, token.start))) return;
         const lower = token.word.toLowerCase();
-        if (token.word === "I" || ARTICLES.has(lower) || CONJUNCTIONS.has(lower) || PREPOSITIONS.has(lower)) return;
+        if (token.word === "I" || ARTICLES.has(lower) || CONJUNCTIONS.has(lower) || SHORT_SUBORDINATING_CONJUNCTIONS.has(lower) || PREPOSITIONS.has(lower)) return;
         if (!/^\p{L}+(?:['’]\p{L}+)*$/u.test(token.word) || !/\p{Ll}/u.test(token.word) || hasIrregularCasing(token.word)) return;
         counted++;
         if (/^\p{Lu}/u.test(token.word)) capitalized++;
