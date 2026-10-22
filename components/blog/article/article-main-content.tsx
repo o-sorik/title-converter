@@ -11,7 +11,7 @@ import { WritingTipsTemplate } from "./writing-tips-template"
 
 function ArticleShell({ article, children }: { article: Article; children: React.ReactNode }) {
   return (
-    <article id="article-content" className="space-y-8 rounded-3xl border border-slate-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900/80 sm:p-5 md:space-y-10 md:p-8">
+    <article id="article-content" className="min-w-0 space-y-8 rounded-3xl border border-slate-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900/80 sm:p-5 md:space-y-10 md:p-8">
       <Image src={article.image} alt={article.title} width={1120} height={640} priority sizes="(max-width: 768px) 100vw, (max-width: 1280px) 66vw, 760px" className="rounded-xl border border-slate-200 dark:border-zinc-700 md:rounded-2xl" />
       {children}
     </article>
