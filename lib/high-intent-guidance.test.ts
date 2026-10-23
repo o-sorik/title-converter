@@ -123,4 +123,20 @@ describe("high-intent guidance catalog", () => {
       expect(entry?.relatedSlugs.length).toBeGreaterThan(0)
     }
   })
+
+  // A note meant for us ("When consolidating SEO pages...") once shipped as a
+  // reader-facing special case on /blog/of-capitalized-in-title-case.
+  test("keeps internal SEO notes out of reader-facing copy", () => {
+    for (const slug of getHighIntentGuidanceSlugs()) {
+      const entry = getHighIntentGuidanceBySlug(slug)
+      const readerCopy = [
+        entry?.quickAnswer,
+        entry?.ruleSummary,
+        entry?.posLogic,
+        entry?.whyPeopleGetThisWrong,
+        ...(entry?.specialCases ?? []),
+      ].join("\n")
+      expect(readerCopy, slug).not.toMatch(/\bSEO\b|\bintents?\b|canonical|cannibali/i)
+    }
+  })
 })

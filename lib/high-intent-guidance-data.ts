@@ -136,7 +136,6 @@ const V2_CONTENT_BY_TERM: Record<
     specialCases: [
       "Capitalize \"of\" when first or last.",
       "Preserve official capitalization in formal names and quoted works.",
-      "When consolidating SEO pages, keep one canonical rule phrasing to avoid duplicate intents.",
     ],
     originOrMeaning:
       "\"Of\" developed from Old English \"of\" and marks relation, source, or composition.",
