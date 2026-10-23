@@ -51,14 +51,14 @@ export default async function Home() {
         className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(60%_60%_at_50%_0%,oklch(0.511_0.194_267/0.08),transparent)] dark:bg-[radial-gradient(60%_60%_at_50%_0%,oklch(0.707_0.165_267/0.1),transparent)]"
       />
 
-      <main className="relative container mx-auto pt-6 pb-10 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-3.5rem)] flex flex-col items-center">
+      <main id="main" className="relative container mx-auto pt-6 pb-10 px-4 sm:px-6 lg:px-8 min-h-[calc(100vh-3.5rem)] flex flex-col items-center">
         <div className="w-full max-w-5xl space-y-12">
           <div className="text-center space-y-3 mb-4">
             <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
               {config.h1}
             </h1>
             <p className="text-base text-muted-foreground max-w-2xl mx-auto">
-              Capitalize titles with practical AP, APA, MLA, and Chicago-friendly rules in one click. Free, no signup.
+              Capitalize titles in AP, APA, Chicago or MLA style. Free, no signup.
             </p>
           </div>
 
