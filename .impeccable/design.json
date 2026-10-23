@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-23T15:30:00+03:00",
+  "title": "Design System: Title Case Converter",
+  "extensions": {
+    "colorMeta": {
+      "proofmark-indigo": { "role": "primary", "displayName": "Proofmark Indigo", "canonical": "oklch(0.511 0.194 267)", "tonalRamp": ["oklch(0.15 0.08 267)", "oklch(0.25 0.12 267)", "oklch(0.35 0.16 267)", "oklch(0.45 0.19 267)", "oklch(0.55 0.19 267)", "oklch(0.65 0.16 267)", "oklch(0.8 0.1 267)", "oklch(0.95 0.03 267)"] },
+      "proofmark-indigo-night": { "role": "primary", "displayName": "Proofmark Indigo Night", "canonical": "oklch(0.707 0.165 267)" },
+      "masthead-navy": { "role": "secondary", "displayName": "Masthead Navy", "canonical": "oklch(0.22 0.09 267)", "tonalRamp": ["oklch(0.15 0.06 267)", "oklch(0.17 0.07 267)", "oklch(0.22 0.09 267)", "oklch(0.25 0.1 267)", "oklch(0.35 0.1 267)", "oklch(0.55 0.08 255)", "oklch(0.8 0.04 245)", "oklch(0.94 0.02 240)"] },
+      "mark-capitalized": { "role": "tertiary", "displayName": "Mark Capitalized", "canonical": "oklch(0.508 0.118 165.612)", "tonalRamp": ["oklch(0.26 0.05 166)", "oklch(0.38 0.08 166)", "oklch(0.432 0.095 166.913)", "oklch(0.508 0.118 165.612)", "oklch(0.596 0.145 163.225)", "oklch(0.696 0.17 162.48)", "oklch(0.845 0.143 164.978)", "oklch(0.979 0.021 166.113)"] },
+      "mark-lowercased": { "role": "tertiary", "displayName": "Mark Lowercased", "canonical": "oklch(0.488 0.243 264.376)", "tonalRamp": ["oklch(0.282 0.091 267.935)", "oklch(0.379 0.146 265.522)", "oklch(0.424 0.199 265.638)", "oklch(0.488 0.243 264.376)", "oklch(0.546 0.245 262.881)", "oklch(0.623 0.214 259.815)", "oklch(0.809 0.105 251.813)", "oklch(0.97 0.014 254.604)"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "oklch(0.145 0 0)" },
+      "paper": { "role": "neutral", "displayName": "Paper", "canonical": "oklch(1 0 0)" },
+      "page-gray": { "role": "neutral", "displayName": "Page Gray", "canonical": "oklch(0.985 0 0)", "tonalRamp": ["oklch(0.145 0 0)", "oklch(0.205 0 0)", "oklch(0.269 0 0)", "oklch(0.439 0 0)", "oklch(0.556 0 0)", "oklch(0.708 0 0)", "oklch(0.922 0 0)", "oklch(0.985 0 0)"] },
+      "margin-gray": { "role": "neutral", "displayName": "Margin Gray", "canonical": "oklch(0.97 0 0)" },
+      "pencil-gray": { "role": "neutral", "displayName": "Pencil Gray", "canonical": "oklch(0.556 0 0)" },
+      "rule-gray": { "role": "neutral", "displayName": "Rule Gray", "canonical": "oklch(0.922 0 0)" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "H1 конвертерних сторінок; 30 px на мобільному." },
+      "headline-article": { "displayName": "Headline Article", "purpose": "Лише короткі display-рядки блогу: H1 статті, заголовок картки, однорядковий приклад." },
+      "title": { "displayName": "Title", "purpose": "H2 на головній і в статтях." },
+      "body": { "displayName": "Body", "purpose": "Інтерфейсний текст і контент головної." },
+      "body-article": { "displayName": "Body Article", "purpose": "Текст статей, інтерліньяж 32 px." },
+      "output": { "displayName": "Output", "purpose": "Текст у полях вводу й результату конвертера." },
+      "ui": { "displayName": "UI", "purpose": "Чипи, вкладки, кнопки, підписи полів." },
+      "label": { "displayName": "Label", "purpose": "Підписи груп керування; 10 px – відомий борг, ціль 11 px+." },
+      "mono": { "displayName": "Mono", "purpose": "Клавіатурні підказки й підписи прикладів." }
+    },
+    "shadows": [
+      { "name": "scrolled-header", "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)", "purpose": "Шапка лише після прокрутки." },
+      { "name": "floating-layer", "value": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)", "purpose": "Тултипи й поповери над контентом." },
+      { "name": "converter-card-legacy", "value": "0 25px 50px -12px rgb(0 0 0 / 0.25)", "purpose": "Спадок: картка конвертера. Не використовувати в нових елементах." }
+    ],
+    "motion": [
+      { "name": "result-reveal", "value": "200ms ease-out", "purpose": "Поява результату лише з порожнього стану." },
+      { "name": "mode-pill-slide", "value": "220ms cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Ковзна індигова пігулка активного режиму." },
+      { "name": "scroll-reveal", "value": "500ms ease", "purpose": "Поява секцій при прокрутці; вимикається при prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Mode Chip",
+      "kind": "chip",
+      "refersTo": "chip-mode",
+      "description": "Режим конвертера в групі Text Case / Code Case.",
+      "html": "<button class=\"ds-chip\">Sentence case</button>",
+      "css": ".ds-chip { height: 32px; padding: 0 12px; border-radius: 9999px; border: 1px solid oklch(0.92 0.004 286.32); background: transparent; color: oklch(0.145 0 0); font: 500 14px/20px 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background-color 150ms; } .ds-chip:hover { background: oklch(0.985 0 0); } .ds-chip:focus-visible { outline: 3px solid oklch(0.511 0.194 267 / 0.5); outline-offset: 1px; }"
+    },
+    {
+      "name": "Mode Chip Active",
+      "kind": "chip",
+      "refersTo": "chip-mode-active",
+      "description": "Активний режим: заповнений Proofmark Indigo.",
+      "html": "<button class=\"ds-chip-active\" aria-pressed=\"true\">Title Case</button>",
+      "css": ".ds-chip-active { height: 32px; padding: 0 12px; border-radius: 9999px; border: 1px solid transparent; background: oklch(0.511 0.194 267); color: oklch(0.985 0 0); font: 500 14px/20px 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-chip-active:focus-visible { outline: 3px solid oklch(0.511 0.194 267 / 0.5); outline-offset: 1px; }"
+    },
+    {
+      "name": "Style Tabs",
+      "kind": "custom",
+      "refersTo": "tab-style",
+      "description": "Вибір стилю title case.",
+      "html": "<div class=\"ds-tabs\"><button class=\"ds-tab\">Standard</button><button class=\"ds-tab ds-tab-on\">AP</button><button class=\"ds-tab\">Chicago</button><button class=\"ds-tab\">MLA</button><button class=\"ds-tab\">APA</button></div>",
+      "css": ".ds-tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 10px; background: oklch(0.967 0.001 286.375); } .ds-tab { height: 32px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: oklch(0.145 0 0); font: 500 14px/20px 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-tab-on { background: oklch(1 0 0); box-shadow: 0 1px 2px rgb(0 0 0 / 0.05); } .ds-tab:focus-visible { outline: 3px solid oklch(0.511 0.194 267 / 0.5); }"
+    },
+    {
+      "name": "Converter Input",
+      "kind": "input",
+      "refersTo": "input-converter",
+      "description": "Поле вводу конвертера.",
+      "html": "<textarea class=\"ds-input\" placeholder=\"Type or paste your text here...\"></textarea>",
+      "css": ".ds-input { width: 100%; min-height: 160px; padding: 24px; border-radius: 14px; border: 1px solid oklch(0.92 0.004 286.32); background: oklch(1 0 0); color: oklch(0.145 0 0); font: 500 18px/28px 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; resize: none; } .ds-input::placeholder { color: oklch(0.552 0.016 285.938); } .ds-input:focus-visible { outline: none; box-shadow: 0 0 0 2px oklch(0.511 0.194 267 / 0.2); border-color: oklch(0.511 0.194 267); }"
+    },
+    {
+      "name": "Converter Output with Diff Marks",
+      "kind": "custom",
+      "refersTo": "output-converter",
+      "description": "Результат з позначками змін: зелена – піднято, синя – опущено.",
+      "html": "<div class=\"ds-output\"><mark class=\"ds-up\">The</mark> <mark class=\"ds-up\">Best</mark> <mark class=\"ds-up\">Way</mark> to <mark class=\"ds-up\">Learn</mark> a <mark class=\"ds-up\">Language</mark>: <mark class=\"ds-up\">Tips</mark> <mark class=\"ds-down\">from</mark> an <mark class=\"ds-up\">Expert</mark></div>",
+      "css": ".ds-output { min-height: 160px; padding: 24px; border-radius: 14px; border: 1px solid oklch(0.92 0.004 286.32); background: oklch(0.985 0 0); color: oklch(0.145 0 0); font: 500 18px/28px 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; } .ds-output mark { background: transparent; padding: 0 2px; border-radius: 3px; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; } .ds-up { color: oklch(0.508 0.118 165.612); text-decoration-color: oklch(0.765 0.177 163.223 / 0.6); } .ds-down { color: oklch(0.488 0.243 264.376); text-decoration-color: oklch(0.707 0.165 254.624 / 0.6); }"
+    },
+    {
+      "name": "Outline Button (Copy)",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Кнопка Copy біля результату.",
+      "html": "<button class=\"ds-btn-outline\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z\"/><path d=\"M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1\"/></svg>Copy</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid oklch(0.922 0 0); background: oklch(1 0 0); color: oklch(0.145 0 0); font: 500 14px/20px 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; cursor: pointer; box-shadow: 0 1px 2px rgb(0 0 0 / 0.05); } .ds-btn-outline:hover { background: oklch(0.97 0 0); } .ds-btn-outline:focus-visible { outline: 3px solid oklch(0.511 0.194 267 / 0.5); }"
+    },
+    {
+      "name": "Editorial Lede",
+      "kind": "custom",
+      "description": "Безбоксовий блок відповіді на початку статті.",
+      "html": "<div class=\"ds-lede\"><p class=\"ds-lede-label\">Quick Answer</p><p class=\"ds-lede-text\">Usually no. In title case, “the” stays lowercase unless it is the first or last word.</p></div>",
+      "css": ".ds-lede { border-top: 2px solid oklch(0.208 0.042 265.755); padding-top: 16px; max-width: 640px; } .ds-lede-label { margin: 0; font: 700 11px/16px 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.2em; text-transform: uppercase; color: oklch(0.488 0.243 264.376); } .ds-lede-text { margin: 12px 0 0; font: 400 18px/32px 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; color: oklch(0.208 0.042 265.755); }"
+    },
+    {
+      "name": "Capitalization Badges",
+      "kind": "chip",
+      "refersTo": "badge-capitalize",
+      "description": "Бейджі в таблицях статей.",
+      "html": "<span class=\"ds-badge ds-badge-cap\">Capitalize</span> <span class=\"ds-badge ds-badge-low\">Lowercase</span>",
+      "css": ".ds-badge { display: inline-block; padding: 2px 10px; border-radius: 9999px; font: 600 12px/16px 'Space Grotesk', ui-sans-serif, system-ui, sans-serif; } .ds-badge-cap { background: oklch(0.979 0.021 166.113); color: oklch(0.508 0.118 165.612); } .ds-badge-low { background: oklch(0.968 0.007 247.896); color: oklch(0.446 0.043 257.281); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Поля коректора (The Proofreader's Margin)",
+    "overview": "Текст відвідувача – головний на сторінці, а система поводиться як коректор на полях: ставить точну позначку там, де щось змінилося, і пише поруч правило. Кожне перетворене слово підкреслено кольором зміни, у кожного є причина з конкретного гайду, а решта інтерфейсу мовчить. Колір тут означає дію або зміну, не настрій.\n\nЩільність середня: інструмент на одну хвилину, тому керування знайоме й упізнаване з першого погляду (чипи режимів, вкладки стилів, поле вводу, поле результату, кнопка копіювання). Довідкові статті читаються спокійно: широкий інтерліньяж, один sans для тексту, serif лише в заголовку статті. Візуальна сміливість не мета, мета – точність і стриманість.",
+    "keyCharacteristics": [
+      "Один шрифт для всього інтерфейсу й тексту (Space Grotesk); Playfair Display лише в коротких display-елементах блогу.",
+      "Один акцент – Proofmark Indigo; кольори позначок змін (зелений «з великої», синій «з малої») мають лише цю роль.",
+      "Пласкі поверхні, глибина тоном фону й тонким бордером.",
+      "Заокруглення м'які (10–14 px) на полях і картках, пігулки (full) на чипах і бейджах.",
+      "Темна тема обов'язкова для кожного елемента."
+    ],
+    "rules": [
+      { "name": "The Mark Means Change Rule", "body": "Зелений і синій позначок означають лише «слово змінено вгору» і «слово змінено вниз». Ні кнопки, ні декор, ні статуси їх не беруть.", "section": "colors" },
+      { "name": "The One Accent Rule", "body": "Proofmark Indigo – єдиний акцент інтерфейсу. Другого брендового кольору поза Masthead Navy блогу немає й не додається.", "section": "colors" },
+      { "name": "The Serif Stays Short Rule", "body": "Playfair Display – лише для коротких display-рядків: заголовок статті, заголовок картки, приклад заголовка в один рядок. Абзаци, H2 і нижче, інтерфейс – тільки Space Grotesk.", "section": "typography" },
+      { "name": "The Same Size In And Out Rule", "body": "Текст, який відвідувач вводить, і текст, який отримує, мають однаковий кегль (18 px), щоб результат читався як той самий рядок, а не як інший документ. Зараз на md+ ввід рендериться 14 px: `md:text-sm` зі shadcn `Textarea` перебиває `text-lg` – це відхилення, не норма.", "section": "typography" },
+      { "name": "The Flat Page Rule", "body": "Поверхні пласкі у спокої. Тінь з'являється лише як відповідь на стан (прокрутка, відкритий поповер), ніколи як прикраса. Скло й розмиття фону в нових елементах не використовуються.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do давати кожному новому елементу пару для темної теми (`dark:`) і перевіряти обидві теми на 390 px і на десктопі.",
+      "Do будувати глибину тоном Paper на Page Gray і бордером 1 px, а не тінню.",
+      "Do брати кольори з токенів `globals.css` (OKLCH); Tailwind-палітру (emerald, blue, slate) – лише для ролей, уже описаних вище.",
+      "Do тримати сенсорні цілі не менше 44 px на дотикових пристроях (як уже зроблено для кнопок конвертера).",
+      "Do використовувати іконки лише з `@tabler/icons-react`."
+    ],
+    "donts": [
+      "Don't додавати скло, `backdrop-blur` чи великі тіні на нові поверхні; скло картки конвертера – спадок, не взірець.",
+      "Don't фарбувати кнопки, статуси чи декор зеленим або синім позначок змін.",
+      "Don't повертати анімований градієнт на тло чи фейкові відгуки.",
+      "Don't ставити текст менше 11 px для функціональних підписів (нинішні 10 px – борг, не норма).",
+      "Don't редагувати `components/ui/` вручну; зміни – через `className` на місці виклику."
+    ]
+  }
+}
