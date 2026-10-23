@@ -858,6 +858,32 @@ export function convert(text: string, type: ConversionType, options: ConvertOpti
     }
 }
 
+/**
+ * The rule behind every word of a title or sentence case result, changed or
+ * not, in input order. `type` is the direction the rule decided, not whether the
+ * word moved: compare `word` with `converted` for that. `start`/`end` index into the input, and each `converted`
+ * word has the same length as its source, so the input with every word swapped
+ * for its `converted` form is exactly `convert(text, type, options)`.
+ * Other modes have no word-level rules and return an empty list.
+ */
+export interface WordRule {
+    word: string;
+    converted: string;
+    reason: string;
+    type: "capitalized" | "lowercased" | "unchanged";
+    start: number;
+    end: number;
+}
+
+export function explainWords(text: string, type: ConversionType, options: ConvertOptions = {}): WordRule[] {
+    if (!text) return [];
+    const transforms =
+        type === "title" ? buildTitleTransforms(text, options.titleStyle ?? "standard")
+        : type === "sentence" ? buildSentenceTransforms(text)
+        : [];
+    return transforms.map(({ word, converted, reason, type: change, start, end }) => ({ word, converted, reason, type: change, start, end }));
+}
+
 // Explanation types for the "Show Explanations" feature
 export interface WordExplanation {
     word: string;
