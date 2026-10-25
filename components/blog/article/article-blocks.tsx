@@ -3,6 +3,7 @@ import Link from "next/link"
 import type { ArticleBlock, ArticleSection, CaseDiagramTone, StyleGuideName } from "@/lib/article-content"
 import { cn } from "@/lib/utils"
 import { CapitalizationBadge } from "./capitalization-badge"
+import { WordFormMatrix } from "./word-form-matrix"
 
 // Renders the serializable block model from lib/article-content.ts.
 // Supported inline markup: **bold**, *italic*, [label](href); link labels
@@ -298,6 +299,8 @@ export function ArticleBlockRenderer({ block }: { block: ArticleBlock }) {
           ))}
         </ol>
       )
+    case "wordFormMatrix":
+      return <WordFormMatrix block={block} />
     case "styleGuideMatrix":
       return (
         <div className={tableWrap}>
