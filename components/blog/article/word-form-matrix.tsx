@@ -13,9 +13,12 @@ const GUIDE_COLUMNS: { key: StyleGuideName; label: string }[] = [
 
 const linkClass = "underline underline-offset-4 text-blue-700 dark:text-blue-400"
 // Sticks under the 56px site header and its 1px border. No horizontal
-// scroller around the table: it fits a 320px phone, and a scroller would
-// stop the header from sticking.
+// scroller around the table: a scroller would stop the header from sticking.
+// Below 360px the table bleeds to the card's edges instead, so seven-letter
+// words fit their columns on a 320px phone.
 const headCell = "sticky top-[57px] z-10 bg-slate-50 py-2.5 text-[13px] font-semibold text-slate-700 sm:text-sm dark:bg-zinc-800 dark:text-zinc-300"
+// Below 360px the word column lines up with the article text, 16px in from the card's edge.
+const wordColumnInset = "px-2 sm:px-4 max-[359px]:pl-4 max-[359px]:pr-1"
 // The converter's mark for a capital: a dotted underline in the capitalized color.
 const capitalMark =
   "underline decoration-dotted decoration-2 underline-offset-[5px] decoration-emerald-600 dark:decoration-emerald-400"
@@ -32,20 +35,20 @@ function guidesDisagree(guides: Record<StyleGuideName, boolean>): boolean {
 
 export function WordFormMatrix({ block }: { block: WordFormMatrixBlock }) {
   return (
-    <div className="overflow-clip rounded-xl border border-slate-200 dark:border-zinc-700">
+    <div className="overflow-clip rounded-xl border border-slate-200 dark:border-zinc-700 max-[359px]:-mx-4 max-[359px]:rounded-none max-[359px]:border-x-0">
       <table className="w-full table-fixed text-sm">
-        <caption className="caption-top px-3 pb-2 pt-3 text-left text-sm text-slate-600 sm:px-4 dark:text-zinc-400">
+        <caption className="caption-top px-3 pb-2 pt-3 text-left text-sm text-slate-600 sm:px-4 max-[359px]:px-4 dark:text-zinc-400">
           {block.caption}
         </caption>
         <colgroup>
-          <col className="w-[22%] min-[360px]:w-[25%] sm:w-[34%]" />
+          <col className="w-[28%] min-[360px]:w-[25%] sm:w-[34%]" />
           {GUIDE_COLUMNS.map((guide) => (
             <col key={guide.key} />
           ))}
         </colgroup>
         <thead>
           <tr>
-            <th scope="col" className={cn(headCell, "px-2 text-left sm:px-4")}>
+            <th scope="col" className={cn(headCell, wordColumnInset, "text-left")}>
               {block.rowHeader}
             </th>
             {GUIDE_COLUMNS.map((guide) => (
@@ -64,7 +67,7 @@ export function WordFormMatrix({ block }: { block: WordFormMatrixBlock }) {
                 data-split={split ? "true" : undefined}
                 className={cn("border-t border-slate-100 dark:border-zinc-700/50", split && "bg-sky-50 dark:bg-sky-400/10")}
               >
-                <th scope="row" className="px-2 py-2.5 text-left align-top font-semibold text-slate-900 sm:px-4 dark:text-zinc-100">
+                <th scope="row" className={cn(wordColumnInset, "py-2.5 text-left align-top font-semibold text-slate-900 dark:text-zinc-100")}>
                   {row.href ? (
                     <Link href={row.href} className={linkClass}>
                       {row.word}
