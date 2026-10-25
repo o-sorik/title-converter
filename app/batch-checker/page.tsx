@@ -59,21 +59,21 @@ export default function BatchCheckerPage() {
                 className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(60%_60%_at_50%_0%,oklch(0.511_0.194_267/0.08),transparent)] dark:bg-[radial-gradient(60%_60%_at_50%_0%,oklch(0.707_0.165_267/0.1),transparent)]"
             />
 
-            <main id="main" className="relative container mx-auto py-10 px-4 sm:px-6 lg:px-8">
-                <div className="w-full max-w-5xl mx-auto space-y-12">
-                    <div className="text-center space-y-4">
-                        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            <main id="main" className="relative container mx-auto pt-6 pb-10 px-4 sm:px-6 lg:px-8">
+                <div className="w-full max-w-5xl mx-auto space-y-8">
+                    <div className="text-center space-y-3">
+                        <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
                             Batch Headline Checker
                         </h1>
-                        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                            Process multiple headlines against one capitalization standard. Paste one per line, run a QA pass, and instantly spot inconsistencies.
+                        <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+                            Check a list of headlines against one capitalization style. Paste one per line, see which need a fix and why, then copy the corrected list.
                         </p>
                     </div>
 
                     <BatchChecker />
 
                     {/* SEO content */}
-                    <article className="prose prose-zinc dark:prose-invert max-w-none w-full space-y-8">
+                    <article className="mx-auto w-full max-w-2xl space-y-12 pt-12 text-lg leading-relaxed text-pretty text-zinc-600 dark:text-zinc-400 [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-4 [&_h2]:mb-4 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-zinc-900 md:[&_h2]:text-3xl dark:[&_h2]:text-zinc-50 [&_strong]:font-semibold [&_strong]:text-zinc-900 dark:[&_strong]:text-zinc-100">
                         <section>
                             <h2>What Is the Batch Headline Checker?</h2>
                             <p>
@@ -84,7 +84,7 @@ export default function BatchCheckerPage() {
 
                         <section>
                             <h2>Who Is This Tool For?</h2>
-                            <ul>
+                            <ul className="list-disc space-y-3 pl-5 marker:text-zinc-400">
                                 <li>
                                     <strong>Content editors and publishers</strong> reviewing a batch of article titles before publication — especially when enforcing a house style like AP or Chicago across a team.
                                 </li>
@@ -102,13 +102,13 @@ export default function BatchCheckerPage() {
 
                         <section>
                             <h2>How to Use the Batch Headline Checker</h2>
-                            <ol>
-                                <li>Select your <strong>capitalization standard</strong> — Title Case, Sentence case, lower case, or UPPER CASE.</li>
-                                <li>If you chose Title Case, pick the <strong>title style</strong>: Standard, AP, Chicago, MLA, or APA.</li>
-                                <li>Paste your headlines into the text area, <strong>one per line</strong>.</li>
-                                <li>Click <strong>Run QA Pass</strong> to see which headlines are consistent and which need correction.</li>
-                                <li>For any inconsistent headline, click <strong>Review in converter</strong> to open it in the{" "}
-                                    <Link href="/">main converter</Link> with the text pre-filled.</li>
+                            <ol className="list-decimal space-y-3 pl-5 marker:text-zinc-400">
+                                <li>Pick the <strong>style guide</strong> you follow: Standard, AP, APA, Chicago, or MLA. To check a different case, switch Title Case to Sentence case, lower case, or UPPER CASE.</li>
+                                <li>Paste your headlines into the text area, <strong>one per line</strong>. Results update as you type.</li>
+                                <li>You see the headlines that <strong>need a fix</strong>, with every changed word marked and your original line underneath. Switch to All to see the ones that are already correct.</li>
+                                <li>Click <strong>Why?</strong> under a headline to see the rule behind each change, or open that headline in the{" "}
+                                    <Link href="/">main converter</Link>.</li>
+                                <li>Click <strong>Copy all</strong> to take the corrected list back in its original order, or copy a single headline.</li>
                             </ol>
                         </section>
                     </article>
