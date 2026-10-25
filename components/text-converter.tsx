@@ -7,6 +7,7 @@ import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { ResultText, RuleNotes } from "@/components/converter-result"
+import { StylePicker } from "@/components/style-picker"
 import { convert, explainWords, type ConversionType, type TitleCaseStyle } from "@/lib/converters"
 import { TITLE_STYLES } from "@/lib/title-styles"
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
@@ -18,6 +19,7 @@ import {
     writeConverterContext,
 } from "@/lib/converter-context"
 import { getHighIntentBlogHref, getHighIntentEntryFromInput } from "@/lib/high-intent-guidance"
+import { useAutoGrow } from "@/lib/use-auto-grow"
 import { cn } from "@/lib/utils"
 import { trackEvent } from "@/lib/analytics"
 
@@ -60,40 +62,6 @@ function plural(count: number, word: string): string {
 function resultLabel(mode: ConversionType, style: TitleCaseStyle): string {
     if (mode !== "title") return CONVERSION_TYPES.find((t) => t.id === mode)?.label ?? mode
     return `${TITLE_STYLES.find((s) => s.id === style)?.label ?? "Standard"} title case`
-}
-
-function useAutoGrow(value: string, min: number, max: number) {
-    const ref = React.useRef<HTMLTextAreaElement>(null)
-    React.useLayoutEffect(() => {
-        const el = ref.current
-        if (!el) return
-        el.style.height = "auto"
-        el.style.height = `${Math.min(max, Math.max(min, el.scrollHeight))}px`
-    }, [value, min, max])
-    return ref
-}
-
-const selectClass = cn(
-    "h-11 min-w-0 cursor-pointer rounded-md border border-zinc-200 bg-background px-3 text-base text-foreground md:h-9 md:text-sm dark:border-zinc-700",
-    focusRing
-)
-
-function StyleHint({ titleStyle, onSentenceCase }: { titleStyle: TitleCaseStyle; onSentenceCase: () => void }) {
-    return (
-        <p className="text-xs text-muted-foreground">
-            {TITLE_STYLES.find((s) => s.id === titleStyle)?.hint}
-            {titleStyle === "ap" && (
-                // AP's 4+ letter rule is for titles of works; AP news headlines are written in sentence case.
-                <span data-testid="ap-headline-hint">
-                    {" "}For titles of works. AP news headlines use{" "}
-                    <button type="button" onClick={onSentenceCase} className={cn("cursor-pointer underline underline-offset-2 hover:text-foreground", focusRing)}>
-                        sentence case
-                    </button>
-                    .
-                </span>
-            )}
-        </p>
-    )
 }
 
 export function TextConverter({
@@ -330,88 +298,13 @@ export function TextConverter({
             aria-label="Converter Workspace"
             data-testid="converter-workspace"
         >
-            {/* Desktop: the style guide is the first question, the case sits beside it */}
-            <div className="hidden gap-2 md:grid">
-                <div className="flex flex-wrap items-end justify-between gap-3">
-                    {isTitle ? (
-                        <div className="grid min-w-0 gap-1.5" data-testid="style-controls">
-                            <span id="style-picker-label" className="text-sm font-medium">Which style guide?</span>
-                            <div role="radiogroup" aria-labelledby="style-picker-label" className="flex flex-wrap gap-1.5">
-                                {TITLE_STYLES.map((style) => {
-                                    const active = titleStyle === style.id
-                                    return (
-                                        <button
-                                            key={style.id}
-                                            type="button"
-                                            role="radio"
-                                            aria-checked={active}
-                                            onClick={() => selectStyle(style.id)}
-                                            className={cn(
-                                                "h-8 cursor-pointer rounded-full border px-3 text-sm font-medium transition-colors",
-                                                focusRing,
-                                                active
-                                                    ? "border-transparent bg-primary text-primary-foreground"
-                                                    : "border-zinc-200 text-foreground hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800/60"
-                                            )}
-                                        >
-                                            {style.qualifiedLabel}
-                                        </button>
-                                    )
-                                })}
-                            </div>
-                        </div>
-                    ) : (
-                        <span />
-                    )}
-                    <select
-                        aria-label="Conversion mode"
-                        data-testid="mode-controls"
-                        value={activeType}
-                        onChange={(e) => selectMode(e.target.value as ConversionType)}
-                        className={selectClass}
-                    >
-                        {CONVERSION_TYPES.map((type) => (
-                            <option key={type.id} value={type.id}>
-                                {type.label}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                {isTitle && <StyleHint titleStyle={titleStyle} onSentenceCase={() => selectMode("sentence")} />}
-            </div>
-
-            {/* Phones: two compact selects; the hint says what the style does */}
-            <div className="grid gap-2 md:hidden" data-testid="mobile-mode-controls">
-                <div className="flex gap-2">
-                    <select
-                        aria-label="Conversion mode"
-                        value={activeType}
-                        onChange={(e) => selectMode(e.target.value as ConversionType)}
-                        className={cn(selectClass, "w-full flex-1")}
-                    >
-                        {CONVERSION_TYPES.map((type) => (
-                            <option key={type.id} value={type.id}>
-                                {type.label}
-                            </option>
-                        ))}
-                    </select>
-                    {isTitle && (
-                        <select
-                            aria-label="Title style"
-                            value={titleStyle}
-                            onChange={(e) => selectStyle(e.target.value as TitleCaseStyle)}
-                            className={cn(selectClass, "w-full flex-1")}
-                        >
-                            {TITLE_STYLES.map((style) => (
-                                <option key={style.id} value={style.id}>
-                                    {style.label}
-                                </option>
-                            ))}
-                        </select>
-                    )}
-                </div>
-                {isTitle && <StyleHint titleStyle={titleStyle} onSentenceCase={() => selectMode("sentence")} />}
-            </div>
+            <StylePicker
+                modes={CONVERSION_TYPES}
+                mode={activeType}
+                onModeChange={selectMode}
+                titleStyle={titleStyle}
+                onTitleStyleChange={selectStyle}
+            />
 
             <div className="relative" data-testid="input-zone">
                 <textarea
