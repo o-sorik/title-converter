@@ -8,6 +8,7 @@ import {
 import { WRITING_TIPS_ARTICLES, getAllWritingTipsArticles } from "./writing-tips-article-data"
 import { blogArticles } from "@/components/blog/data"
 import { convert } from "./converters"
+import { WORD_ROWS } from "./lowercase-words-content"
 
 describe("getArticleContentBySlug", () => {
   test("dispatches by template priority: is-x wins over high-intent", () => {
@@ -124,5 +125,25 @@ describe("styleGuideMatrix alignment with converter engine", () => {
     }
 
     expect(checkedRows).toBeGreaterThanOrEqual(20)
+  })
+})
+
+describe("QN4 word table", () => {
+  test("shows every engine-checked word row, linked to its own page where it has one", () => {
+    const article = getAllWritingTipsArticles().find((a) => a.slug === "what-words-are-not-capitalized-in-a-title")
+    const block = article?.sections
+      .find((section) => section.id === "by-style-guide")
+      ?.blocks.find((candidate) => candidate.type === "wordFormMatrix")
+    expect(block?.type).toBe("wordFormMatrix")
+    if (block?.type !== "wordFormMatrix") return
+
+    expect(block.rows).toEqual(
+      WORD_ROWS.map((row) => ({
+        word: row.word,
+        href: row.slug ? `/blog/${row.slug}` : undefined,
+        note: row.kind,
+        guides: row.capitalized,
+      }))
+    )
   })
 })

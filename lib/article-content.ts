@@ -110,6 +110,18 @@ export type ArticleBlock =
       rows: string[][]
     }
   | {
+      /**
+       * One word per row; each guide's column shows the word as that guide
+       * writes it mid-title (From / from), so all four guides fit on a phone.
+       * Rows where the guides disagree are shaded. `href` links the word to its
+       * own page; `note` is a plain-text second line, e.g. the word class.
+       */
+      type: "wordFormMatrix"
+      rowHeader: string
+      caption: string
+      rows: { word: string; href?: string; note?: string; guides: Record<StyleGuideName, boolean> }[]
+    }
+  | {
       /** Capitalize/Lowercase badge matrix across the four style guides. */
       type: "styleGuideMatrix"
       rowHeader: string

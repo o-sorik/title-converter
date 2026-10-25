@@ -120,10 +120,12 @@ export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
             text: "Each row shows what a guide does with the word in the middle of a title. Words that have their own page link to it.",
           },
           {
-            type: "styleGuideMatrix",
+            type: "wordFormMatrix",
             rowHeader: "Word",
+            caption: "Each guide's column shows the word as it appears in a title. Shaded rows are where the guides disagree.",
             rows: WORD_ROWS.map((row) => ({
-              label: row.slug ? `[${row.word}](/blog/${row.slug})` : row.word,
+              word: row.word,
+              href: row.slug ? `/blog/${row.slug}` : undefined,
               note: row.kind,
               guides: row.capitalized,
             })),
