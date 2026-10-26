@@ -61,6 +61,7 @@ export function WordFormMatrix({ block }: { block: WordFormMatrixBlock }) {
         <tbody>
           {block.rows.map((row) => {
             const split = guidesDisagree(row.guides)
+            const form = row.form ?? row.word
             return (
               <tr
                 key={row.word}
@@ -93,7 +94,7 @@ export function WordFormMatrix({ block }: { block: WordFormMatrixBlock }) {
                               : "font-medium text-slate-500 dark:text-zinc-400"
                         )}
                       >
-                        {capitalized ? capitalize(row.word) : row.word}
+                        {capitalized ? capitalize(form) : form}
                       </span>
                       <span className="sr-only">{capitalized ? ", capitalized" : ", lowercase"}</span>
                     </td>

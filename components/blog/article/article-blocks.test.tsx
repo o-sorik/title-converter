@@ -144,6 +144,24 @@ describe("ArticleBlockRenderer", () => {
     expect(head).toContain("sticky")
   })
 
+  test("wordFormMatrix cells show `form` when a row label is not the word itself", () => {
+    const html = renderToStaticMarkup(
+      <ArticleBlockRenderer
+        block={{
+          type: "wordFormMatrix",
+          rowHeader: "After the colon",
+          caption: "Each column shows the first word after the colon.",
+          rows: [{ word: "One sentence", form: "the", note: "a complete sentence", guides: { ap: true, apa: true, chicago: true, mla: false } }],
+        }}
+      />
+    )
+    const row = (html.match(/<tr[^>]*>[\s\S]*?<\/tr>/g) ?? [])[1]
+
+    expect(row).toMatch(/<th scope="row"[^>]*>One sentence<span/)
+    expect((row.match(/>(The|the)<\/span>/g) ?? []).map((cell) => cell.slice(1, -7))).toEqual(["The", "The", "The", "the"])
+    expect(row).toContain('data-split="true"')
+  })
+
   test("renders generic table with bold first column", () => {
     const html = renderToStaticMarkup(
       <ArticleBlockRenderer
