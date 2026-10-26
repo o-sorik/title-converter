@@ -115,11 +115,13 @@ export type ArticleBlock =
        * writes it mid-title (From / from), so all four guides fit on a phone.
        * Rows where the guides disagree are shaded. `href` links the word to its
        * own page; `note` is a plain-text second line, e.g. the word class.
+       * `form` puts a different word in the guide cells than the row label,
+       * e.g. a row "One sentence" whose cells show The / the.
        */
       type: "wordFormMatrix"
       rowHeader: string
       caption: string
-      rows: { word: string; href?: string; note?: string; guides: Record<StyleGuideName, boolean> }[]
+      rows: { word: string; form?: string; href?: string; note?: string; guides: Record<StyleGuideName, boolean> }[]
     }
   | {
       /** Capitalize/Lowercase badge matrix across the four style guides. */

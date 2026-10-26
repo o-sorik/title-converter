@@ -13,6 +13,7 @@ import {
   TO_TITLE,
 } from "@/lib/sentence-vs-title-case-content"
 import { CONVERTER_LIMITS, EXAMPLES, MAJOR_WORD_ROWS, REASON_SAMPLES, WORD_ROWS, majorTitle } from "@/lib/lowercase-words-content"
+import { COLON_LIMITS, COLON_REASONS, COLON_ROWS, CONVERTER_EXAMPLES, SENTENCE_CASE_SUBTITLE, SUBTITLES } from "@/lib/colon-content"
 
 export interface WritingTipsArticle {
   slug: string
@@ -307,6 +308,252 @@ export const WRITING_TIPS_ARTICLES: WritingTipsArticle[] = [
               "[The Chicago Manual of Style Online: Q&A on coordinating conjunctions](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/CapitalizationTitles/faq0098.html) and [on \"than\"](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/CapitalizationTitles/faq0074.html)",
               "[MLA Style Center: Capitalization of Titles](https://style.mla.org/capitalization-of-titles/) and [Two-Word Prepositions in Titles](https://style.mla.org/two-word-prepositions-in-titles/); MLA Handbook, 9th ed., 2.90",
               "The Associated Press Stylebook, entry \"composition titles\"",
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    slug: "do-you-capitalize-after-a-colon",
+    converterLink: {
+      anchor: "headline case converter",
+      before: "Writing a headline with a subtitle? Paste it into the ",
+      after: " and pick your style guide – the word after the colon gets its capital, and Explain shows the rule behind it.",
+    },
+    tags: ["Grammar 101", "Style Guides", "Title Case"],
+    ctaWord: CONVERTER_EXAMPLES.title.input,
+    ctaText: "Paste a title with a subtitle and pick AP, APA, Chicago or MLA – the free converter capitalizes the word after the colon and explains why.",
+    relatedSlugs: ["what-words-are-not-capitalized-in-a-title", "sentence-vs-title-case", "chicago-title-case", "apa-heading-levels"],
+    faqHeading: "Questions about capitalizing after a colon",
+    faqItems: [
+      {
+        question: "Do you capitalize after a colon in AP style?",
+        answer:
+          "Only when a complete sentence or a proper noun follows. In AP news headlines, which use sentence case, the first word after a colon is always capitalized.",
+      },
+      {
+        question: "Do you capitalize after a colon in APA style?",
+        answer:
+          "Yes, when what follows is a complete sentence. In titles and headings APA capitalizes the first word after a colon whatever follows, and in headings it does the same after an em dash.",
+      },
+      {
+        question: "Has Chicago changed its rule on capitalizing after a colon?",
+        answer:
+          "Yes. The 17th edition capitalized only when two or more sentences, dialogue or a quotation followed. The 18th edition, published in 2024, capitalizes any complete sentence after a colon.",
+      },
+      {
+        question: "Do you capitalize after a label such as Note:?",
+        answer:
+          "Yes, when a sentence follows. Chicago prints Note: Semicolons are not allowed past this point. A word or a phrase after the label stays lowercase.",
+      },
+      {
+        question: "Does a colon need a complete sentence before it?",
+        answer:
+          "Not always: a label such as Note: or Warning: can come before one. But Chicago and MLA both rule out a colon between a verb and the list that completes it. MLA's example of the error ends …are: tennis, lenses, and mathematics.",
+      },
+    ],
+    sections: [
+      {
+        id: "intro",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "In a title, yes: AP, APA, Chicago and MLA all capitalize the first word after a colon, because it starts the subtitle. In a sentence, capitalize it when a complete sentence follows – the rule in AP, APA and, since its 2024 edition, Chicago. A phrase, a list or a single word after a colon stays lowercase unless it is a name.",
+          },
+          {
+            type: "paragraph",
+            text: "MLA is the exception. It keeps a single sentence after a colon lowercase and capitalizes only a series of sentences, a rule or a question. And if you learned that Chicago capitalizes only when two or more sentences follow, that was the 17th edition – the 18th edition changed the rule.",
+          },
+        ],
+      },
+      {
+        id: "how-to-decide",
+        heading: "How to decide whether to capitalize after a colon",
+        tocLabel: "Five checks",
+        blocks: [
+          { type: "paragraph", text: "Go through these checks in order and stop at the first one that fits:" },
+          {
+            type: "list",
+            ordered: true,
+            items: [
+              `**Is the colon in a title or heading?** Capitalize the first word after it. Every guide does, in title case and in sentence case: *${CONVERTER_EXAMPLES.title.output}*.`,
+              "**Is the first word a name, *I* or an acronym?** It keeps its capital wherever it stands.",
+              "**Does a complete sentence follow?** AP, APA and Chicago capitalize it. MLA keeps one sentence lowercase but capitalizes two or more sentences, a rule or principle, and a question.",
+              "**Does a list follow?** A list that runs on inside the sentence stays lowercase. In a vertical list, items that are full sentences start with a capital.",
+              "**Anything else** – a phrase, a fragment or a single word – stays lowercase.",
+            ],
+          },
+        ],
+      },
+      {
+        id: "by-style-guide",
+        heading: "Capitalization after a colon in AP, APA, Chicago and MLA",
+        tocLabel: "By style guide",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "Each row is one kind of text that can follow a colon. A guide's column shows the first word after the colon as that guide writes it.",
+          },
+          {
+            type: "wordFormMatrix",
+            rowHeader: "After the colon",
+            caption: "Each guide's column shows the first word after the colon. The shaded row is where the guides disagree.",
+            rows: COLON_ROWS.map((row) => ({ word: row.label, form: row.word, note: row.note, guides: row.capitalized })),
+          },
+          {
+            type: "paragraph",
+            text: "Only one row splits the guides: a single complete sentence, which MLA alone keeps lowercase. On everything else the four agree, subtitles included.",
+          },
+          { type: "heading", level: 3, grouping: true, text: "Does a complete sentence after a colon start with a capital?" },
+          {
+            type: "paragraph",
+            text: "In AP, APA and Chicago it does, and one sentence is enough. In MLA it does only when more than one sentence follows.",
+          },
+          { type: "heading", level: 4, text: "AP and APA capitalize a complete sentence" },
+          {
+            type: "paragraph",
+            text: 'The AP Stylebook capitalizes the first word after a colon "only if it is a proper noun or the start of a complete sentence" ([@APStylebook](https://x.com/APStylebook/status/831604055524966400)). APA capitalizes it ["if what follows the colon is a complete sentence"](https://apastyle.apa.org/instructional-aids/test-apa-style-knowledge.pdf). Neither guide counts sentences: one is enough.',
+          },
+          { type: "heading", level: 4, text: "Chicago has capitalized it since the 18th edition" },
+          {
+            type: "paragraph",
+            text: 'Until 2024, Chicago lowercased a single sentence after a colon and capitalized only a series of sentences, dialogue or a quoted extract. The 18th edition [recommends an initial cap](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/Capitalization/faq0008.html) "for any complete sentence following a colon." Its own pair of examples, from the [CMOS Q&A](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/Capitalization/faq0105.html):',
+          },
+          {
+            type: "list",
+            items: [
+              `*${COLON_LIMITS.sentenceAfterColon.correct}* – a complete sentence`,
+              "*…signaled by an abrupt silence: no more gas.* – a phrase",
+            ],
+          },
+          {
+            type: "paragraph",
+            text: "Much of the advice online still gives the old rule. [Chicago Title Case: What the 18th Edition Changed](/blog/chicago-title-case) covers the edition's other changes.",
+          },
+          { type: "heading", level: 4, text: "MLA lowercases a single sentence" },
+          {
+            type: "paragraph",
+            text: 'The MLA Handbook (9th ed., 2.27) lowercases what follows a colon unless it is a word that is always capitalized, or the colon introduces more than one sentence, a rule or principle, or a question. Its example: *The plot is founded on deception: the protagonist has a secret identity.* Asked whether an independent clause after a colon may take a capital, MLA\'s editors answered ["Generally, no."](https://style.mla.org/colons-how-to-use-them/)',
+          },
+          { type: "heading", level: 3, text: "Do you capitalize a question or a quotation after a colon?" },
+          {
+            type: "paragraph",
+            text: "A question that is a complete sentence takes a capital in all four guides. MLA names questions outright: *The moderator then posed a question to the panelists: In what ways has the New Queer Cinema amplified the visibility of queerness in film?*",
+          },
+          {
+            type: "paragraph",
+            text: 'A quotation follows its source. MLA keeps ["the case used in the source"](https://style.mla.org/capitalize-quotation/), and Chicago prints *Unprompted, Jerzy announced the reason for her recent absence: "I was on the moon. Again."* ([CMOS Q&A](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/Quotations/faq0080.html)). APA lets you change the first letter of a quotation to fit your sentence.',
+          },
+          { type: "heading", level: 3, text: "Phrases, fragments and single words stay lowercase" },
+          {
+            type: "paragraph",
+            text: "If what follows the colon cannot stand as a sentence, every guide keeps it lowercase – Chicago's example above ends *…an abrupt silence: no more gas.* The exception is a word that is always capitalized: a name, the pronoun *I* or an acronym. AP allows a capital after a colon for nothing else but a complete sentence.",
+          },
+          { type: "heading", level: 3, grouping: true, text: "How do you capitalize a list after a colon?" },
+          {
+            type: "paragraph",
+            text: "That depends on whether the list runs on inside the sentence or stands as a vertical list.",
+          },
+          { type: "heading", level: 4, text: "A run-in list stays lowercase" },
+          {
+            type: "paragraph",
+            text: "A list inside the sentence starts lowercase, even when its items are clauses: *There were two main viewpoints presented: (1) all people lie, and (2) only certain people lie.* ([CMOS Q&A](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/NoneoftheAbove/faq0025.html)). MLA capitalizes a run-in list only when its items are several full sentences.",
+          },
+          { type: "heading", level: 4, text: "Vertical list items that are full sentences start with a capital" },
+          {
+            type: "paragraph",
+            text: "In a vertical list, an item that is a complete sentence begins with a capital in [APA](https://apastyle.apa.org/style-grammar-guidelines/lists/bulleted), [Chicago](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/VerticalListsBullets/faq0003.html) and MLA (Handbook 1.11). APA and MLA start items that are words or phrases with a lowercase letter.",
+          },
+          { type: "heading", level: 4, text: "AP capitalizes every bulleted item" },
+          {
+            type: "paragraph",
+            text: 'AP does not sort items by grammar: ["Capitalize the first word following the dash or bullet"](https://x.com/APStylebook/status/1415407776726142979), whether the item is a sentence or a phrase.',
+          },
+        ],
+      },
+      {
+        id: "titles",
+        heading: "Capitalizing after a colon in titles and headings",
+        tocLabel: "In titles",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "In a title, the colon separates the title from its subtitle, and the subtitle starts like a new title. This is one of the few rules in [Title Capitalization Rules by Style Guide](/capitalization-rules-guide) on which all four guides agree.",
+          },
+          { type: "heading", level: 3, grouping: true, text: "Is the first word of a subtitle always capitalized?" },
+          { type: "paragraph", text: "Yes – in all four guides, in title case and sentence case, whatever the word." },
+          { type: "heading", level: 4, text: "In title case, a subtitle starts like a new title" },
+          {
+            type: "paragraph",
+            text: `Even an article or a short preposition takes a capital after the colon, though it stays lowercase anywhere else in the title. MLA prints *${SUBTITLES.mla.title}* (Handbook 2.90), and APA prints *${SUBTITLES.apa.title}*. The small words that stay lowercase in the rest of a title are listed in [What Words Are Not Capitalized in a Title?](/blog/what-words-are-not-capitalized-in-a-title)`,
+          },
+          { type: "heading", level: 4, text: "In sentence case, APA, Chicago and AP headlines still capitalize it" },
+          {
+            type: "paragraph",
+            text: `Sentence case lowercases every word except the first and names – and the first word of a subtitle. APA writes reference titles this way: *${SENTENCE_CASE_SUBTITLE.output}* ([APA Style](https://apastyle.apa.org/style-grammar-guidelines/capitalization/sentence-case)). Chicago's sentence case capitalizes ["the first word in a subtitle"](https://cmosshoptalk.com/2018/08/28/chicago-style-workout-29-styling-titles-in-running-text/), and AP writes news headlines in sentence case with one exception: ["First word after colon is always uppercase in headlines"](https://x.com/APStylebook/status/1021397036808265729).`,
+          },
+          {
+            type: "paragraph",
+            text: "[Title Case vs Sentence Case: Which to Use and When](/blog/sentence-vs-title-case) compares the two styles.",
+          },
+          { type: "heading", level: 3, text: "Is the word after a dash in a title capitalized?" },
+          {
+            type: "paragraph",
+            text: 'In APA, yes: its heading rule capitalizes ["the first word after a colon, em dash, or end punctuation"](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case). Chicago does not treat a dash as a colon. What follows an em dash ["is not normally considered to be a subtitle"](https://cmosshoptalk.com/2018/08/28/chicago-style-workout-29-styling-titles-in-running-text/), so Chicago writes *Chicago—a Metropolitan Smorgasbord*.',
+          },
+        ],
+      },
+      {
+        id: "converter",
+        heading: "How the converter capitalizes the word after a colon",
+        tocLabel: "In the converter",
+        blocks: [
+          {
+            type: "paragraph",
+            text: `In title case the converter capitalizes the first word after a colon in every style and labels it *${COLON_REASONS.title}*: *${CONVERTER_EXAMPLES.title.input}* becomes *${CONVERTER_EXAMPLES.title.output}*.`,
+          },
+          {
+            type: "paragraph",
+            text: `In sentence case it tells a title from a sentence by the closing period. A line without one is a title, so the subtitle keeps its capital: *${CONVERTER_EXAMPLES.sentenceCaseTitle.input}* becomes *${CONVERTER_EXAMPLES.sentenceCaseTitle.output}*, labeled *${COLON_REASONS.sentenceCase}*. In a line that ends with a period, a capital you typed after the colon stays if the text is already in sentence case.`,
+          },
+          { type: "paragraph", text: "It reads punctuation, not grammar, so check two things by hand:" },
+          {
+            type: "list",
+            items: [
+              `**A complete sentence after a colon.** The converter cannot tell a sentence from a phrase. Converted from title case, *${COLON_LIMITS.sentenceAfterColon.input}* comes out as *${COLON_LIMITS.sentenceAfterColon.converter}* – right for MLA, but AP, APA and Chicago want *…silence: The generator…*.`,
+              `**A dash in an APA heading.** After an em dash the converter keeps a small word lowercase, as Chicago does: *${COLON_LIMITS.apaDash.converter}*. APA wants *${COLON_LIMITS.apaDash.correct}*.`,
+            ],
+          },
+        ],
+      },
+      {
+        id: "semicolon",
+        heading: "Is the word after a semicolon capitalized?",
+        tocLabel: "Semicolons",
+        blocks: [
+          {
+            type: "paragraph",
+            text: "No. A semicolon joins two independent clauses inside one sentence, so the word after it stays lowercase unless it is a name, *I* or an acronym. MLA's example: *The girl bought an ice cream cone; she dropped it in the park.* ([MLA Style Center](https://style.mla.org/types-of-sentences/))",
+          },
+          {
+            type: "paragraph",
+            text: 'Chicago puts it plainly: a capital after a semicolon ["is likely to look like an error"](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/Capitalization/faq0076.html). A colon is different – what follows it can stand as a sentence of its own, and that is where the guides split.',
+          },
+        ],
+      },
+      {
+        id: "sources",
+        heading: "Sources",
+        hideFromToc: true,
+        blocks: [
+          {
+            type: "list",
+            items: [
+              "[The Chicago Manual of Style Online: Q&A on capitalizing after a colon](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/Capitalization/faq0008.html) and [on a sentence after a colon](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/Capitalization/faq0105.html); CMOS 18th ed., 6.67; [Q&A on a capital after a semicolon](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/Capitalization/faq0076.html)",
+              "MLA Handbook, 9th ed., 1.11, 2.27 and 2.90; [MLA Style Center: Colons: How to Use Them](https://style.mla.org/colons-how-to-use-them/)",
+              "[APA Style: Title Case Capitalization](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case), [Sentence Case Capitalization](https://apastyle.apa.org/style-grammar-guidelines/capitalization/sentence-case) and [Bulleted Lists](https://apastyle.apa.org/style-grammar-guidelines/lists/bulleted)",
+              "The Associated Press Stylebook, entries \"colon\" and \"headlines\"",
             ],
           },
         ],
