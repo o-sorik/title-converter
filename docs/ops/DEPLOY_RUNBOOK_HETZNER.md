@@ -97,12 +97,22 @@ After every deploy, confirm:
 
 ## Nginx Config Location
 
-Live config: `/etc/nginx/sites-enabled/titlecaseconverter.conf`
+Live config: `/etc/nginx/sites-enabled/titlecaseconverter.conf` and `/etc/nginx/sites-enabled/00-default.conf` (repo copies in `nginx/`).
 
-Three server blocks:
-1. HTTP (port 80) → redirect all to HTTPS apex
+`titlecaseconverter.conf`, three server blocks:
+1. HTTP (port 80) → redirect to HTTPS apex
 2. HTTPS www (port 443) → 308 redirect to apex
 3. HTTPS apex (port 443) → proxy_pass to `127.0.0.1:3000`
+
+`00-default.conf` is the catch-all `default_server` for any other host name: HTTP gets `444` (connection closed), HTTPS gets `ssl_reject_handshake`. Another site's DNS (`syltfahrradverleih.com`, wildcard) points at this IP; without the catch-all nginx gave its requests to the first block above, which redirected them to our domain and showed up in Ahrefs as our 404s. Deploys don't touch nginx: install it by hand.
+
+```bash
+sudo install -m 644 ~/00-default.conf /etc/nginx/sites-available/00-default.conf
+sudo ln -sf /etc/nginx/sites-available/00-default.conf /etc/nginx/sites-enabled/00-default.conf
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+Rollback: `sudo rm /etc/nginx/sites-enabled/00-default.conf && sudo systemctl reload nginx`.
 
 To reload after config changes:
 
