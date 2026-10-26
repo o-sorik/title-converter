@@ -7,9 +7,9 @@ function extractOutputRegion(html: string): string {
 }
 
 /**
- * The output is rendered as segments so changed words can be marked inline,
- * so its text is no longer one contiguous string in the markup. Strip the tags
- * to assert on what the user actually reads.
+ * The output is rendered word by word so each word can carry its rule, so its
+ * text is not one contiguous string in the markup. Strip the tags to assert on
+ * what the user actually reads.
  */
 function extractOutputText(html: string): string {
   return extractOutputRegion(html)
@@ -19,28 +19,21 @@ function extractOutputText(html: string): string {
     .replace(/&amp;/g, "&")
 }
 
-function extractDiffLegendText(html: string): string {
-  return (html.match(/data-testid="diff-legend"[\s\S]*?<\/p>/)?.[0] ?? "").replace(/<[^>]+>/g, "")
-}
-
-function extractModeControlsMarkup(html: string): string {
-  const match = html.match(/data-testid="mode-controls"[\s\S]*?<\/div>/)
-  return match?.[0] ?? ""
-}
-
 function extractStyleControlsMarkup(html: string): string {
   const match = html.match(/data-testid="style-controls"[\s\S]*?<\/div>/)
   return match?.[0] ?? ""
 }
 
+function extractModeSelectMarkup(html: string): string {
+  return html.match(/<select[^>]*data-testid="mode-controls"[\s\S]*?<\/select>/)?.[0] ?? ""
+}
+
 function extractCopyActionMarkup(html: string): string {
-  const match = html.match(/<button[^>]*data-testid="copy-action"[^>]*>/)
-  return match?.[0] ?? ""
+  return html.match(/<button[^>]*data-testid="copy-action"[\s\S]*?<\/button>/)?.[0] ?? ""
 }
 
 function extractOutputRulesEntryMarkup(html: string): string {
-  const match = html.match(/data-testid="output-rules-entry"[\s\S]*?<\/div>/)
-  return match?.[0] ?? ""
+  return html.match(/data-testid="output-rules-entry"[\s\S]*?<\/div>/)?.[0] ?? ""
 }
 
 test("renders converter workspace shell with required zones", () => {
@@ -53,8 +46,7 @@ test("renders converter workspace shell with required zones", () => {
   expect(html).toContain('data-testid="style-controls"')
   expect(html).toContain('id="converter-input"')
   expect(html).toContain('id="converter-output"')
-  expect(html).toContain("Input Text")
-  expect(html).toContain("Title Style")
+  expect(html).toContain("Which style guide?")
   expect(html).toContain('href="/batch-checker"')
 })
 
@@ -66,23 +58,21 @@ test("workspace shell remains usable without auth or onboarding copy", () => {
   expect(lowered).not.toContain("log in")
   expect(lowered).not.toContain("create account")
   expect(lowered).not.toContain("onboarding")
-  expect(lowered).toContain("input text")
-  expect(lowered).toContain("title style")
+  expect(lowered).toContain("which style guide?")
 })
 
 test.each([
-  { mode: "title", outputLabel: "Title Case output", expectedOutput: "Hello World" },
-  { mode: "sentence", outputLabel: "Sentence case output", expectedOutput: "Hello world" },
-  { mode: "upper", outputLabel: "UPPER CASE output", expectedOutput: "HELLO WORLD" },
-  { mode: "lower", outputLabel: "lower case output", expectedOutput: "hello world" },
-] as const)("sets visible active mode state and matching output for $mode", ({ mode, outputLabel, expectedOutput }) => {
+  { mode: "title", outputLabel: "Standard title case", expectedOutput: "Hello World" },
+  { mode: "sentence", outputLabel: "Sentence case", expectedOutput: "Hello world" },
+  { mode: "upper", outputLabel: "UPPER CASE", expectedOutput: "HELLO WORLD" },
+  { mode: "lower", outputLabel: "lower case", expectedOutput: "hello world" },
+] as const)("selects the active mode and shows the matching output for $mode", ({ mode, outputLabel, expectedOutput }) => {
   const html = renderToStaticMarkup(<TextConverter defaultMode={mode} initialInput="hello world" />)
-  const modeControls = extractModeControlsMarkup(html)
+  const modeSelect = extractModeSelectMarkup(html)
 
-  const activeCount = (modeControls.match(/aria-pressed="true"/g) ?? []).length
-  expect(activeCount).toBe(1)
-  expect(modeControls).toContain(`data-active="true"`)
-  expect(html).toContain(outputLabel)
+  expect((modeSelect.match(/selected=""/g) ?? []).length).toBe(1)
+  expect(modeSelect).toMatch(new RegExp(`<option value="${mode}" selected=""`))
+  expect(html).toContain(`id="converter-output-label" class="text-sm font-medium text-muted-foreground">${outputLabel}<`)
   expect(extractOutputText(html)).toBe(expectedOutput)
 })
 
@@ -93,7 +83,7 @@ test("preserves whitespace-only output for modes whose engine preserves whitespa
   expect(outputRegion).toContain('aria-label="Converted output"')
   expect(outputRegion).toContain('aria-readonly="true"')
   expect(outputRegion).toContain("   ")
-  expect(outputRegion).not.toContain("Result Will Appear Here")
+  expect(extractOutputText(html)).not.toContain("Appear")
 })
 
 test("the empty-output placeholder previews the active mode", () => {
@@ -116,45 +106,50 @@ test("marks changed words inline in the output with the rule that moved them", (
   expect(html).toMatch(/<mark[^>]*title="[^"]+"/)
 })
 
-test("summarises how many words changed", () => {
+test("explains every word of the result, including the ones that did not move", () => {
   const html = renderToStaticMarkup(
-    <TextConverter defaultMode="title" initialInput="A Guide To Better Writing" />
+    <TextConverter defaultMode="title" initialInput="A Guide About Writing" initialTitleStyle="apa" />
   )
-  expect(html).toContain('data-testid="diff-legend"')
-  expect(extractDiffLegendText(html)).toContain("1 change")
+
+  expect(html).toContain('data-testid="rule-notes"')
+  expect(html).toContain("Why each word looks this way")
+  // "About" is already correct, yet the APA rule that keeps it capitalized is shown.
+  expect(html).toContain("APA style: preposition with 4+ letters")
+  expect(html).toMatch(/APA style: preposition with 4\+ letters<\/span><span[^>]*>About</)
 })
 
-test("shows no diff legend when the input needs no changes", () => {
-  const html = renderToStaticMarkup(
-    <TextConverter defaultMode="title" initialInput="A Guide to Better Writing" />
-  )
-  expect(html).not.toContain('data-testid="diff-legend"')
+test("shows the rules only when there is output in a mode that has word rules", () => {
+  const withOutput = renderToStaticMarkup(<TextConverter defaultMode="title" initialInput="hello world" />)
+  const emptyInput = renderToStaticMarkup(<TextConverter defaultMode="title" />)
+  const unsupportedMode = renderToStaticMarkup(<TextConverter defaultMode="camel" initialInput="hello world" />)
+
+  expect(withOutput).toContain('data-testid="explanations-toggle"')
+  expect(emptyInput).not.toContain('data-testid="explanations-toggle"')
+  expect(unsupportedMode).not.toContain('data-testid="explanations-toggle"')
 })
 
-test("mode controls expose keyboard-friendly toggle semantics", () => {
+test("mode control lists every case and conversion stays realtime", () => {
   const html = renderToStaticMarkup(<TextConverter defaultMode="title" />)
-  expect(html).toContain('aria-label="Mode Controls"')
-  // 8 mode buttons in default (title) mode — Fun group is hidden unless activeType is alternating/inverse
-  expect((html.match(/aria-pressed="/g) ?? []).length).toBe(8)
-  // Conversion is realtime — there is no Convert action or shortcut anymore
+  const modeSelect = extractModeSelectMarkup(html)
+
+  expect(modeSelect).toContain('aria-label="Conversion mode"')
+  expect((modeSelect.match(/<option /g) ?? []).length).toBe(10)
+  // Conversion is realtime – there is no Convert action or shortcut
   expect(html).not.toContain('data-testid="convert-action"')
   expect(html).not.toContain(">Convert<")
   expect(html).not.toContain("aria-keyshortcuts")
 })
 
-test("style controls expose active style state and show expected options in title mode", () => {
+test("style controls put Standard first, explain it, and expose one checked option", () => {
   const html = renderToStaticMarkup(<TextConverter defaultMode="title" />)
   const styleControls = extractStyleControlsMarkup(html)
 
-  expect(html).toContain("Title Style")
-  expect(html).toContain(">Standard<")
-  expect(html).toContain(">AP<")
-  expect(html).toContain(">Chicago<")
-  expect(html).toContain(">MLA<")
-  expect(html).toContain(">APA<")
-  expect(styleControls).toContain('role="tablist"')
-  expect((styleControls.match(/role="tab"/g) ?? []).length).toBe(5)
-  expect((styleControls.match(/data-active="true"/g) ?? []).length).toBe(1)
+  expect(styleControls).toContain('role="radiogroup"')
+  expect((styleControls.match(/role="radio"/g) ?? []).length).toBe(5)
+  expect((styleControls.match(/aria-checked="true"/g) ?? []).length).toBe(1)
+  const labels = [...styleControls.matchAll(/role="radio"[^>]*>([^<]+)</g)].map((m) => m[1])
+  expect(labels).toEqual(["Standard (MLA-based)", "AP", "APA", "Chicago", "MLA"])
+  expect(html).toContain("Standard follows MLA-style rules: all prepositions lowercase.")
 })
 
 test("style selection updates title output for the same input", () => {
@@ -169,13 +164,23 @@ test("style selection updates title output for the same input", () => {
   expect(extractOutputText(apHtml)).toBe("Walking During the Light")
 })
 
+test("the result and the copy button name the style they follow", () => {
+  const html = renderToStaticMarkup(
+    <TextConverter defaultMode="title" initialInput="walking during the light" initialTitleStyle="apa" />
+  )
+
+  expect(html).toContain(">APA title case<")
+  expect(extractCopyActionMarkup(html)).toContain("Copy APA")
+  const sentence = renderToStaticMarkup(<TextConverter defaultMode="sentence" initialInput="hello world" />)
+  expect(extractCopyActionMarkup(sentence)).toContain(">Copy<")
+})
+
 test("shows style-contextual guidance entry point in title mode without duplicates", () => {
   const html = renderToStaticMarkup(
     <TextConverter defaultMode="title" initialInput="walking during the light" initialTitleStyle="ap" />
   )
   const outputRulesEntry = extractOutputRulesEntryMarkup(html)
 
-  // Single guidance entry point: the old style-rules-entry duplicated the same link
   expect(html).not.toContain('data-testid="style-rules-entry"')
   expect(html).toContain('data-testid="output-rules-entry"')
   expect(outputRulesEntry).toContain("AP rules")
@@ -241,20 +246,26 @@ test("enables copy action and shows ready feedback when output exists", () => {
 test("provides semantic labels for icon controls and textareas", () => {
   const html = renderToStaticMarkup(<TextConverter defaultMode="title" initialInput="hello world" />)
 
-  expect(html).toContain('aria-label="Paste from clipboard"')
   expect(html).toContain('aria-label="Clear input"')
   expect(html).toContain('aria-label="Copy output"')
   expect(html).toContain('aria-label="Input text"')
   expect(html).toContain('aria-label="Converted output"')
+  // Clear only appears once there is something to clear
+  expect(renderToStaticMarkup(<TextConverter defaultMode="title" />)).not.toContain('aria-label="Clear input"')
 })
 
-test("includes helper/status relationships and responsive textarea sizing", () => {
+test("includes helper/status relationships and a field that starts compact", () => {
   const html = renderToStaticMarkup(<TextConverter defaultMode="title" />)
 
   expect(html).toContain('id="converter-input-helper"')
   expect(html).toContain('aria-describedby="converter-input-helper"')
   expect(html).toContain('aria-describedby="copy-feedback"')
-  expect(html).toContain('min-h-[160px] md:min-h-[200px]')
+  expect(html).toContain("min-h-24")
+})
+
+test("counts characters and words once, with correct plurals", () => {
+  expect(renderToStaticMarkup(<TextConverter defaultMode="title" initialInput="hello" />)).toContain("5 characters · 1 word<")
+  expect(renderToStaticMarkup(<TextConverter defaultMode="title" initialInput="a b" />)).toContain("3 characters · 2 words<")
 })
 
 test("shows matched Grammar 101 continuity link for high-intent capitalization query input", () => {
@@ -284,16 +295,6 @@ test("shows Grammar 101 browse link when converter input does not match high-int
   expect(html).not.toContain("See matched answer")
 })
 
-test("surfaces the explanations toggle next to the output only when supported output exists", () => {
-  const withOutput = renderToStaticMarkup(<TextConverter defaultMode="title" initialInput="hello world" />)
-  const emptyInput = renderToStaticMarkup(<TextConverter defaultMode="title" />)
-  const unsupportedMode = renderToStaticMarkup(<TextConverter defaultMode="camel" initialInput="hello world" />)
-
-  expect(withOutput).toContain('data-testid="explanations-toggle"')
-  expect(emptyInput).not.toContain('data-testid="explanations-toggle"')
-  expect(unsupportedMode).not.toContain('data-testid="explanations-toggle"')
-})
-
 test("continuity context and output always follow the current selected mode", () => {
   const html = renderToStaticMarkup(
     <TextConverter
@@ -308,14 +309,14 @@ test("continuity context and output always follow the current selected mode", ()
   expect(html).toContain("ctx_style=chicago")
   expect(html).not.toContain("ctx_output_mode")
   // Realtime: output renders immediately in the selected mode, no stale state
-  expect(html).toContain("Sentence case output")
+  expect(html).toContain(">Sentence case<")
   expect(extractOutputText(html)).toBe("Is and capitalized")
   expect(html).not.toContain("Settings changed")
 })
 
 test("AP points news headlines to sentence case, other styles do not", () => {
   const ap = renderToStaticMarkup(<TextConverter defaultMode="title" initialTitleStyle="ap" />)
-  const hint = (ap.match(/data-testid="ap-headline-hint"[\s\S]*?<\/p>/)?.[0] ?? "").replace(/<[^>]+>/g, "")
+  const hint = (ap.match(/data-testid="ap-headline-hint"[\s\S]*?<\/span>/)?.[0] ?? "").replace(/<[^>]+>/g, "")
   expect(hint).toContain("AP news headlines use")
   expect(hint).toContain("sentence case")
 

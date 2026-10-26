@@ -174,7 +174,7 @@ export default async function CapitalizationRulesGuidePage({ searchParams }: Rul
             ]} />
             <FAQPageJsonLd faqs={model.faqs} />
 
-            <main className="container mx-auto py-10 px-4 sm:px-6 lg:px-8 max-w-4xl space-y-12">
+            <main id="main" className="container mx-auto py-10 px-4 sm:px-6 lg:px-8 max-w-4xl space-y-12">
                 <header className="space-y-4">
                     <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Reference guide</p>
                     <h1 className="text-4xl font-extrabold tracking-tight">Title Capitalization Rules by Style Guide</h1>
