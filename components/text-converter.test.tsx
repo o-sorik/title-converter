@@ -128,12 +128,36 @@ test("shows the rules only when there is output in a mode that has word rules", 
   expect(unsupportedMode).not.toContain('data-testid="explanations-toggle"')
 })
 
+test("slug mode shows the slug, its length, an unchecked stop-word switch and what changed", () => {
+  const html = renderToStaticMarkup(
+    <TextConverter defaultMode="slug" initialInput="Don't Stop: Café Résumé & 10% Off!" />
+  )
+
+  expect(extractOutputRegion(html)).toContain("dont-stop-cafe-resume-and-10-off")
+  // The length is shown, never cut.
+  expect(html).toContain('data-testid="slug-length">32 characters in the slug<')
+  expect(html).toContain('data-testid="stop-words-toggle"')
+  expect(html).toMatch(/<input type="checkbox"(?![^>]*checked)[^>]*>/)
+  expect(html).toContain('data-testid="slug-notes"')
+  expect(html).toContain("What changed in your text")
+  expect(html).toContain("Apostrophes are dropped without splitting the word")
+  expect(html).toContain("Don&#x27;t → dont")
+  expect(html).not.toContain("Why each word looks this way")
+})
+
+test("the stop-word switch belongs to slug mode only", () => {
+  expect(renderToStaticMarkup(<TextConverter defaultMode="kebab" initialInput="The Cat" />)).not.toContain('data-testid="stop-words-toggle"')
+  expect(renderToStaticMarkup(<TextConverter defaultMode="title" initialInput="The Cat" />)).not.toContain('data-testid="stop-words-toggle"')
+})
+
 test("mode control lists every case and conversion stays realtime", () => {
   const html = renderToStaticMarkup(<TextConverter defaultMode="title" />)
   const modeSelect = extractModeSelectMarkup(html)
 
   expect(modeSelect).toContain('aria-label="Conversion mode"')
-  expect((modeSelect.match(/<option /g) ?? []).length).toBe(10)
+  expect((modeSelect.match(/<option /g) ?? []).length).toBe(11)
+  expect(modeSelect).toContain(">URL Slug<")
+  expect(modeSelect).toContain(">kebab-case<")
   // Conversion is realtime – there is no Convert action or shortcut
   expect(html).not.toContain('data-testid="convert-action"')
   expect(html).not.toContain(">Convert<")

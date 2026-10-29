@@ -6,8 +6,9 @@ import { IconBug, IconCheck, IconCopy, IconExternalLink, IconX } from "@tabler/i
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
-import { ResultText, RuleNotes } from "@/components/converter-result"
+import { ResultText, RuleNotes, SlugNotes } from "@/components/converter-result"
 import { convert, explainWords, type ConversionType, type TitleCaseStyle } from "@/lib/converters"
+import { buildSlug } from "@/lib/slug"
 import { TITLE_STYLES } from "@/lib/title-styles"
 import { getCopyFeedbackMessage, nextCopyFeedbackTick, type CopyFeedbackState } from "@/lib/copy-feedback"
 import { getContextualRuleGuidance } from "@/lib/rule-guidance"
@@ -34,7 +35,8 @@ const CONVERSION_TYPES: { id: ConversionType; label: string }[] = [
     { id: "camel", label: "camelCase" },
     { id: "pascal", label: "PascalCase" },
     { id: "snake", label: "snake_case" },
-    { id: "kebab", label: "URL Slug" },
+    { id: "kebab", label: "kebab-case" },
+    { id: "slug", label: "URL Slug" },
     { id: "alternating", label: "aLtErNaTiNg" },
     { id: "inverse", label: "InVeRsE cAsE" },
 ]
@@ -78,6 +80,20 @@ const selectClass = cn(
     focusRing
 )
 
+function StopWordsToggle({ checked, onChange }: { checked: boolean; onChange: (checked: boolean) => void }) {
+    return (
+        <label className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium" data-testid="stop-words-toggle">
+            <input
+                type="checkbox"
+                checked={checked}
+                onChange={(e) => onChange(e.target.checked)}
+                className={cn("h-4 w-4 cursor-pointer rounded accent-primary", focusRing)}
+            />
+            Remove stop words
+        </label>
+    )
+}
+
 function StyleHint({ titleStyle, onSentenceCase }: { titleStyle: TitleCaseStyle; onSentenceCase: () => void }) {
     return (
         <p className="text-xs text-muted-foreground">
@@ -105,6 +121,7 @@ export function TextConverter({
     const [input, setInput] = React.useState(initialInput)
     const [activeType, setActiveType] = React.useState<ConversionType>(defaultMode)
     const [titleStyle, setTitleStyle] = React.useState<TitleCaseStyle>(initialTitleStyle)
+    const [removeStopWords, setRemoveStopWords] = React.useState(false)
     const [copied, setCopied] = React.useState(false)
     const [copyFeedbackState, setCopyFeedbackState] = React.useState<CopyFeedbackState>("idle")
     const [copyFeedbackTick, setCopyFeedbackTick] = React.useState(0)
@@ -182,7 +199,11 @@ export function TextConverter({
     }, [initialContextRef, initialTitleStyle])
 
     const isTitle = activeType === "title"
-    const conversionOptions = React.useMemo(() => (isTitle ? { titleStyle } : {}), [isTitle, titleStyle])
+    const isSlug = activeType === "slug"
+    const conversionOptions = React.useMemo(
+        () => (isTitle ? { titleStyle } : isSlug ? { removeStopWords } : {}),
+        [isTitle, isSlug, titleStyle, removeStopWords]
+    )
     const output = React.useMemo(
         () => (deferredInput ? convert(deferredInput, activeType, conversionOptions) : ""),
         [deferredInput, activeType, conversionOptions]
@@ -190,6 +211,10 @@ export function TextConverter({
     const rules = React.useMemo(
         () => explainWords(deferredInput, activeType, conversionOptions),
         [deferredInput, activeType, conversionOptions]
+    )
+    const slugNotes = React.useMemo(
+        () => (isSlug ? buildSlug(deferredInput, { removeStopWords }).notes : []),
+        [isSlug, deferredInput, removeStopWords]
     )
     const ruleGuidance = React.useMemo(
         () => getContextualRuleGuidance(activeType, titleStyle, navigationContext),
@@ -322,7 +347,8 @@ export function TextConverter({
         window.location.href = `mailto:${feedbackEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
     }
 
-    const showNotes = rules.length > 0 && canCopy
+    const showNotes = (rules.length > 0 || slugNotes.length > 0) && canCopy
+
 
     return (
         <section
@@ -360,6 +386,8 @@ export function TextConverter({
                                 })}
                             </div>
                         </div>
+                    ) : isSlug ? (
+                        <StopWordsToggle checked={removeStopWords} onChange={setRemoveStopWords} />
                     ) : (
                         <span />
                     )}
@@ -411,6 +439,7 @@ export function TextConverter({
                     )}
                 </div>
                 {isTitle && <StyleHint titleStyle={titleStyle} onSentenceCase={() => selectMode("sentence")} />}
+                {isSlug && <StopWordsToggle checked={removeStopWords} onChange={setRemoveStopWords} />}
             </div>
 
             <div className="relative" data-testid="input-zone">
@@ -452,7 +481,11 @@ export function TextConverter({
                     <span id="converter-output-label" className="text-sm font-medium text-muted-foreground">
                         {resultLabel(activeType, titleStyle)}
                     </span>
-                    {input && (
+                    {isSlug && output ? (
+                        <span className="text-xs tabular-nums text-muted-foreground" data-testid="slug-length">
+                            {plural(output.length, "character")} in the slug
+                        </span>
+                    ) : input && (
                         <span className="text-xs tabular-nums text-muted-foreground">
                             {plural(input.length, "character")} · {plural(wordCount, "word")}
                         </span>
@@ -503,17 +536,23 @@ export function TextConverter({
                             data-testid="explanations-toggle"
                             className={cn("cursor-pointer text-sm font-medium text-primary underline-offset-4 hover:underline md:hidden", focusRing)}
                         >
-                            {notesOpen ? "Hide the rules" : "Why each word looks this way"}
+                            {notesOpen ? "Hide the rules" : isSlug ? "What changed in your text" : "Why each word looks this way"}
                         </button>
-                        <p className="mb-3 hidden text-sm font-medium md:block">Why each word looks this way</p>
-                        <RuleNotes
-                            id="converter-rule-notes"
-                            rules={rules}
-                            open={notesOpen}
-                            animate={drawing || notesOpen}
-                            activeRule={activeRule}
-                            onActiveRule={setActiveRule}
-                        />
+                        <p className="mb-3 hidden text-sm font-medium md:block">
+                            {isSlug ? "What changed in your text" : "Why each word looks this way"}
+                        </p>
+                        {isSlug ? (
+                            <SlugNotes id="converter-rule-notes" notes={slugNotes} open={notesOpen} />
+                        ) : (
+                            <RuleNotes
+                                id="converter-rule-notes"
+                                rules={rules}
+                                open={notesOpen}
+                                animate={drawing || notesOpen}
+                                activeRule={activeRule}
+                                onActiveRule={setActiveRule}
+                            />
+                        )}
                     </div>
                 )}
             </div>

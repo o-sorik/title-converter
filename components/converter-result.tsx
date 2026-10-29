@@ -2,6 +2,7 @@
 import * as React from "react"
 
 import { convert, explainWords, type ConversionType, type TitleCaseStyle, type WordRule } from "@/lib/converters"
+import { SLUG_REASONS, type SlugNote } from "@/lib/slug"
 import { cn } from "@/lib/utils"
 
 export const OUTPUT_PLACEHOLDER = "Result will appear here..."
@@ -214,6 +215,46 @@ export function RuleNotes({
                         )
                     })}
                 </div>
+            </div>
+        </div>
+    )
+}
+
+/**
+ * Slug mode's version of the rule notes: every change the slug made, grouped by
+ * rule in the order the page lists them, with what each fragment became.
+ * Removed punctuation has no "to", so it is listed on its own.
+ */
+export function SlugNotes({ id, notes, open }: { id: string; notes: SlugNote[]; open: boolean }) {
+    const groups = React.useMemo(() => {
+        const order = Object.values(SLUG_REASONS) as string[]
+        const byReason = new Map<string, string[]>()
+        for (const note of notes) {
+            const part = note.to || note.reason === SLUG_REASONS.allStopWords ? `${note.from} → ${note.to}` : note.from
+            const parts = byReason.get(note.reason) ?? []
+            if (!parts.includes(part)) parts.push(part)
+            byReason.set(note.reason, parts)
+        }
+        return [...byReason.entries()].sort(([a], [b]) => order.indexOf(a) - order.indexOf(b))
+    }, [notes])
+
+    return (
+        <div
+            id={id}
+            className={cn(
+                "grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none md:visible md:grid-rows-[1fr]",
+                open ? "visible grid-rows-[1fr]" : "invisible grid-rows-[0fr]"
+            )}
+        >
+            <div className="min-h-0 overflow-hidden">
+                <dl className="grid gap-1 pt-3 text-[13px] md:pt-0" data-testid="slug-notes">
+                    {groups.map(([reason, parts]) => (
+                        <div key={reason} className="grid gap-x-3 gap-y-0.5 py-1 sm:grid-cols-[minmax(0,14rem)_minmax(0,1fr)]">
+                            <dt className="text-muted-foreground">{reason}</dt>
+                            <dd className="break-words font-medium text-foreground">{parts.join(reason === SLUG_REASONS.removed ? "  " : ", ")}</dd>
+                        </div>
+                    ))}
+                </dl>
             </div>
         </div>
     )
