@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
 import { WebApplicationJsonLd, FAQPageJsonLd } from "@/components/json-ld"
 import { SentenceCaseGuide } from "@/components/sentence-case-guide"
+import { SlugGeneratorGuide } from "@/components/slug-generator-guide"
 import type { Metadata } from "next"
 
 export const revalidate = 604800
@@ -19,6 +20,7 @@ export const revalidate = 604800
  */
 const MODE_GUIDES: Partial<Record<string, () => React.JSX.Element>> = {
     "sentence-case-converter": SentenceCaseGuide,
+    "slug-generator": SlugGeneratorGuide,
 }
 export const dynamicParams = false
 

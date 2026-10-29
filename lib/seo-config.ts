@@ -1,5 +1,6 @@
 import { ConversionType } from "./converters";
 import { SENTENCE_CASE_FAQS } from "./sentence-case-content";
+import { SLUG_FAQS } from "./slug-generator-content";
 
 export interface SeoPageConfig {
     slug: string;
@@ -328,37 +329,21 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
     "slug-generator": {
         slug: "slug-generator",
         mode: "slug",
-        title: "URL Slug Generator - Free Online Tool",
-        description: "Generate clean URL slugs from any text. Converts to lowercase, removes specials, and uses hyphens.",
+        title: "Slug Generator – Clean URL Slugs from Any Text",
+        description: "Turn a headline into a clean, lowercase, hyphenated URL slug. Accents become plain letters, apostrophes keep words whole, stop words are optional.",
         h1: "URL Slug Generator",
+        // The page body is rendered by <SlugGeneratorGuide />; this block stays accurate for any other consumer.
         content: {
-            intro: "The URL Slug Generator creates SEO-friendly URL slugs from your text. It follows best practices by using hyphens to separate words, converting to lowercase, and removing invalid URL characters.",
+            intro: "The URL Slug Generator turns a headline into a lowercase, hyphenated slug. Words stay whole (don't becomes dont, iPhone becomes iphone), accented letters become plain letters, and every removed part is explained.",
             features: [
-                "Creates SEO-friendly URLs.",
-                "Removes unsafe characters.",
-                "Standardizes on hyphens.",
+                "Keeps words whole: apostrophes are dropped, brands are not split.",
+                "Turns accented letters into plain letters and & into \"and\".",
+                "Shows the slug's length and removes stop words only on request.",
             ],
-            exampleInput: "What IS the Best Title?",
-            exampleOutput: "what-is-the-best-title",
+            exampleInput: "Don't Stop: Café Résumé & 10% Off!",
+            exampleOutput: "dont-stop-cafe-resume-and-10-off",
         },
-        faqs: [
-            {
-                question: "What is a URL slug generator?",
-                answer: "It converts text into a clean, URL-safe slug by lowercasing words, removing unsafe characters, and using hyphens."
-            },
-            {
-                question: "Why are hyphens preferred in slugs?",
-                answer: "Hyphens improve readability and are commonly used in search-friendly URL structures."
-            },
-            {
-                question: "Should slugs include stop words like 'the' and 'of'?",
-                answer: "They can, but many teams shorten slugs by removing unnecessary words while keeping meaning clear."
-            },
-            {
-                question: "Can I use generated slugs for blog posts and products?",
-                answer: "Yes. Slugs are useful for blog URLs, product pages, category pages, and docs."
-            }
-        ],
+        faqs: SLUG_FAQS,
     },
     "alternating-case-converter": {
         slug: "alternating-case-converter",
