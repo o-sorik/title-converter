@@ -163,6 +163,25 @@ const MODE_CONTENT: Record<ConversionType, ModeContent> = {
             { href: "/lower-case-converter", label: "Lower Case Converter" },
         ],
     },
+    slug: {
+        whenToUse: "Use the slug generator to turn a headline into the last part of a page URL.",
+        useCases: [
+            "Blog post and product page URLs.",
+            "Slugs for WordPress, Shopify and Ghost.",
+            "Clean file and folder names for the web.",
+        ],
+        commonMistakes: [
+            "Changing a published slug without a redirect.",
+            "Leaving accented letters that browsers percent-encode.",
+            "Using underscores instead of hyphens between words.",
+        ],
+        proTip: "Fix the headline first, then generate the slug: a published slug should not change.",
+        relatedLinks: [
+            { href: "/kebab-case-converter", label: "Kebab Case Converter" },
+            { href: "/snake-case-converter", label: "Snake Case Converter" },
+            { href: "/lower-case-converter", label: "Lower Case Converter" },
+        ],
+    },
     alternating: {
         whenToUse: "Use alternating case for playful formatting, meme-style text, and social content experiments.",
         useCases: [

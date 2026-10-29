@@ -327,7 +327,7 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
     // Alias for slug generator
     "slug-generator": {
         slug: "slug-generator",
-        mode: "kebab",
+        mode: "slug",
         title: "URL Slug Generator - Free Online Tool",
         description: "Generate clean URL slugs from any text. Converts to lowercase, removes specials, and uses hyphens.",
         h1: "URL Slug Generator",

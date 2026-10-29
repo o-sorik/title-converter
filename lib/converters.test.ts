@@ -245,7 +245,7 @@ test('inverse case preserves numbers and flips letters', () => {
 // --- Empty and whitespace ---
 
 test('handles empty string for all modes', () => {
-    const modes: ConversionType[] = ['title', 'upper', 'lower', 'sentence', 'camel', 'pascal', 'snake', 'kebab', 'alternating', 'inverse']
+    const modes: ConversionType[] = ['title', 'upper', 'lower', 'sentence', 'camel', 'pascal', 'snake', 'kebab', 'slug', 'alternating', 'inverse']
     for (const mode of modes) {
         expect(convert('', mode)).toBe('')
     }
