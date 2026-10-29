@@ -105,7 +105,7 @@ export default async function ConverterPage({ params }: Props) {
                             {config.h1}
                         </h1>
                         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                            Transform your text instantly with smart capitalization rules.
+                            {config.subtitle ?? "Transform your text instantly with smart capitalization rules."}
                         </p>
                     </div>
 

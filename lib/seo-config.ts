@@ -8,6 +8,8 @@ export interface SeoPageConfig {
     title: string;
     description: string;
     h1: string;
+    /** One line under the H1. Pages without it share the generic converter line. */
+    subtitle?: string;
     content: {
         intro: string;
         features: string[];
@@ -332,6 +334,7 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
         title: "Slug Generator – Clean URL Slugs from Any Text",
         description: "Turn a headline into a clean, lowercase, hyphenated URL slug. Accents become plain letters, apostrophes keep words whole, stop words are optional.",
         h1: "URL Slug Generator",
+        subtitle: "Turn any headline into a clean URL slug and see what each rule changed.",
         // The page body is rendered by <SlugGeneratorGuide />; this block stays accurate for any other consumer.
         content: {
             intro: "The URL Slug Generator turns a headline into a lowercase, hyphenated slug. Words stay whole (don't becomes dont, iPhone becomes iphone), accented letters become plain letters, and every removed part is explained.",
