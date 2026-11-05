@@ -23,7 +23,7 @@ const MARK_COLOR = {
 }
 
 /** Rebuilds the result word by word so each word can carry its rule and highlight. */
-function RuledText({
+export function RuledText({
     text,
     rules,
     activeRule,
