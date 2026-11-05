@@ -109,6 +109,59 @@ describe("ArticleBlockRenderer", () => {
     expect(html).toMatch(/with<span class="block text-xs[^"]*">preposition, 4 letters<\/span>/)
   })
 
+  test("renders wordFormMatrix with the word as each guide writes it", () => {
+    const html = renderToStaticMarkup(
+      <ArticleBlockRenderer
+        block={{
+          type: "wordFormMatrix",
+          rowHeader: "Word",
+          caption: "Shaded rows are where the guides disagree.",
+          rows: [
+            { word: "with", href: "/blog/with-capitalized-in-title-case", note: "preposition, 4 letters", guides: { ap: true, apa: true, chicago: false, mla: false } },
+            { word: "of", note: "preposition, 2 letters", guides: { ap: false, apa: false, chicago: false, mla: false } },
+          ],
+        }}
+      />
+    )
+    const rows = html.match(/<tr[^>]*>[\s\S]*?<\/tr>/g) ?? []
+    const [head, withRow, ofRow] = rows
+
+    expect(html).toMatch(/<caption[^>]*>Shaded rows are where the guides disagree.<\/caption>/)
+    expect(head).toMatch(/>Word<.*>AP<.*>APA<.*>Chicago<.*>MLA</)
+    // Guide order AP, APA, Chicago, MLA: capitals where the guide capitalizes.
+    expect((withRow.match(/>(With|with)<\/span>/g) ?? []).map((cell) => cell.slice(1, -7))).toEqual(["With", "With", "with", "with"])
+    expect((withRow.match(/, capitalized/g) ?? []).length).toBe(2)
+    expect((withRow.match(/, lowercase/g) ?? []).length).toBe(2)
+    expect(withRow).toContain('data-split="true"')
+    expect(withRow).toMatch(/<th scope="row"[^>]*><a[^>]*href="\/blog\/with-capitalized-in-title-case"[^>]*>with<\/a>/)
+    expect(withRow).toContain(">preposition, 4 letters</span>")
+    // A row every guide agrees on is not shaded.
+    expect(ofRow).not.toContain("data-split")
+    expect((ofRow.match(/, lowercase/g) ?? []).length).toBe(4)
+    // No badges and no horizontal scroller: the table fits, so the header can stick.
+    expect(html).not.toContain(">Capitalize<")
+    expect(html).not.toContain("overflow-x-auto")
+    expect(head).toContain("sticky")
+  })
+
+  test("wordFormMatrix cells show `form` when a row label is not the word itself", () => {
+    const html = renderToStaticMarkup(
+      <ArticleBlockRenderer
+        block={{
+          type: "wordFormMatrix",
+          rowHeader: "After the colon",
+          caption: "Each column shows the first word after the colon.",
+          rows: [{ word: "One sentence", form: "the", note: "a complete sentence", guides: { ap: true, apa: true, chicago: true, mla: false } }],
+        }}
+      />
+    )
+    const row = (html.match(/<tr[^>]*>[\s\S]*?<\/tr>/g) ?? [])[1]
+
+    expect(row).toMatch(/<th scope="row"[^>]*>One sentence<span/)
+    expect((row.match(/>(The|the)<\/span>/g) ?? []).map((cell) => cell.slice(1, -7))).toEqual(["The", "The", "The", "the"])
+    expect(row).toContain('data-split="true"')
+  })
+
   test("renders generic table with bold first column", () => {
     const html = renderToStaticMarkup(
       <ArticleBlockRenderer
