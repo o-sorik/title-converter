@@ -21,6 +21,16 @@ export function getContextualRuleGuidance(
   titleStyle: TitleCaseStyle,
   converterContext?: ConverterContext
 ): RuleGuidanceContext {
+  // A slug has no capitalization rules: its rules are the list on the slug page.
+  if (mode === "slug") {
+    return {
+      href: "/slug-generator#what-changes",
+      shortLabel: "Slug rules",
+      description: "Open the list of changes the slug generator makes.",
+      isStyleSpecific: false,
+    }
+  }
+
   const baseHref =
     mode === "title"
       ? `/capitalization-rules-guide?mode=title&style=${titleStyle}`

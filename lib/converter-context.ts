@@ -27,6 +27,7 @@ const VALID_MODES: ConversionType[] = [
   "pascal",
   "snake",
   "kebab",
+  "slug",
   "alternating",
   "inverse",
 ]

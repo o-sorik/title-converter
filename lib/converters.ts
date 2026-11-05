@@ -1,3 +1,5 @@
+import { slugify } from "./slug";
+
 export type ConversionType =
     | "title"
     | "upper"
@@ -7,6 +9,7 @@ export type ConversionType =
     | "pascal"
     | "snake"
     | "kebab"
+    | "slug"
     | "alternating"
     | "inverse";
 
@@ -14,6 +17,8 @@ export type TitleCaseStyle = "standard" | "ap" | "chicago" | "mla" | "apa";
 
 export interface ConvertOptions {
     titleStyle?: TitleCaseStyle;
+    /** Slug mode only: drop the words in SLUG_STOP_WORDS. Off by default. */
+    removeStopWords?: boolean;
 }
 
 const EXPLANATION_SNIPPET_LENGTH = 20;
@@ -851,6 +856,8 @@ export function convert(text: string, type: ConversionType, options: ConvertOpti
             return tokenizeIdentifierWords(text)
                 .map((w) => w.toLowerCase())
                 .join("-");
+        case "slug":
+            return slugify(text, { removeStopWords: options.removeStopWords });
         case "alternating":
             return text.split("").map((c, i) => i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()).join("");
         case "inverse":
