@@ -59,7 +59,7 @@ export default function BatchCheckerPage() {
                 className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(60%_60%_at_50%_0%,oklch(0.511_0.194_267/0.08),transparent)] dark:bg-[radial-gradient(60%_60%_at_50%_0%,oklch(0.707_0.165_267/0.1),transparent)]"
             />
 
-            <main className="relative container mx-auto py-10 px-4 sm:px-6 lg:px-8">
+            <main id="main" className="relative container mx-auto py-10 px-4 sm:px-6 lg:px-8">
                 <div className="w-full max-w-5xl mx-auto space-y-12">
                     <div className="text-center space-y-4">
                         <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">

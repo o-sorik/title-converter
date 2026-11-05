@@ -1,5 +1,5 @@
-import { expect, test } from 'vitest'
-import { convert } from './converters'
+import { describe, expect, test } from 'vitest'
+import { convert, explainWords } from './converters'
 import type { ConversionType } from './converters'
 
 test('converts to title case', () => {
@@ -307,4 +307,43 @@ test('all five styles handle hyphenated compounds with prepositions', () => {
     expect(convert(input, 'title', { titleStyle: 'apa' })).toBe('A Run-Through of the Plan')
     expect(convert(input, 'title', { titleStyle: 'mla' })).toBe('A Run-through of the Plan')
     expect(convert(input, 'title', { titleStyle: 'chicago' })).toBe('A Run-Through of the Plan')
+})
+
+describe('explainWords', () => {
+    const titles = [
+        'the best way to learn a language in 2026: tips from an expert',
+        'A Guide To Writing About The Effects Of Social Media On Teenagers',
+        'HOW TO WRITE A BETTER HEADLINE',
+        'why I switched from android to iPhone',
+        'a well-known guide to self-driving cars at NASA',
+        '  spaced   out   title  ',
+    ]
+
+    test.each(['standard', 'ap', 'apa', 'chicago', 'mla'] as const)('rebuilding %s output from the word rules matches convert()', (style) => {
+        for (const text of titles) {
+            const rules = explainWords(text, 'title', { titleStyle: style })
+            let rebuilt = ''
+            let cursor = 0
+            for (const rule of rules) {
+                rebuilt += text.slice(cursor, rule.start) + rule.converted
+                cursor = rule.end
+            }
+            rebuilt += text.slice(cursor)
+            expect(rebuilt).toBe(convert(text, 'title', { titleStyle: style }))
+        }
+    })
+
+    test('explains unchanged words too, not only the ones that moved', () => {
+        const rules = explainWords('A Guide About Writing', 'title', { titleStyle: 'apa' })
+        const about = rules.find((rule) => rule.word === 'About')
+        // Already correct, so nothing moved, yet the rule that keeps it capitalized is still there
+        expect(about?.converted).toBe('About')
+        expect(about?.reason).toMatch(/APA/)
+    })
+
+    test('covers sentence case and returns nothing for modes without word rules', () => {
+        expect(explainWords('The Report From NASA', 'sentence').length).toBeGreaterThan(0)
+        expect(explainWords('hello world', 'snake')).toEqual([])
+        expect(explainWords('', 'title')).toEqual([])
+    })
 })

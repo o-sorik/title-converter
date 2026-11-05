@@ -13,7 +13,9 @@ import type { TitleCaseStyle } from "@/lib/converters"
 export interface TitleStyleOption {
     id: TitleCaseStyle
     label: string
-    /** Short line shown under the style picker. */
+    /** Label with what the style is, where there is room for it ("Standard (MLA-based)"). */
+    qualifiedLabel: string
+    /** One sentence under the style picker saying what the style does. */
     hint: string
     /**
      * Preposition length at or above which this style capitalises, or null when
@@ -23,36 +25,42 @@ export interface TitleStyleOption {
     prepositionThreshold: number | null
 }
 
+/** Picker order: the default first, then the four manuals. */
 export const TITLE_STYLES: TitleStyleOption[] = [
     {
         id: "standard",
         label: "Standard",
-        hint: "Lowercases all prepositions in middle positions",
+        qualifiedLabel: "Standard (MLA-based)",
+        hint: "Standard follows MLA-style rules: all prepositions lowercase.",
         prepositionThreshold: null,
     },
     {
         id: "ap",
         label: "AP",
-        hint: "Capitalizes prepositions with 4+ letters",
+        qualifiedLabel: "AP",
+        hint: "AP capitalizes prepositions with 4+ letters.",
+        prepositionThreshold: 4,
+    },
+    {
+        id: "apa",
+        label: "APA",
+        qualifiedLabel: "APA",
+        hint: "APA capitalizes prepositions and conjunctions with 4+ letters.",
         prepositionThreshold: 4,
     },
     {
         id: "chicago",
         label: "Chicago",
-        hint: "Capitalizes prepositions with 5+ letters (18th ed.)",
+        qualifiedLabel: "Chicago",
+        hint: "Chicago capitalizes prepositions with 5+ letters (18th ed.).",
         prepositionThreshold: 5,
     },
     {
         id: "mla",
         label: "MLA",
-        hint: "Lowercases all prepositions — same rule as Standard",
+        qualifiedLabel: "MLA",
+        hint: "MLA lowercases all prepositions.",
         prepositionThreshold: null,
-    },
-    {
-        id: "apa",
-        label: "APA",
-        hint: "Capitalizes prepositions and conjunctions with 4+ letters",
-        prepositionThreshold: 4,
     },
 ]
 
@@ -62,7 +70,7 @@ export const STYLE_RULE_SUMMARY: Record<TitleCaseStyle, string> = {
     ap: "Capitalizes prepositions with 4+ letters, lowercases shorter ones in the middle of titles.",
     chicago:
         "Capitalizes prepositions with 5+ letters (18th ed.); keeps 4-letter and shorter prepositions lowercase.",
-    mla: "Lowercases all prepositions regardless of length — the same rule as Standard.",
+    mla: "Lowercases all prepositions regardless of length, the same rule as Standard.",
     apa: "Capitalizes prepositions and conjunctions with 4+ letters; lowercases shorter ones in the middle.",
 }
 

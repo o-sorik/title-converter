@@ -28,25 +28,28 @@ export function ConsentBanner() {
         setOpen(false)
     }
 
+    // A slim bar: it must not cover the converter result on phones, and refusing
+    // has to be as easy as accepting, so both choices carry the same weight.
     return (
         <div
             role="dialog"
             aria-live="polite"
             aria-label="Analytics preference"
-            className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-md rounded-lg border bg-background p-4 text-sm shadow-lg sm:inset-x-auto sm:right-4"
+            className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 text-sm backdrop-blur supports-[backdrop-filter]:bg-background/85"
         >
-            <p className="text-foreground">
-                We use Google Analytics to count visits and see which tools get used. No ads, no data
-                sales.{" "}
-                <Link href="/privacy-policy" className="underline underline-offset-4 hover:text-foreground/80">
-                    Privacy policy
-                </Link>
-            </p>
-            <div className="mt-3 flex justify-end gap-2">
-                <Button type="button" variant="ghost" size="sm" onClick={() => choose("denied")}>
+            <div className="mx-auto flex max-w-5xl items-center gap-3">
+                <p className="min-w-0 flex-1 text-xs leading-snug text-muted-foreground sm:text-sm">
+                    <span className="hidden sm:inline">We use Google Analytics to count visits and see which tools get used. </span>
+                    <span className="sm:hidden">Analytics cookies? </span>
+                    <Link href="/privacy-policy" className="underline underline-offset-4 hover:text-foreground">
+                        <span className="sm:hidden">Details</span>
+                        <span className="hidden sm:inline">Privacy policy</span>
+                    </Link>
+                </p>
+                <Button type="button" variant="outline" size="sm" className="h-9 min-w-20 cursor-pointer" onClick={() => choose("denied")}>
                     Decline
                 </Button>
-                <Button type="button" size="sm" onClick={() => choose("granted")}>
+                <Button type="button" variant="outline" size="sm" className="h-9 min-w-20 cursor-pointer" onClick={() => choose("granted")}>
                     Allow
                 </Button>
             </div>
