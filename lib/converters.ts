@@ -526,8 +526,17 @@ function looksVerbLike(word: string): boolean {
     return stemCandidates(word.toLowerCase()).some((candidate) => COMMON_BASE_VERBS.has(candidate));
 }
 
+/**
+ * Words for camelCase, PascalCase, snake_case and kebab-case.
+ *
+ * An apostrophe between two letters is dropped before the split, so "Don't"
+ * stays one word ("dont", not "don-t"): an apostrophe cannot be part of a CSS
+ * identifier or a variable name, and nobody means the half-word "t".
+ * Accented letters are kept; turning them into plain letters is the slug mode's job.
+ */
 function tokenizeIdentifierWords(text: string): string[] {
     const normalized = text
+        .replace(/(?<=\p{L})['’](?=\p{L})/gu, "")
         .replace(/([\p{Ll}\p{N}])([\p{Lu}])/gu, "$1 $2")
         .replace(/([\p{Lu}]+)([\p{Lu}][\p{Ll}])/gu, "$1 $2");
 
