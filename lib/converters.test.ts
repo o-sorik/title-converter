@@ -277,6 +277,48 @@ test('converts various inputs to kebab case', () => {
     expect(convert('helloWorld', 'kebab')).toBe('hello-world')
 })
 
+// --- Apostrophes and accents in the identifier modes (kebab brief, decision K1) ---
+
+test('an apostrophe between letters is dropped without splitting the word', () => {
+    expect(convert("Don't Stop", 'kebab')).toBe('dont-stop')
+    expect(convert("Don't Stop", 'snake')).toBe('dont_stop')
+    expect(convert("Don't Stop", 'camel')).toBe('dontStop')
+    expect(convert("Don't Stop", 'pascal')).toBe('DontStop')
+})
+
+test('a typographic apostrophe behaves like a straight one', () => {
+    expect(convert('Don’t Stop', 'kebab')).toBe('dont-stop')
+    expect(convert('What’s New', 'snake')).toBe('whats_new')
+    expect(convert('it’s here', 'camel')).toBe('itsHere')
+    expect(convert('it’s here', 'pascal')).toBe('ItsHere')
+})
+
+test('quote marks that are not inside a word still only separate words', () => {
+    expect(convert("rock 'n' roll", 'kebab')).toBe('rock-n-roll')
+    expect(convert("the writers' guide", 'snake')).toBe('the_writers_guide')
+    expect(convert("'quoted' text", 'camel')).toBe('quotedText')
+})
+
+test('a capital after a dropped apostrophe still starts a new word', () => {
+    expect(convert("O'Reilly Media", 'kebab')).toBe('o-reilly-media')
+    expect(convert("McDonald's Menu", 'kebab')).toBe('mc-donalds-menu')
+})
+
+test('accented letters are kept in every identifier mode', () => {
+    expect(convert('Café Résumé', 'kebab')).toBe('café-résumé')
+    expect(convert('Café Résumé', 'snake')).toBe('café_résumé')
+    expect(convert('Café Résumé', 'camel')).toBe('caféRésumé')
+    expect(convert('Café Résumé', 'pascal')).toBe('CaféRésumé')
+    expect(convert('Straße über', 'kebab')).toBe('straße-über')
+})
+
+test('the apostrophe rule does not reach the slug mode or the text modes', () => {
+    expect(convert("Don't Stop", 'slug')).toBe('dont-stop')
+    expect(convert('Café Résumé', 'slug')).toBe('cafe-resume')
+    expect(convert("don't stop", 'title')).toBe("Don't Stop")
+    expect(convert("DON'T STOP", 'sentence')).toBe("Don't stop")
+})
+
 // --- Multiple consecutive spaces ---
 
 test('preserves multiple consecutive spaces in title case', () => {

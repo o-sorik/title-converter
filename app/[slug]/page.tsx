@@ -7,6 +7,7 @@ import { ModeContentSection, getRelatedLinksForMode } from "@/components/mode-co
 import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
 import { WebApplicationJsonLd, FAQPageJsonLd } from "@/components/json-ld"
+import { KebabCaseGuide } from "@/components/kebab-case-guide"
 import { SentenceCaseGuide } from "@/components/sentence-case-guide"
 import { SlugGeneratorGuide } from "@/components/slug-generator-guide"
 import type { Metadata } from "next"
@@ -21,6 +22,7 @@ export const revalidate = 604800
 const MODE_GUIDES: Partial<Record<string, () => React.JSX.Element>> = {
     "sentence-case-converter": SentenceCaseGuide,
     "slug-generator": SlugGeneratorGuide,
+    "kebab-case-converter": KebabCaseGuide,
 }
 export const dynamicParams = false
 
