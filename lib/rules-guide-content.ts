@@ -474,6 +474,7 @@ const MODE_TO_RETURN_HREF: Partial<Record<ConversionType, string>> = {
   pascal: "/pascal-case-converter",
   snake: "/snake-case-converter",
   kebab: "/slug-generator",
+  slug: "/slug-generator",
   alternating: "/alternating-case-converter",
 }
 
@@ -486,6 +487,7 @@ const MODE_TO_RETURN_LABEL: Partial<Record<ConversionType, string>> = {
   pascal: "Return to PascalCase converter",
   snake: "Return to snake_case converter",
   kebab: "Return to slug generator",
+  slug: "Return to slug generator",
   alternating: "Return to alternating-case converter",
 }
 

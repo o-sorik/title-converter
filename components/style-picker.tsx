@@ -42,6 +42,7 @@ export function StylePicker({
     titleStyle,
     onTitleStyleChange,
     modeLabel = "Conversion mode",
+    secondary,
 }: {
     modes: { id: ConversionType; label: string }[]
     mode: ConversionType
@@ -49,6 +50,8 @@ export function StylePicker({
     titleStyle: TitleCaseStyle
     onTitleStyleChange: (style: TitleCaseStyle) => void
     modeLabel?: string
+    /** A mode's own control (e.g. the slug stop-words toggle), shown where the styles sit when the mode has no style guide. */
+    secondary?: React.ReactNode
 }) {
     const labelId = React.useId()
     const isTitle = mode === "title"
@@ -90,7 +93,7 @@ export function StylePicker({
                             </div>
                         </div>
                     ) : (
-                        <span />
+                        secondary ?? <span />
                     )}
                     <select
                         aria-label={modeLabel}
@@ -131,6 +134,7 @@ export function StylePicker({
                     )}
                 </div>
                 {isTitle && <StyleHint titleStyle={titleStyle} onSentenceCase={() => onModeChange("sentence")} />}
+                {!isTitle && secondary}
             </div>
         </>
     )

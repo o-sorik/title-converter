@@ -13,6 +13,14 @@ describe("getContextualRuleGuidance", () => {
     expect(guidance.description).toContain("context")
   })
 
+  test("points slug mode at the slug rules, not the capitalization guide", () => {
+    const guidance = getContextualRuleGuidance("slug", "standard", { input: "Hello", mode: "slug", titleStyle: "standard" })
+
+    expect(guidance.href).toBe("/slug-generator#what-changes")
+    expect(guidance.shortLabel).toBe("Slug rules")
+    expect(guidance.isStyleSpecific).toBe(false)
+  })
+
   test("returns generic guidance for non-title modes", () => {
     const guidance = getContextualRuleGuidance("sentence", "ap")
 
