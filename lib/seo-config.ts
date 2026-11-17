@@ -1,4 +1,5 @@
 import { ConversionType } from "./converters";
+import { KEBAB_FAQS } from "./kebab-case-content";
 import { SENTENCE_CASE_FAQS } from "./sentence-case-content";
 import { SLUG_FAQS } from "./slug-generator-content";
 
@@ -295,37 +296,22 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
     "kebab-case-converter": {
         slug: "kebab-case-converter",
         mode: "kebab",
-        title: "Kebab Case Converter - Free Online Tool",
-        description: "Convert text to kebab-case. Replaces spaces with hyphens, essential for URLs and CSS classes.",
-        h1: "Kebab Case Converter",
+        title: "kebab-case Converter – Text to kebab-case",
+        description: "Convert text, camelCase or snake_case to kebab-case for CSS classes, HTML attributes, CLI flags and file names.",
+        h1: "kebab-case Converter",
+        subtitle: "Turn text, camelCase or snake_case into kebab-case names for CSS, HTML and the command line.",
+        // The page body is rendered by <KebabCaseGuide />; this block stays accurate for any other consumer.
         content: {
-            intro: "The Kebab Case Converter transforms text into kebab-case (also called spinal-case). It replaces spaces with hyphens and makes everything lowercase. This is the standard for URL slugs and CSS class names.",
+            intro: "The kebab-case converter writes words in lowercase and joins them with hyphens. It reads camelCase, PascalCase and snake_case as well as plain text: myVariableName becomes my-variable-name and HTTPServer becomes http-server.",
             features: [
-                "Replaces spaces with hyphens (-).",
-                "Converts all text to lowercase.",
-                "URL-friendly format.",
+                "Splits camelCase, PascalCase and snake_case into words.",
+                "Keeps a run of capitals such as HTTP as one word.",
+                "Drops apostrophes without splitting the word and keeps accented letters.",
             ],
-            exampleInput: "Product Detail Page",
-            exampleOutput: "product-detail-page",
+            exampleInput: "getHTTPResponseCode",
+            exampleOutput: "get-http-response-code",
         },
-        faqs: [
-            {
-                question: "What is kebab-case?",
-                answer: "kebab-case is a format where words are lowercase and separated by hyphens."
-            },
-            {
-                question: "Is kebab-case good for URLs?",
-                answer: "Yes. Hyphenated lowercase slugs are typically easier to read and widely used in SEO-friendly URLs."
-            },
-            {
-                question: "Can I use kebab-case for CSS classes?",
-                answer: "Yes. Many CSS naming patterns use kebab-case for consistency and readability."
-            },
-            {
-                question: "Will punctuation be removed in kebab conversion?",
-                answer: "Yes. Special characters are generally stripped while words are joined with hyphens."
-            }
-        ],
+        faqs: KEBAB_FAQS,
     },
     // Alias for slug generator
     "slug-generator": {

@@ -145,18 +145,18 @@ const MODE_CONTENT: Record<ConversionType, ModeContent> = {
         ],
     },
     kebab: {
-        whenToUse: "Use kebab-case for URL slugs, CSS class names, and human-readable path segments.",
+        whenToUse: "Use kebab-case for names that a browser, a shell or a file system reads: CSS classes, HTML attributes, command-line flags and file names.",
         useCases: [
-            "SEO-friendly URL path generation.",
-            "CSS utility and component class naming.",
-            "Normalized route and filename patterns.",
+            "CSS class names and custom properties.",
+            "HTML data-* and ARIA attributes.",
+            "Command-line flags, file names and package names.",
         ],
         commonMistakes: [
-            "Using underscores in URL slugs when hyphens are preferred.",
-            "Keeping uppercase characters in slugs.",
-            "Including unsafe punctuation in path segments.",
+            "Using kebab-case for a variable name: in most languages the hyphen is the minus sign.",
+            "Leaving a brand name split, such as i-phone for iPhone.",
+            "Keeping accented letters in an npm, Debian or Kubernetes name.",
         ],
-        proTip: "For SEO pages, keep slugs short, descriptive, and keyword-relevant without stuffing.",
+        proTip: "For a page address, use the URL slug generator: it keeps brand names whole and turns accented letters into plain ones.",
         relatedLinks: [
             { href: "/slug-generator", label: "URL Slug Generator" },
             { href: "/snake-case-converter", label: "Snake Case Converter" },

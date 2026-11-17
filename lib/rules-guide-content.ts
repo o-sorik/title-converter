@@ -473,7 +473,7 @@ const MODE_TO_RETURN_HREF: Partial<Record<ConversionType, string>> = {
   camel: "/camel-case-converter",
   pascal: "/pascal-case-converter",
   snake: "/snake-case-converter",
-  kebab: "/slug-generator",
+  kebab: "/kebab-case-converter",
   slug: "/slug-generator",
   alternating: "/alternating-case-converter",
 }
