@@ -4,6 +4,18 @@ interface WebApplicationProps {
     name: string
     description: string
     url: string
+    /** Profiles of the same entity elsewhere (e.g. the YouTube channel). */
+    sameAs?: string[]
+}
+
+interface VideoObjectProps {
+    name: string
+    description: string
+    thumbnailUrl: string
+    uploadDate: string
+    duration: string
+    embedUrl: string
+    url: string
 }
 
 interface FAQItem {
@@ -37,7 +49,7 @@ interface BreadcrumbListProps {
 }
 
 // WebApplication schema for tool pages
-export function WebApplicationJsonLd({ name, description, url }: WebApplicationProps) {
+export function WebApplicationJsonLd({ name, description, url, sameAs }: WebApplicationProps) {
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "WebApplication",
@@ -56,7 +68,30 @@ export function WebApplicationJsonLd({ name, description, url }: WebApplicationP
         "creator": {
             "@type": "Organization",
             "name": "Antigravity"
-        }
+        },
+        ...(sameAs && sameAs.length ? { "sameAs": sameAs } : {}),
+    }
+
+    return (
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+    )
+}
+
+// VideoObject schema for an embedded video
+export function VideoObjectJsonLd({ name, description, thumbnailUrl, uploadDate, duration, embedUrl, url }: VideoObjectProps) {
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "VideoObject",
+        "name": name,
+        "description": description,
+        "thumbnailUrl": [thumbnailUrl],
+        "uploadDate": uploadDate,
+        "duration": duration,
+        "embedUrl": embedUrl,
+        "url": url,
     }
 
     return (

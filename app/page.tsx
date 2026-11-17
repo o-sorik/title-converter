@@ -4,7 +4,9 @@ import { SITE_URL } from "@/lib/constants"
 import { TextConverter } from "@/components/text-converter"
 import { AudienceSection } from "@/components/audience-section"
 import { ContentSection } from "@/components/content-section"
-import { WebApplicationJsonLd, FAQPageJsonLd, HowToJsonLd } from "@/components/json-ld"
+import { WebApplicationJsonLd, FAQPageJsonLd, HowToJsonLd, VideoObjectJsonLd } from "@/components/json-ld"
+import { ExplainerVideo } from "@/components/explainer-video"
+import { EXPLAINER_VIDEO, YOUTUBE_CHANNEL_URL, explainerPosterUrl, youtubeEmbedUrl, youtubeWatchUrl } from "@/lib/explainer-video"
 import { Toaster } from "@/components/ui/sonner"
 import { SiteFooter, SiteHeader } from "@/components/site-shell"
 import { ScrollReveal } from "@/components/scroll-reveal"
@@ -32,6 +34,16 @@ export default async function Home() {
         name={config.h1}
         description={config.description}
         url={SITE_URL}
+        sameAs={[YOUTUBE_CHANNEL_URL]}
+      />
+      <VideoObjectJsonLd
+        name={EXPLAINER_VIDEO.title}
+        description={EXPLAINER_VIDEO.description}
+        thumbnailUrl={explainerPosterUrl()}
+        uploadDate={EXPLAINER_VIDEO.uploadDate}
+        duration={EXPLAINER_VIDEO.duration}
+        embedUrl={youtubeEmbedUrl(EXPLAINER_VIDEO.id)}
+        url={youtubeWatchUrl(EXPLAINER_VIDEO.id)}
       />
       <HowToJsonLd
         name={`How to use ${config.h1}`}
@@ -113,6 +125,8 @@ export default async function Home() {
 
           </article>
           </ScrollReveal>
+
+          <ScrollReveal delay={50}><ExplainerVideo /></ScrollReveal>
 
           <ScrollReveal delay={50}><ContentSection faqs={config.faqs} /></ScrollReveal>
         </div>
