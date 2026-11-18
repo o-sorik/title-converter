@@ -2,6 +2,7 @@ import { ConversionType } from "./converters";
 import { KEBAB_FAQS } from "./kebab-case-content";
 import { SENTENCE_CASE_FAQS } from "./sentence-case-content";
 import { SLUG_FAQS } from "./slug-generator-content";
+import { SNAKE_FAQS } from "./snake-case-content";
 
 export interface SeoPageConfig {
     slug: string;
@@ -261,37 +262,22 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
     "snake-case-converter": {
         slug: "snake-case-converter",
         mode: "snake",
-        title: "Snake Case Converter - Free Online Tool",
-        description: "Convert text to snake_case. Replaces spaces with underscores, ideal for Python and databases.",
-        h1: "Snake Case Converter",
+        title: "snake_case Converter – Text to snake_case",
+        description: "Convert text, camelCase or kebab-case to snake_case for Python and Rust names, Ruby methods and SQL columns.",
+        h1: "snake_case Converter",
+        subtitle: "Turn text, camelCase or kebab-case into snake_case names for Python, Rust and SQL.",
+        // The page body is rendered by <SnakeCaseGuide />; this block stays accurate for any other consumer.
         content: {
-            intro: "The Snake Case Converter transforms text into snake_case. It replaces all spaces with underscores and converts letters to lowercase. This format is the standard for variable names in Python and for database column names.",
+            intro: "The snake_case converter writes words in lowercase and joins them with underscores. It reads camelCase, PascalCase and kebab-case as well as plain text: myVariableName becomes my_variable_name and HTTPServer becomes http_server.",
             features: [
-                "Replaces spaces with underscores (_).",
-                "Converts all text to lowercase.",
-                "Removes special characters.",
+                "Splits camelCase, PascalCase and kebab-case into words.",
+                "Keeps a run of capitals such as HTTP as one word.",
+                "Keeps leading and trailing underscores, as in _private_value and __init__.",
             ],
-            exampleInput: "User ID Number",
-            exampleOutput: "user_id_number",
+            exampleInput: "getHTTPResponseCode",
+            exampleOutput: "get_http_response_code",
         },
-        faqs: [
-            {
-                question: "What is snake_case?",
-                answer: "snake_case is a naming format where words are lowercase and separated by underscores."
-            },
-            {
-                question: "Where is snake_case commonly used?",
-                answer: "It is common in Python code, SQL schemas, and data engineering workflows."
-            },
-            {
-                question: "Does snake case keep numbers?",
-                answer: "Yes. Numeric characters are preserved while words are normalized and separated with underscores."
-            },
-            {
-                question: "Snake case vs kebab case: what is the difference?",
-                answer: "snake_case uses underscores, while kebab-case uses hyphens."
-            }
-        ],
+        faqs: SNAKE_FAQS,
     },
     "kebab-case-converter": {
         slug: "kebab-case-converter",

@@ -543,6 +543,24 @@ function tokenizeIdentifierWords(text: string): string[] {
     return normalized.match(/[\p{L}\p{N}]+/gu) ?? [];
 }
 
+/**
+ * snake_case keeps the underscores the input starts and ends with: in Python
+ * `_name` marks internal use and `__name__` a "magic" attribute (PEP 8), so
+ * `_privateValue` becomes `_private_value` and `__init__` stays `__init__`.
+ * Only this mode does it; kebab, camel and pascal have no such convention.
+ */
+function toSnakeCase(text: string): string {
+    const body = tokenizeIdentifierWords(text)
+        .map((w) => w.toLowerCase())
+        .join("_");
+    if (!body) return "";
+
+    const trimmed = text.trim();
+    const leading = trimmed.match(/^_+/)?.[0] ?? "";
+    const trailing = trimmed.match(/_+$/)?.[0] ?? "";
+    return leading + body + trailing;
+}
+
 function buildTitleTransforms(text: string, style: TitleCaseStyle): TitleWordTransform[] {
     const tokens = tokenizeWords(text);
     if (!tokens.length) return [];
@@ -858,9 +876,7 @@ export function convert(text: string, type: ConversionType, options: ConvertOpti
                 .map((w) => capitalize(w))
                 .join("");
         case "snake":
-            return tokenizeIdentifierWords(text)
-                .map((w) => w.toLowerCase())
-                .join("_");
+            return toSnakeCase(text);
         case "kebab":
             return tokenizeIdentifierWords(text)
                 .map((w) => w.toLowerCase())

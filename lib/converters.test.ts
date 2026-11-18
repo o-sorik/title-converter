@@ -124,6 +124,23 @@ test('converts to snake case', () => {
     expect(convert('hello world', 'snake')).toBe('hello_world')
 })
 
+// Decision S1 (brief snake-case-converter.md, 18.11.2026): Python gives leading and trailing underscores a meaning.
+test('snake case keeps the underscores the input starts and ends with', () => {
+    expect(convert('_privateValue', 'snake')).toBe('_private_value')
+    expect(convert('__init__', 'snake')).toBe('__init__')
+    expect(convert('__double_leading', 'snake')).toBe('__double_leading')
+    expect(convert('  _padded value  ', 'snake')).toBe('_padded_value')
+    expect(convert('class_', 'snake')).toBe('class_')
+    expect(convert('___', 'snake')).toBe('')
+    expect(convert('hello world', 'snake')).toBe('hello_world')
+})
+
+test('only snake case keeps edge underscores', () => {
+    expect(convert('_privateValue', 'kebab')).toBe('private-value')
+    expect(convert('_privateValue', 'camel')).toBe('privateValue')
+    expect(convert('_privateValue', 'pascal')).toBe('PrivateValue')
+})
+
 test('supports unicode in title case', () => {
     expect(convert('привіт світ', 'title')).toBe('Привіт Світ')
     expect(convert('working with café data', 'title')).toBe('Working with Café Data')
