@@ -117,7 +117,8 @@ export function ResultText({
         )
     }
     return (
-        <span key={revealKey} className={cn(revealKey > 0 && "result-appear")}>
+        // An identifier such as a long snake_case or camelCase name has no break point, so let it wrap anywhere.
+        <span key={revealKey} className={cn("[overflow-wrap:anywhere]", revealKey > 0 && "result-appear")}>
             {rules.length ? <RuledText text={text} rules={rules} activeRule={activeRule} drawing={drawing} /> : output}
         </span>
     )
