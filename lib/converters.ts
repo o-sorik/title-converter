@@ -533,12 +533,17 @@ function looksVerbLike(word: string): boolean {
  * stays one word ("dont", not "don-t"): an apostrophe cannot be part of a CSS
  * identifier or a variable name, and nobody means the half-word "t".
  * Accented letters are kept; turning them into plain letters is the slug mode's job.
+ *
+ * A plural acronym stays one word: "URLs", "APIs", "IDs" (decision C2, camel brief
+ * 22.11.2026). The split before a capital and a lowercase letter, which makes
+ * "XMLHttp" two words, skips a lone lowercase "s" at the end of a capital run,
+ * so "getURLs" is "get URLs" and not "get UR Ls".
  */
 function tokenizeIdentifierWords(text: string): string[] {
     const normalized = text
         .replace(/(?<=\p{L})['’](?=\p{L})/gu, "")
         .replace(/([\p{Ll}\p{N}])([\p{Lu}])/gu, "$1 $2")
-        .replace(/([\p{Lu}]+)([\p{Lu}][\p{Ll}])/gu, "$1 $2");
+        .replace(/([\p{Lu}]+)([\p{Lu}](?!s(?!\p{Ll}))[\p{Ll}])/gu, "$1 $2");
 
     return normalized.match(/[\p{L}\p{N}]+/gu) ?? [];
 }
@@ -559,6 +564,23 @@ function toSnakeCase(text: string): string {
     const leading = trimmed.match(/^_+/)?.[0] ?? "";
     const trailing = trimmed.match(/_+$/)?.[0] ?? "";
     return leading + body + trailing;
+}
+
+/**
+ * camelCase puts an underscore between two numbers in a row, so "version 2.5"
+ * becomes `version2_5` and not `version25`, which reads as twenty-five.
+ * Google Java Style lists `guava3346` as incorrect and gives `guava33_4_6`
+ * (decision C1, camel brief 22.11.2026). Only this mode does it.
+ */
+function toCamelCase(text: string): string {
+    const words = tokenizeIdentifierWords(text);
+    return words
+        .map((w, i) => {
+            const word = i === 0 ? w.toLowerCase() : capitalize(w);
+            const betweenNumbers = i > 0 && /\p{N}$/u.test(words[i - 1]) && /^\p{N}/u.test(w);
+            return betweenNumbers ? `_${word}` : word;
+        })
+        .join("");
 }
 
 function buildTitleTransforms(text: string, style: TitleCaseStyle): TitleWordTransform[] {
@@ -868,9 +890,7 @@ export function convert(text: string, type: ConversionType, options: ConvertOpti
         case "title":
             return convertTitleCase(text, titleStyle);
         case "camel":
-            return tokenizeIdentifierWords(text)
-                .map((w, i) => i === 0 ? w.toLowerCase() : capitalize(w))
-                .join("");
+            return toCamelCase(text);
         case "pascal":
             return tokenizeIdentifierWords(text)
                 .map((w) => capitalize(w))

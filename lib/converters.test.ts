@@ -116,6 +116,53 @@ test('converts to camel case', () => {
     expect(convert('hello_world', 'camel')).toBe('helloWorld')
 })
 
+// Golden cases from the camel brief (camel-case-converter.md, 22.11.2026), checked against
+// lodash 4.17.21, change-case 5.4.4 and the Google JavaScript and Java style guides.
+test('camel case matches the Google style guide examples', () => {
+    expect(convert('user first name', 'camel')).toBe('userFirstName')
+    expect(convert('user-first-name', 'camel')).toBe('userFirstName')
+    expect(convert('UserFirstName', 'camel')).toBe('userFirstName')
+    expect(convert('MAX_RETRY_COUNT', 'camel')).toBe('maxRetryCount')
+    expect(convert('XML HTTP request', 'camel')).toBe('xmlHttpRequest')
+    expect(convert('XMLHttpRequest', 'camel')).toBe('xmlHttpRequest')
+    expect(convert('new customer ID', 'camel')).toBe('newCustomerId')
+    expect(convert('userID', 'camel')).toBe('userId')
+    expect(convert('inner stopwatch', 'camel')).toBe('innerStopwatch')
+    expect(convert('YouTube importer', 'camel')).toBe('youTubeImporter')
+    expect(convert('getHTTPResponseCode', 'camel')).toBe('getHttpResponseCode')
+    expect(convert('IOError', 'camel')).toBe('ioError')
+    expect(convert('font-size', 'camel')).toBe('fontSize')
+    expect(convert('data-user-id', 'camel')).toBe('dataUserId')
+    expect(convert('Turn on 2SV', 'camel')).toBe('turnOn2Sv')
+})
+
+// Decision C1 (camel brief, 22.11.2026): two numbers in a row get an underscore, camel only.
+test('camel case puts an underscore between two numbers in a row', () => {
+    expect(convert('version 2.5', 'camel')).toBe('version2_5')
+    expect(convert('Guava 33.4.6', 'camel')).toBe('guava33_4_6')
+    expect(convert('rgb 255 0 0', 'camel')).toBe('rgb255_0_0')
+    expect(convert('version 25', 'camel')).toBe('version25')
+    expect(convert('404 page', 'camel')).toBe('404Page')
+    expect(convert('2nd place', 'camel')).toBe('2ndPlace')
+    expect(convert('version 2.5', 'pascal')).toBe('Version25')
+    expect(convert('version 2.5', 'snake')).toBe('version_2_5')
+})
+
+// Decision C2 (camel brief, 22.11.2026): a plural acronym is one word in every identifier mode.
+test('a plural acronym stays one word in every identifier mode', () => {
+    expect(convert('getURLs', 'camel')).toBe('getUrls')
+    expect(convert('APIs list', 'camel')).toBe('apisList')
+    expect(convert('userIDs', 'camel')).toBe('userIds')
+    expect(convert('DVDs and CDs', 'camel')).toBe('dvdsAndCds')
+    expect(convert('DVDs and CDs', 'pascal')).toBe('DvdsAndCds')
+    expect(convert('DVDs and CDs', 'snake')).toBe('dvds_and_cds')
+    expect(convert('DVDs and CDs', 'kebab')).toBe('dvds-and-cds')
+    expect(convert('getURLsList', 'camel')).toBe('getUrlsList')
+    expect(convert('HTTPStatus', 'camel')).toBe('httpStatus')
+    expect(convert('HTTPServer', 'kebab')).toBe('http-server')
+    expect(convert('IDsAndNames', 'snake')).toBe('ids_and_names')
+})
+
 test('converts to pascal case', () => {
     expect(convert('hello world', 'pascal')).toBe('HelloWorld')
 })
