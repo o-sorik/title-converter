@@ -1,3 +1,4 @@
+import { CAMEL_FAQS } from "./camel-case-content";
 import { ConversionType } from "./converters";
 import { KEBAB_FAQS } from "./kebab-case-content";
 import { SENTENCE_CASE_FAQS } from "./sentence-case-content";
@@ -191,38 +192,22 @@ export const SEO_CONFIG: Record<string, SeoPageConfig> = {
     "camel-case-converter": {
         slug: "camel-case-converter",
         mode: "camel",
-        title: "Camel Case Converter - Free Online Tool",
-        description: "Convert text to camelCase. Perfect for programming variable names in JavaScript, Java, and C#.",
-        h1: "Camel Case Converter",
+        title: "camelCase Converter – Text to camelCase",
+        description: "Convert text, snake_case or kebab-case to camelCase for JavaScript and Java names, JSON keys and React style properties.",
+        h1: "camelCase Converter",
+        subtitle: "Turn text, snake_case or kebab-case into camelCase names for JavaScript, Java and JSON.",
+        // The page body is rendered by <CamelCaseGuide />; this block stays accurate for any other consumer.
         content: {
-            intro: "The Camel Case Converter transforms text into the camelCase naming convention, commonly used in programming languages like JavaScript and Java. It removes spaces and punctuation, and capitalizes the first letter of each word except the first one.",
+            intro: "The camelCase converter joins words without spaces: the first word is lowercase and every next word starts with a capital. It reads snake_case, kebab-case and PascalCase as well as plain text: user first name becomes userFirstName and HTTPServer becomes httpServer.",
             features: [
-                "Removes all spaces and special characters.",
-                "Lowercases the first word.",
-                "Capitalizes subsequent words.",
-                "Essential for coding variable names.",
+                "Splits snake_case, kebab-case and PascalCase into words.",
+                "Treats an acronym as one word, as Google style does: XML HTTP request becomes xmlHttpRequest.",
+                "Keeps a plural acronym whole and separates two numbers in a row, as in getUrls and version2_5.",
             ],
-            exampleInput: "User first name",
-            exampleOutput: "userFirstName",
+            exampleInput: "getHTTPResponseCode",
+            exampleOutput: "getHttpResponseCode",
         },
-        faqs: [
-            {
-                question: "What is camelCase?",
-                answer: "camelCase is a naming convention where the first word is lowercase and each following word starts with an uppercase letter."
-            },
-            {
-                question: "Where is camelCase commonly used?",
-                answer: "It is common in JavaScript, TypeScript, and JSON keys for variables, properties, and function names."
-            },
-            {
-                question: "Does camel case remove spaces and punctuation?",
-                answer: "Yes. Spaces and separators are removed and words are merged into a single identifier."
-            },
-            {
-                question: "What is the difference between camelCase and PascalCase?",
-                answer: "camelCase starts with a lowercase letter, while PascalCase starts with an uppercase letter."
-            }
-        ],
+        faqs: CAMEL_FAQS,
     },
     "pascal-case-converter": {
         slug: "pascal-case-converter",

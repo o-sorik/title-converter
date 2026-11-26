@@ -88,7 +88,7 @@ const MODE_CONTENT: Record<ConversionType, ModeContent> = {
         ],
     },
     camel: {
-        whenToUse: "Use camelCase for variable names and object keys where the first token should be lowercase.",
+        whenToUse: "Use camelCase for variable, function and property names in JavaScript, TypeScript, Java, Kotlin, Swift and Dart, and for JSON keys where a style guide asks for it.",
         useCases: [
             "JavaScript and TypeScript variable naming.",
             "JSON key formatting for APIs.",
